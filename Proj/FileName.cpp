@@ -46,7 +46,6 @@ public:
 class Professor {
     Course* courses[10];
     int coursecount;
-    int profcount;
     char* name;
 
 public:
@@ -142,7 +141,7 @@ bool Course::addStudent(Student* s) {
     }
     for (int i = 0; i < currcount; i++) {
         if (studs[i] == s) {
-            cout << "Student already adeed\n";
+            cout << "Student already added\n";
             return false;
         }
     }
@@ -254,7 +253,7 @@ int Student::getcoursecount() const { return coursecount; }
 
 bool Student::addCourse(Course* c) {
     if (coursecount >= 10) {
-        cout << "Max is 10!\n";
+        cout << "Student can't take more than 10 courses.\n";
         return false;
     }
     for (int i = 0; i < coursecount; i++) {
@@ -283,7 +282,7 @@ bool Student::removeCourse(Course* c) {
 
 void Student::printInfo() const {
     cout << "Student: " << name << "\n";
-    cout << "Added in " << coursecount << " course:\n";
+    cout << "Enrolled in " << coursecount << " course(s):\n";
     if (coursecount == 0) cout << "  (no courses)\n";
     else {
         for (int i = 0; i < coursecount; i++) {
@@ -336,7 +335,7 @@ void addProfessor() {
 
 void addCourse() {
     if (profList.size == 0) {
-        cout << "Create a professor firstly\n";
+        cout << "Create a professor first.\n";
         return;
     }
 
@@ -484,7 +483,7 @@ void unenrollStudent() {
     }
 
     if (s->removeCourse(c))
-        cout << "Student kicked from course\n";
+        cout << "Student removed from course\n";
     else
         cout << "Fail\n";
 }
@@ -533,7 +532,7 @@ void showAllProfessors() {
 }
 
 void showAllCourses() {
-    cout << "\n    ALL PROFESSORS     \n";
+    cout << "\n     ALL COURSES     \n";
     if (courseList.size == 0) {
         cout << "No courses\n";
         return;
@@ -543,7 +542,7 @@ void showAllCourses() {
 }
 
 void showAllStudents() {
-    cout << "\n    ALL PROFESSORS     \n";
+    cout << "\n     ALL STUDENTS     \n";
     if (studentCount == 0) {
         cout << "No students\n";
         return;
@@ -574,8 +573,8 @@ int main() {
         cout << "\n1. Add professor\n";
         cout << "2. Add course\n";
         cout << "3. Add student\n";
-        cout << "4. Add student to course\n";
-        cout << "5. Kick student from course\n";
+        cout << "4. Enroll student to course\n";
+        cout << "5. Unenroll student from course\n";
         cout << "6. Change course schedule\n";
         cout << "7. Show all professors\n";
         cout << "8. Show all courses\n";
