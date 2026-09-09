@@ -18,24 +18,24 @@
     <ClCompile Include="Main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Student.cpp">
+    <ClCompile Include="Course\Course.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Course.cpp">
+    <ClCompile Include="Professor\Professor.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Professor.cpp">
+    <ClCompile Include="Student\Student.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Course.h">
+    <ClInclude Include="Course\Course.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Professor.h">
+    <ClInclude Include="Professor\Professor.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Student.h">
+    <ClInclude Include="Student\Student.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

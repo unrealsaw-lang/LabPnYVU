@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\CodeTmp\Proj\Proj\Student;D:\CodeTmp\Proj\Proj\Professor;D:\CodeTmp\Proj\Proj\Course;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\CodeTmp\Proj\Proj\Student;D:\CodeTmp\Proj\Proj\Professor;D:\CodeTmp\Proj\Proj\Course;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\CodeTmp\Proj\Proj\Student;D:\CodeTmp\Proj\Proj\Professor;D:\CodeTmp\Proj\Proj\Course;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\CodeTmp\Proj\Proj\Student;D:\CodeTmp\Proj\Proj\Professor;D:\CodeTmp\Proj\Proj\Course;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,15 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Course.cpp" />
-    <ClCompile Include="Professor.cpp" />
-    <ClCompile Include="Student.cpp" />
+    <ClCompile Include="Course\Course.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Professor\Professor.cpp" />
+    <ClCompile Include="Student\Student.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Course.h" />
-    <ClInclude Include="Professor.h" />
-    <ClInclude Include="Student.h" />
+    <ClInclude Include="Course\Course.h" />
+    <ClInclude Include="Professor\Professor.h" />
+    <ClInclude Include="Student\Student.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
