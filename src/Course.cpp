@@ -1,80 +1,88 @@
+#include "Course.h"
 #include "Professor.h"
 #include "Student.h"
 #include <iostream>
-#include <string>
-#include <vector>
 
-using namespace std;
-
-Course::Course(string lang, string lvl, Professor* P, string sched, int max) :
-	language(lang), level(lvl), maxCount(max), schedule(sched), currCount(0) {
-	profs.push_back(P);
+Course::Course(const std::string& lang, const std::string& lvl, Professor* P, const std::string& sched, int max) :
+    maxCount(max), currCount(0), level(lvl), language(lang), schedule(sched) {
+    if (P != nullptr) addProfessor(P);
 }
-	//геттеры
-	string Course::getCourseLevel() const { return level; }
-	string Course::getCourseLanguage() const { return language; }
-	string Course::getCourseSchedule() const { return schedule; }
-	int Course::getCourseCurrCount() const { return currCount; }
-	void Course::printCourse(Course *C) const {
-		cout << "--------------------------------------\n";
-		cout << C->getCourseLanguage() << " course\n";
-		cout << "Course level : " << C->getCourseLevel() << endl;
-		cout << "Professor(s) of the course is ";
-		if (profs.empty()) cout << "Empty";
-		else {
-			for (size_t i = 0; i < profs.size(); ++i) {
-				cout << profs[i]->getName();
-				if (i != profs.size() - 1) cout << ", ";
-			}
-		}
-		cout << '\n';
-		cout << "Number of students: " << getCourseCurrCount() << endl;
-		cout << "Course schedule - " << getCourseSchedule() << endl;
-	}
-	//сеттеры
-	void Course::setCourseSchedule(string schd) {schedule = schd;}
-	void Course::setCourseLanguage(string lang) {language = lang;}
-	void Course::setCourseLevel(string lvl) {level = lvl;}
-	void Course::setCourseCount(int count) {currCount = count;}
-	//методы
-	int Course::addStudent(Student* S) {
-		if (currCount >= maxCount) return 0;
-		else {
-			studs.push_back(S);
-			currCount++;
-			return 1;
-		}
-	};
-	void Course::addProfessor(Professor* P) {profs.push_back(P);};
-	Student* Course::findStudentByName(const string& name) {
-		for (int i = 0; i < studs.size(); ++i) {
-			if (studs[i]->getName() == name) 
-			return studs[i];
-		}
-		return nullptr;
-	}
-	void Course::removeStudent(Student *S) {
-		for (int i = 0; i < studs.size(); ++i) {
-			if (studs[i] == S) {
-				studs.erase(studs.begin() + i);
-				currCount--;
-				break;
-			}
-		}
-	}
-	Professor* Course::findProfessorByName(const string& name) {
-		for (int i = 0; i < profs.size(); ++i) {
-			if (profs[i]->getName() == name)
-			return profs[i];
-		}
-		return nullptr;
-	}
-	void Course::removeProfessor(Professor* P) {
-		for (int i = 0; i < profs.size(); ++i) {
-			if (profs[i] == P) {
-				profs.erase(profs.begin() + i);
-				break;
-			}
-		}
 
-	}
+std::string Course::getCourseLevel() const { return level; }
+std::string Course::getCourseLanguage() const { return language; }
+std::string Course::getCourseSchedule() const { return schedule; }
+int Course::getCourseCurrCount() const { return currCount; }
+int Course::getCourseMaxCount() const { return maxCount; }
+
+void Course::setCourseSchedule(const std::string& schd) { schedule = schd; }
+void Course::setCourseLanguage(const std::string& lang) { language = lang; }
+void Course::setCourseLevel(const std::string& lvl) { level = lvl; }
+void Course::setCourseCount(int count) { currCount = count; }
+
+void Course::printCourse() const {
+    std::cout << "--------------------------------------\n";
+    std::cout << language << " course (" << level << ")\n";
+    std::cout << "Professor(s): ";
+
+    if (profs.empty()) std::cout << "None";
+    else {
+        for (size_t i = 0; i < profs.size(); ++i) {
+            std::cout << profs[i]->getName();
+            if (i != profs.size() - 1) std::cout << ", ";
+        }
+    }
+
+    std::cout << "\nStudents capacity: " << currCount << " / " << maxCount << "\n";
+    std::cout << "Schedule: " << schedule << "\n";
+}
+
+int Course::addStudent(Student* S) {
+    if (S == nullptr || currCount >= maxCount) return 0;
+
+    for (size_t i = 0; i < studs.size(); ++i) {
+        if (studs[i] == S) return 1;
+    }
+    studs.push_back(S);
+    currCount++;
+    return 1;
+}
+int Course::addProfessor(Professor* P) {
+    if (P == nullptr) return 0;
+    for (size_t i = 0; i < profs.size(); ++i) {
+        if (profs[i] == P) return 1;
+    }
+    profs.push_back(P);
+    P->addCourse(this);
+    return 1;
+}
+
+Student* Course::findStudentByName(const std::string& name) const {
+    for (size_t i = 0; i < studs.size(); ++i) {
+        if (studs[i]->getName() == name) return studs[i];
+    }
+    return nullptr;
+}
+Professor* Course::findProfessorByName(const std::string& name) const {
+    for (size_t i = 0; i < profs.size(); ++i) {
+        if (profs[i]->getName() == name) return profs[i];
+    }
+    return nullptr;
+}
+
+void Course::removeStudent(const Student* S) {
+    for (size_t i = 0; i < studs.size(); ++i) {
+        if (studs[i] == S) {
+            studs.erase(studs.begin() + i);
+            currCount--;
+            break;
+        }
+    }
+}
+void Course::removeProfessor(const Professor* P) {
+    for (size_t i = 0; i < profs.size(); ++i) {
+        if (profs[i] == P) {
+            profs.erase(profs.begin() + i);
+            break;
+        }
+    }
+}

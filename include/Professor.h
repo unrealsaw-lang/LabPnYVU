@@ -1,22 +1,25 @@
 #pragma once
 #include <string>
-#include "Course.h"
-using namespace std;
+#include <vector>
+
+class Course;
 
 class Professor {
-	vector<Course*> courses;
-	string name;
+private:
+    std::vector<Course*> courses;
+    std::string name;
 
 public:
-	Professor(string N);
+    explicit Professor(const std::string& N);
+    ~Professor() = default;
 
-	int addCourse(Course* C);
+    int addCourse(Course* C);
+    void removeCourse(const Course* C);
 
-	string getName() const;
-	int getCourseCount() const;
+    std::string getName() const;
+    int getCourseCount() const;
 
-	void setName(string N);
+    void setName(const std::string& N);
 
-	void printInfo(Professor *P) const;
-	void printCourse() const;
+    void printInfo() const;
 };

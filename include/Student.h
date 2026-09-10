@@ -1,21 +1,25 @@
 #pragma once
 #include <string>
-#include "Course.h"
+#include <vector>
 
+class Course;
 
 class Student {
-	vector<Course*> courses;
-	string name;
+private:
+    std::vector<Course*> courses;
+    std::string name;
 
 public:
-	Student(string N);
+    explicit Student(const std::string& N);
+    ~Student() = default;
 
-	string getName() const;
-	int getCourseCount() const;
-	void printInfo(Student* S) const;
+    std::string getName() const;
+    int getCourseCount() const;
 
-	void setName(string N);
+    void setName(const std::string& N);
 
-	int addCourse(Course* C);
+    int addCourse(Course* C);
+    void removeCourse(const Course* C);
 
+    void printInfo() const;
 };
