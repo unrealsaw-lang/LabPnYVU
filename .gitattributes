@@ -61,3 +61,9 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+# Visual Studio build artifacts
+x64/
+Debug/
+Release/
+.vs/
+*.user
