@@ -20,25 +20,27 @@ int Student::addCourse(Course* C) {
 }
 
 void Student::removeCourse(const Course* C) {
-    for (size_t i = 0; i < courses.size(); ++i) {
-        if (courses[i] == C) {
-            courses.erase(courses.begin() + i);
-            break;
+    for (int j = 0; j < courses.size(); ++j) {
+        if (courses[j] == C) {
+            courses.erase(courses.begin() + j);
+            return;
         }
     }
 }
 
 void Student::printInfo() const {
-    std::cout << "\n--------------------------------------\n";
-    std::cout << "Student: " << name << "\n";
-    std::cout << "In courses (" << getCourseCount() << "): ";
+    std::cout << "\n--------------------------------------\n"
+        << "Student: " << name << "\n"
+        << "Enrolled in courses (" << getCourseCount() << "): ";
 
-    if (courses.empty()) std::cout << "None";
-    else {
-        for (size_t i = 0; i < courses.size(); ++i) {
-            std::cout << courses[i]->getCourseLanguage() << " (" << courses[i]->getCourseLevel() << ")";
-            if (i != courses.size() - 1) std::cout << ", ";
-        }
+    if (courses.empty()) {
+        std::cout << "None\n";
+        return;
+    }
+
+    std::cout << courses[0]->getCourseLanguage() << " (" << courses[0]->getCourseLevel() << ")";
+    for (size_t j = 1; j < courses.size(); ++j) {
+        std::cout << ", " << courses[j]->getCourseLanguage() << " (" << courses[j]->getCourseLevel() << ")";
     }
     std::cout << "\n";
 }
