@@ -9,7 +9,6 @@ class Course {
 private:
     std::vector<Student*> studs;
     int maxCount;
-    int currCount;
     std::vector<Professor*> profs;
     std::string level;
     std::string language;
@@ -32,10 +31,12 @@ public:
 
     void printCourse() const;
 
-    int addStudent(Student* S);
-    int addProfessor(Professor* P);
     Student* findStudentByName(const std::string& name) const;
     Professor* findProfessorByName(const std::string& name) const;
+
+    int addStudent(Student* S);
+    int addProfessor(Professor* P);
+
     void removeStudent(const Student* S);
     void removeProfessor(const Professor* P);
 };
