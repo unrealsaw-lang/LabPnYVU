@@ -10,7 +10,7 @@ private:
     std::string name;
 
 public:
-    explicit Student(const std::string& N);
+    Student(const std::string& N);
     ~Student() = default;
 
     std::string getName() const;
@@ -19,6 +19,7 @@ public:
     void setName(const std::string& N);
 
     int addCourse(Course* C);
+
     void removeCourse(const Course* C);
 
     void printInfo() const;
