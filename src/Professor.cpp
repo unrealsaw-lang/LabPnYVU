@@ -23,7 +23,7 @@ void Professor::removeCourse(const Course* C) {
 }
 
 std::string Professor::getName() const { return name; }
-int Professor::getCourseCount() const { return static_cast<int>(courses.size()); }
+int Professor::getCourseCount() const { return courses.size(); }
 void Professor::setName(const std::string& N) { name = N; }
 
 void Professor::printInfo() const {
