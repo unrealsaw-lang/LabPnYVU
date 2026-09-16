@@ -17,7 +17,6 @@ int Course::getCourseMaxCount() const { return maxCount; }
 void Course::setCourseSchedule(const std::string& schd) { schedule = schd; }
 void Course::setCourseLanguage(const std::string& lang) { language = lang; }
 void Course::setCourseLevel(const std::string& lvl) { level = lvl; }
-void Course::setCourseCount(int count) { currCount = count; }
 
 void Course::printCourse() const {
     std::cout << "--------------------------------------\n";
