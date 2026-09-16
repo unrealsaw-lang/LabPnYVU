@@ -4,7 +4,7 @@
 #include <iostream>
 
 Course::Course(const std::string& lang, const std::string& lvl, Professor* P, const std::string& sched, int max) :
-    maxCount(max), currCount(0), level(lvl), language(lang), schedule(sched) {
+    maxCount(max), level(lvl), language(lang), schedule(sched) {
     if (P != nullptr) addProfessor(P);
 }
 
@@ -32,18 +32,18 @@ void Course::printCourse() const {
         }
     }
 
-    std::cout << "\nStudents capacity: " << currCount << " / " << maxCount << "\n";
+    std::cout << "\nStudents capacity: " << studs.size() << " / " << maxCount << "\n";
     std::cout << "Schedule: " << schedule << "\n";
 }
 
 int Course::addStudent(Student* S) {
-    if (S == nullptr || currCount >= maxCount) return 0;
+    if (S == nullptr || studs.size() >= maxCount) return 0;
 
     for (size_t i = 0; i < studs.size(); ++i) {
         if (studs[i] == S) return 1;
     }
     studs.push_back(S);
-    currCount++;
+    S->addCourse(this);
     return 1;
 }
 int Course::addProfessor(Professor* P) {
@@ -73,7 +73,6 @@ void Course::removeStudent(const Student* S) {
     for (size_t i = 0; i < studs.size(); ++i) {
         if (studs[i] == S) {
             studs.erase(studs.begin() + i);
-            currCount--;
             break;
         }
     }
