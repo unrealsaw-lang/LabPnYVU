@@ -5,7 +5,7 @@
 Student::Student(const std::string& N) : name(N) {}
 
 std::string Student::getName() const { return name; }
-int Student::getCourseCount() const { return static_cast<int>(courses.size()); }
+int Student::getCourseCount() const { return courses.size(); }
 void Student::setName(const std::string& N) { name = N; }
 
 int Student::addCourse(Course* C) {
