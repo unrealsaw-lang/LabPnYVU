@@ -10,16 +10,17 @@ private:
     std::string name;
 
 public:
-    explicit Professor(const std::string& N);
+    Professor(const std::string& N);
     ~Professor() = default;
-
-    int addCourse(Course* C);
-    void removeCourse(const Course* C);
 
     std::string getName() const;
     int getCourseCount() const;
 
     void setName(const std::string& N);
+
+    int addCourse(Course* C);
+
+    void removeCourse(const Course* C);
 
     void printInfo() const;
 };
