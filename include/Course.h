@@ -15,6 +15,19 @@ private:
     std::string schedule;
 
 public:
+
+    friend std::ostream& operator<<(std::ostream& stream, const Course& course);
+    friend std::istream& operator>>(std::istream& stream, Course& course);
+
+    bool operator==(const Course& otherCourse) const; //по уровню и языку
+    bool operator!=(const Course& otherCourse) const;
+    bool operator<(const Course& otherCourse) const;
+    bool operator>(const Course& otherCourse) const; //по числу студентов
+    bool operator<=(const Course& otherCourse) const;
+    bool operator>=(const Course& otherCourse) const;
+    Course& operator+=(Student* s); //добавить студента
+    Course& operator-=(Student* s); //убрать студента
+
     Course(const std::string& lang, const std::string& lvl, Professor* P, const std::string& sched, int max);
     ~Course() = default;
 

@@ -4,6 +4,32 @@
 
 Professor::Professor(const std::string& N) : name(N) {}
 
+std::ostream& operator<<(std::ostream& stream, const Professor& P) {
+    stream << "Professor " << P.getName();
+    stream << "\nCurrently leads: ";
+
+    if (P.courses.empty()) stream << "None";
+    else {
+        for (size_t i = 0; i < P.courses.size(); ++i) {
+            stream << P.courses[i]->getCourseLanguage() << " (" << P.courses[i]->getCourseLevel() << ")";
+            if (i != P.courses.size() - 1) stream << ", ";
+        }
+    }
+    return stream;
+}
+std::istream& operator>>(std::istream& stream, Professor& P) {
+    std::cout << "Enter professor name: ";
+    std::getline(stream, P.name);
+    return stream;
+}
+
+bool Professor::operator==(const Professor& otherProfessor) const { return name == otherProfessor.name; }
+bool Professor::operator!=(const Professor& otherProfessor) const { return !(*this == otherProfessor); }
+bool Professor::operator<(const Professor& otherProfessor) const { return courses.size() < otherProfessor.courses.size(); }
+bool Professor::operator>(const Professor& otherProfessor) const { return courses.size() > otherProfessor.courses.size(); }
+bool Professor::operator<=(const Professor& otherProfessor) const { return !(otherProfessor < *this); }
+bool Professor::operator>=(const Professor& otherProfessor) const { return !(*this < otherProfessor); }
+
 int Professor::addCourse(Course* C) {
     if (C == nullptr) return 0;
     for (size_t i = 0; i < courses.size(); ++i) {

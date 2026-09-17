@@ -10,6 +10,16 @@ private:
     std::string name;
 
 public:
+    friend std::ostream& operator<<(std::ostream& stream, const Professor& P);
+    friend std::istream& operator>>(std::istream& stream, Professor& P);
+
+    bool operator==(const Professor& otherProfessor) const;
+    bool operator!=(const Professor& otherProfessor) const;
+    bool operator<(const Professor& otherProfessor) const;
+    bool operator>(const Professor& otherProfessor) const;
+    bool operator<=(const Professor& otherProfessor) const;
+    bool operator>=(const Professor& otherProfessor) const;
+
     Professor(const std::string& N);
     ~Professor() = default;
 
