@@ -10,7 +10,13 @@ private:
     std::string name;
 
 public:
-    explicit Professor(const std::string& N);
+    friend std::ostream& operator<<(std::ostream& stream, const Professor& P);
+
+    bool operator==(const Professor& otherProfessor);
+    bool operator>(const Professor& otherProfessor);
+    bool operator<(const Professor& otherProfessor);
+
+    Professor(const std::string& N);
     ~Professor() = default;
 
     int addCourse(Course* C);

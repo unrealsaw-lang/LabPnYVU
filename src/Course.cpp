@@ -4,20 +4,40 @@
 #include <iostream>
 
 Course::Course(const std::string& lang, const std::string& lvl, Professor* P, const std::string& sched, int max) :
-    maxCount(max), currCount(0), level(lvl), language(lang), schedule(sched) {
+    maxCount(max), level(lvl), language(lang), schedule(sched) {
     if (P != nullptr) addProfessor(P);
 }
+
+std::ostream& operator<<(std::ostream& stream, const Course& course)
+{
+    stream << course.getCourseLanguage()  << " course";
+    stream << "\nLevel: " << course.getCourseLevel();
+    stream << "\nProfessor(s): ";
+    if (course.profs.empty()) stream << "None";
+    else {
+        for (size_t i = 0; i < course.profs.size(); ++i) {
+            stream << course.profs[i]->getName();
+            if (i != course.profs.size() - 1) stream << ", ";
+        }
+    }
+    stream << "\nSchedule: " << course.getCourseSchedule();
+    stream << "\nMax capacity: " << course.getCourseMaxCount();
+    return stream;
+}
+
+bool Course::operator==(const Course& otherCourse) { return language == otherCourse.language && level == otherCourse.level; }
+bool Course::operator>(const Course& otherCourse) { return studs.size() > otherCourse.studs.size(); }
+bool Course::operator<(const Course& otherCourse) { return studs.size() < otherCourse.studs.size(); }
 
 std::string Course::getCourseLevel() const { return level; }
 std::string Course::getCourseLanguage() const { return language; }
 std::string Course::getCourseSchedule() const { return schedule; }
-int Course::getCourseCurrCount() const { return currCount; }
+int Course::getCourseCurrCount() const { return studs.size(); }
 int Course::getCourseMaxCount() const { return maxCount; }
 
 void Course::setCourseSchedule(const std::string& schd) { schedule = schd; }
 void Course::setCourseLanguage(const std::string& lang) { language = lang; }
 void Course::setCourseLevel(const std::string& lvl) { level = lvl; }
-void Course::setCourseCount(int count) { currCount = count; }
 
 void Course::printCourse() const {
     std::cout << "--------------------------------------\n";
@@ -32,18 +52,17 @@ void Course::printCourse() const {
         }
     }
 
-    std::cout << "\nStudents capacity: " << currCount << " / " << maxCount << "\n";
+    std::cout << "\nStudents capacity: " << studs.size() << " / " << maxCount << "\n";
     std::cout << "Schedule: " << schedule << "\n";
 }
 
 int Course::addStudent(Student* S) {
-    if (S == nullptr || currCount >= maxCount) return 0;
-
+    if (S == nullptr || studs.size() >= maxCount) return 0;
     for (size_t i = 0; i < studs.size(); ++i) {
         if (studs[i] == S) return 1;
     }
     studs.push_back(S);
-    currCount++;
+    S->addCourse(this);
     return 1;
 }
 int Course::addProfessor(Professor* P) {
@@ -73,7 +92,6 @@ void Course::removeStudent(const Student* S) {
     for (size_t i = 0; i < studs.size(); ++i) {
         if (studs[i] == S) {
             studs.erase(studs.begin() + i);
-            currCount--;
             break;
         }
     }

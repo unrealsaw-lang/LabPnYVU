@@ -5,12 +5,18 @@
 class Course;
 
 class Student {
+
 private:
     std::vector<Course*> courses;
     std::string name;
 
 public:
-    explicit Student(const std::string& N);
+    friend std::ostream& operator<<(std::ostream& stream, const Student& S);
+    bool operator==(const Student& otherStudent);
+    bool operator>(const Student& otherStudent);
+    bool operator<(const Student& otherStudent);
+
+    Student(const std::string& N);
     ~Student() = default;
 
     std::string getName() const;
@@ -23,3 +29,4 @@ public:
 
     void printInfo() const;
 };
+

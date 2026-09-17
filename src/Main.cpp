@@ -1,3 +1,4 @@
+//https://github.com/unrealsaw-lang/LabPnYVU
 #include <iostream>
 #include <string>
 #include <vector>
@@ -28,7 +29,6 @@ Professor* findOrCreateProfessor(std::vector<Professor*>& allProfs, const std::s
     allProfs.push_back(newP);
     return newP;
 }
-
 Student* findOrCreateStudent(std::vector<Student*>& allStudents, const std::string& name) {
     for (size_t i = 0; i < allStudents.size(); ++i) {
         if (allStudents[i]->getName() == name) return allStudents[i];
@@ -39,10 +39,7 @@ Student* findOrCreateStudent(std::vector<Student*>& allStudents, const std::stri
 }
 
 void createCourse(std::vector<Professor*>& allProfs, std::vector<Course*>& allCourses) {
-    std::string language;
-    std::string level;
-    std::string profName;
-    std::string schedule;
+    std::string language,level,profName, schedule;
     int maxCap = 0;
 
     std::cout << "Enter course language: ";
@@ -67,7 +64,6 @@ void createCourse(std::vector<Professor*>& allProfs, std::vector<Course*>& allCo
 
     std::cout << "\nCourse successfully created!\n";
 }
-
 void addStudentToCourse(std::vector<Student*>& allStudents, std::vector<Course*>& allCourses) {
     std::cout << "Enter student name: ";
     std::string name;

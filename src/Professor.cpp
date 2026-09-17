@@ -4,6 +4,23 @@
 
 Professor::Professor(const std::string& N) : name(N) {}
 
+std::ostream& operator<<(std::ostream& stream, const Professor& P) {
+    stream << "Professor " << P.getName();
+    stream << "\nCurrently leads: ";
+
+    if (P.courses.empty()) stream << "None";
+    else {
+        for (size_t i = 0; i < P.courses.size(); ++i) {
+            stream << P.courses[i]->getCourseLanguage() << " (" << P.courses[i]->getCourseLevel() << ")";
+            if (i != P.courses.size() - 1) stream << ", ";
+        }
+    }
+}
+
+bool Professor::operator==(const Professor& otherProfessor) { return name == otherProfessor.name; }
+bool Professor::operator>(const Professor& otherProfessor) { return courses.size() > otherProfessor.courses.size(); }
+bool Professor::operator<(const Professor& otherProfessor) { return courses.size() < otherProfessor.courses.size(); }
+
 int Professor::addCourse(Course* C) {
     if (C == nullptr) return 0;
     for (size_t i = 0; i < courses.size(); ++i) {
@@ -23,7 +40,7 @@ void Professor::removeCourse(const Course* C) {
 }
 
 std::string Professor::getName() const { return name; }
-int Professor::getCourseCount() const { return static_cast<int>(courses.size()); }
+int Professor::getCourseCount() const { return courses.size(); }
 void Professor::setName(const std::string& N) { name = N; }
 
 void Professor::printInfo() const {

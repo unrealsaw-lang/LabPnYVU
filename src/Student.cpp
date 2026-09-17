@@ -4,8 +4,25 @@
 
 Student::Student(const std::string& N) : name(N) {}
 
+std::ostream& operator<<(std::ostream& stream, const Student& S) {
+    stream << "Student " << S.getName();
+    stream << "\nEnrolled in " << S.getCourseCount() << " course(s)";
+    if (S.courses.empty()) {
+        stream << "None\n";
+        return;
+    }
+
+    stream << S.courses[0]->getCourseLanguage() << " (" << S.courses[0]->getCourseLevel() << ")";
+    for (size_t j = 1; j < S.courses.size(); ++j) {
+        stream << ", " << S.courses[j]->getCourseLanguage() << " (" << S.courses[j]->getCourseLevel() << ")";
+    }
+}
+bool Student::operator==(const Student& otherStudent) { return name == otherStudent.name; }
+bool Student::operator>(const Student& otherStudent) { return courses.size() > otherStudent.courses.size(); }
+bool Student::operator<(const Student& otherStudent) { return courses.size() < otherStudent.courses.size(); }
+
 std::string Student::getName() const { return name; }
-int Student::getCourseCount() const { return static_cast<int>(courses.size()); }
+int Student::getCourseCount() const { return courses.size(); }
 void Student::setName(const std::string& N) { name = N; }
 
 int Student::addCourse(Course* C) {

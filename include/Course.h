@@ -9,13 +9,19 @@ class Course {
 private:
     std::vector<Student*> studs;
     int maxCount;
-    int currCount;
     std::vector<Professor*> profs;
     std::string level;
     std::string language;
     std::string schedule;
 
 public:
+
+    friend std::ostream& operator<<(std::ostream& stream, const Course& course);
+
+    bool operator==(const Course& otherCourse);
+    bool operator>(const Course& otherCourse);
+    bool operator<(const Course& otherCourse);
+
     Course(const std::string& lang, const std::string& lvl, Professor* P, const std::string& sched, int max);
     ~Course() = default;
 
