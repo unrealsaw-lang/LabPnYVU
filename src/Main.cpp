@@ -15,30 +15,35 @@ Course* findCourseByTitle(const std::vector<Course*>& allCourses) {
     std::cout << "Enter course level: ";
     std::cin >> courseLevel;
 
-    for (size_t i = 0; i < allCourses.size(); ++i) {
-        if (allCourses[i]->getCourseLanguage() == courseTitle && allCourses[i]->getCourseLevel() == courseLevel) return allCourses[i];
+    for (Course* C : allCourses) {
+        if (C->getCourseLanguage() == courseTitle && C->getCourseLevel() == courseLevel)
+        return C;
     }
     return nullptr;
 }
 Professor* findOrCreateProfessor(std::vector<Professor*>& allProfs, const std::string& name) {
-    for (size_t i = 0; i < allProfs.size(); ++i) {
-        if (allProfs[i]->getName() == name) return allProfs[i];
+    for (Professor* P : allProfs) {
+        if (P->getName() == name) return P;
     }
-    Professor* newP = new Professor(name);
+    auto newP = new Professor(name);
     allProfs.push_back(newP);
     return newP;
 }
 Student* findOrCreateStudent(std::vector<Student*>& allStudents, const std::string& name) {
-    for (size_t i = 0; i < allStudents.size(); ++i) {
-        if (allStudents[i]->getName() == name) return allStudents[i];
+    for (Student* S : allStudents) {
+        if (S->getName() == name) return S;
     }
-    Student* newS = new Student(name);
+    auto newS = new Student(name);
     allStudents.push_back(newS);
     return newS;
 }
 
-void createCourse(std::vector<Professor*>& allProfs, std::vector<Course*>& allCourses) {
-    std::string language,level,profName, schedule;
+void createCourse(std::vector<Professor*>& allProfs, std::vector <Course*>& allCourses) {
+    std::string language;
+    std::string level;
+    std::string profName;
+    std::string schedule;
+
     int maxCap = 0;
 
     std::cout << "Enter course language: ";
@@ -58,7 +63,7 @@ void createCourse(std::vector<Professor*>& allProfs, std::vector<Course*>& allCo
     std::cin >> maxCap;
 
     Professor* prof = findOrCreateProfessor(allProfs, profName);
-    Course* C = new Course(language, level, prof, schedule, maxCap);
+    auto C = new Course(language, level, prof, schedule, maxCap);
     allCourses.push_back(C);
 
     std::cout << "\nCourse successfully created!\n";
@@ -146,8 +151,8 @@ void deleteCourse(std::vector<Professor*>& allProfs, std::vector<Student*>& allS
         return;
     }
 
-    for (size_t i = 0; i < allProfs.size(); ++i) allProfs[i]->removeCourse(delC);
-    for (size_t i = 0; i < allStuds.size(); ++i) allStuds[i]->removeCourse(delC);
+    for (Professor* P : allProfs) P->removeCourse(delC);
+    for (Student* S : allStuds) S->removeCourse(delC);
     for (size_t i = 0; i < allCourses.size(); ++i) {
         if (allCourses[i] == delC) {
             delete delC;
@@ -159,21 +164,21 @@ void deleteCourse(std::vector<Professor*>& allProfs, std::vector<Student*>& allS
 }
 
 void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds, std::vector<Course*>& allCourses) {
-    Professor* P1 = new Professor("Smith");
-    Professor* P2 = new Professor("Brown");
-    Professor* P3 = new Professor("Johnson");
-    Professor* P4 = new Professor("Potapenko");
+    auto P1 = new Professor("Smith");
+    auto P2 = new Professor("Brown");
+    auto P3 = new Professor("Johnson");
+    auto P4 = new Professor("Potapenko");
 
     allProfs.push_back(P1);
     allProfs.push_back(P2);
     allProfs.push_back(P3);
     allProfs.push_back(P4);
 
-    Course* C1 = new Course("English", "A1", P1, "Mon 10:00", 30);
-    Course* C2 = new Course("Deutsche", "A2", P1, "Tue 12:00", 20);
-    Course* C3 = new Course("Russian", "B1", P2, "Wed 10:00", 10);
-    Course* C4 = new Course("Deutsche", "C1", P3, "Thu 14:00", 30);
-    Course* C5 = new Course("English", "B2", P4, "Fri 16:00", 25);
+    auto C1 = new Course("English", "A1", P1, "Mon 10:00", 30);
+    auto C2 = new Course("Deutsche", "A2", P1, "Tue 12:00", 20);
+    auto C3 = new Course("Russian", "B1", P2, "Wed 10:00", 10);
+    auto C4 = new Course("Deutsche", "C1", P3, "Thu 14:00", 30);
+    auto C5 = new Course("English", "B2", P4, "Fri 16:00", 25);
 
     allCourses.push_back(C1);
     allCourses.push_back(C2);
@@ -181,8 +186,8 @@ void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds
     allCourses.push_back(C4);
     allCourses.push_back(C5);
 
-    Student* S1 = new Student("Steve");
-    Student* S2 = new Student("Bob");
+    auto S1 = new Student("Steve");
+    auto S2 = new Student("Bob");
     allStuds.push_back(S1);
     allStuds.push_back(S2);
 
@@ -452,7 +457,44 @@ void demonstrateOperators(std::vector<Course*>& allCourses, std::vector<Student*
     default: std::cout << "Invalid choice\n";
     }
 }
- 
+void printAllCourses(const std::vector<Course*>& allCourses) { for (Course* C : allCourses) C->printCourse();}
+void printStudentByName(const std::vector<Student*>& allStudents) {
+    std::cout << "Enter student name: ";
+    std::string name;
+    std::cin.ignore();
+    std::getline(std::cin, name);
+
+    bool found = false;
+    for (Student* S : allStudents) {
+        if (S->getName() == name) {
+            S->printInfo();
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        std::cout << "\nStudent not found...\n";
+    }
+}
+void printProfessorByName(const std::vector<Professor*>& allProfs) {
+    std::cout << "Enter professor name: ";
+    std::string name;
+    std::cin.ignore();
+    std::getline(std::cin, name);
+
+    bool found = false;
+    for (Professor* P : allProfs) {
+        if (P->getName() == name) {
+            P->printInfo();
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        std::cout << "\nProfessor not found...\n";
+    }
+}
+
 int main() {
     std::vector<Professor*> allProfessors;
     std::vector<Student*> allStudents;
@@ -479,48 +521,9 @@ int main() {
         }
 
         switch (choice) {
-        case 1: {
-            for (size_t i = 0; i < allCourses.size(); ++i) allCourses[i]->printCourse();
-            break;
-        }
-        case 2: {
-            std::cout << "Enter student name: ";
-            std::string name;
-            std::cin.ignore();
-            std::getline(std::cin, name);
-
-            bool found = false;
-            for (size_t i = 0; i < allStudents.size(); ++i) {
-                if (allStudents[i]->getName() == name) {
-                    allStudents[i]->printInfo();
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                std::cout << "\nStudent not found...\n";
-            }
-            break;
-        }
-        case 3: {
-            std::cout << "Enter professor name: ";
-            std::string name;
-            std::cin.ignore();
-            std::getline(std::cin, name);
-
-            bool found = false;
-            for (size_t i = 0; i < allProfessors.size(); ++i) {
-                if (allProfessors[i]->getName() == name) {
-                    allProfessors[i]->printInfo();
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                std::cout << "\nProfessor not found...\n";
-            }
-            break;
-        }
+        case 1: printAllCourses(allCourses);break;
+        case 2: printStudentByName(allStudents); break;
+        case 3: printProfessorByName(allProfessors); break;
         case 4: createCourse(allProfessors, allCourses); break;
         case 5: addStudentToCourse(allStudents, allCourses); break;
         case 6: addProfessorToCourse(allProfessors, allCourses); break;
@@ -532,9 +535,9 @@ int main() {
         }
     } while (choice != 0);
 
-    for (size_t i = 0; i < allCourses.size(); ++i) delete allCourses[i];
-    for (size_t i = 0; i < allProfessors.size(); ++i) delete allProfessors[i];
-    for (size_t i = 0; i < allStudents.size(); ++i) delete allStudents[i];
+    for (Course* C : allCourses)       delete C;
+    for (Professor* P : allProfessors) delete P;
+    for (Student* S : allStudents)     delete S;
 
     return 0;
 }

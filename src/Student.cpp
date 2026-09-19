@@ -16,6 +16,7 @@ std::ostream& operator<<(std::ostream& stream, const Student& S) {
     for (size_t j = 1; j < S.courses.size(); ++j) {
         stream << ", " << S.courses[j]->getCourseLanguage() << " (" << S.courses[j]->getCourseLevel() << ")";
     }
+    return stream;
 }
 std::istream& operator>>(std::istream& stream, Student& S) {
     std::cout << "Enter student name: ";
