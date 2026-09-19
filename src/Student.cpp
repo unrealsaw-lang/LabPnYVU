@@ -9,7 +9,7 @@ std::ostream& operator<<(std::ostream& stream, const Student& S) {
     stream << "\nEnrolled in " << S.getCourseCount() << " course(s)";
     if (S.courses.empty()) {
         stream << "None\n";
-        return;
+        return stream;
     }
 
     stream << S.courses[0]->getCourseLanguage() << " (" << S.courses[0]->getCourseLevel() << ")";

@@ -1,4 +1,3 @@
-//https://github.com/unrealsaw-lang/LabPnYVU
 #include <iostream>
 #include <string>
 #include <vector>
@@ -193,6 +192,267 @@ void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds
     C2->addProfessor(P2);
 }
 
+void courseOperators(std::vector<Course*>& allCourses) {
+    int op;
+    std::cout << "\n1. Operator ==\n";
+    std::cout << "2. Operator !=\n";
+    std::cout << "3. Operator <\n";
+    std::cout << "4. Operator >\n";
+    std::cout << "5. Operator <=\n";
+    std::cout << "6. Operator >=\n";
+    std::cout << "0. Back\n";
+    std::cout << "Your choice: ";
+    std::cin >> op;
+    if (op == 0) return;
+
+    Course* A = findCourseByTitle(allCourses);
+    if (!A) { std::cout << "Course A not found\n"; return; }
+    Course* B = findCourseByTitle(allCourses);
+    if (!B) { std::cout << "Course B not found\n"; return; }
+
+    std::string nA = A->getCourseLanguage() + " " + A->getCourseLevel();
+    std::string nB = B->getCourseLanguage() + " " + B->getCourseLevel();
+
+    switch (op) {
+    case 1:
+        std::cout << "\n" << nA << " == " << nB << " : "
+            << ((*A == *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 2:
+        std::cout << "\n" << nA << " != " << nB << " : "
+            << ((*A != *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 3:
+        std::cout << "\n" << nA << " < " << nB << " : "
+            << ((*A < *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 4:
+        std::cout << "\n" << nA << " > " << nB << " : "
+            << ((*A > *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 5:
+        std::cout << "\n" << nA << " <= " << nB << " : "
+            << ((*A <= *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 6:
+        std::cout << "\n" << nA << " >= " << nB << " : "
+            << ((*A >= *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    default: std::cout << "Invalid choice\n";
+    }
+}
+void studentOperators(std::vector<Student*>& allStudents) {
+    int op;
+    std::cout << "\n1. Operator ==\n";
+    std::cout << "2. Operator !=\n";
+    std::cout << "3. Operator <\n";
+    std::cout << "4. Operator >\n";
+    std::cout << "5. Operator <=\n";
+    std::cout << "6. Operator >=\n";
+    std::cout << "0. Back\n";
+    std::cout << "Your choice: ";
+    std::cin >> op;
+    if (op == 0) return;
+
+    std::cout << "Enter student A name: ";
+    std::string n1; std::cin.ignore();
+    std::getline(std::cin, n1);
+    std::cout << "Enter student B name: ";
+    std::string n2; std::getline(std::cin, n2);
+
+    Student* A = nullptr; Student* B = nullptr;
+    for (size_t i = 0; i < allStudents.size(); ++i) {
+        if (allStudents[i]->getName() == n1) A = allStudents[i];
+        if (allStudents[i]->getName() == n2) B = allStudents[i];
+    }
+    if (!A || !B) { std::cout << "Student not found...\n"; return; }
+
+    switch (op) {
+    case 1:
+        std::cout << "\nStudent " << A->getName() << " == Student " << B->getName()
+            << " : " << ((*A == *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 2:
+        std::cout << "\nStudent " << A->getName() << " != Student " << B->getName()
+            << " : " << ((*A != *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 3:
+        std::cout << "\nStudent " << A->getName() << " < Student " << B->getName()
+            << " : " << ((*A < *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 4:
+        std::cout << "\nStudent " << A->getName() << " > Student " << B->getName()
+            << " : " << ((*A > *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 5:
+        std::cout << "\nStudent " << A->getName() << " <= Student " << B->getName()
+            << " : " << ((*A <= *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 6:
+        std::cout << "\nStudent " << A->getName() << " >= Student " << B->getName()
+            << " : " << ((*A >= *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    default: std::cout << "Invalid choice\n";
+    }
+}
+void professorOperators(std::vector<Professor*>& allProfs) {
+    int op;
+    std::cout << "\n1. Operator ==\n";
+    std::cout << "2. Operator !=\n";
+    std::cout << "3. Operator <\n";
+    std::cout << "4. Operator >\n";
+    std::cout << "5. Operator <=\n";
+    std::cout << "6. Operator >=\n";
+    std::cout << "0. Back\n";
+    std::cout << "Your choice: ";
+    std::cin >> op;
+    if (op == 0) return;
+
+    std::cout << "Enter professor A name: ";
+    std::string n1; std::cin.ignore();
+    std::getline(std::cin, n1);
+    std::cout << "Enter professor B name: ";
+    std::string n2; std::getline(std::cin, n2);
+
+    Professor* A = nullptr; Professor* B = nullptr;
+    for (size_t i = 0; i < allProfs.size(); ++i) {
+        if (allProfs[i]->getName() == n1) A = allProfs[i];
+        if (allProfs[i]->getName() == n2) B = allProfs[i];
+    }
+    if (!A || !B) { std::cout << "Professor not found...\n"; return; }
+
+    switch (op) {
+    case 1:
+        std::cout << "\nProfessor " << A->getName() << " == Professor " << B->getName()
+            << " : " << ((*A == *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 2:
+        std::cout << "\nProfessor " << A->getName() << " != Professor " << B->getName()
+            << " : " << ((*A != *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 3:
+        std::cout << "\nProfessor " << A->getName() << " < Professor " << B->getName()
+            << " : " << ((*A < *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 4:
+        std::cout << "\nProfessor " << A->getName() << " > Professor " << B->getName()
+            << " : " << ((*A > *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 5:
+        std::cout << "\nProfessor " << A->getName() << " <= Professor " << B->getName()
+            << " : " << ((*A <= *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    case 6:
+        std::cout << "\nProfessor " << A->getName() << " >= Professor " << B->getName()
+            << " : " << ((*A >= *B) ? "TRUE" : "FALSE") << "\n";
+        break;
+    default: std::cout << "Invalid choice\n";
+    }
+}
+void demonstrateOperators(std::vector<Course*>& allCourses, std::vector<Student*>& allStudents, std::vector<Professor*>& allProfs) {
+    int choice;
+    std::cout << "\n1. Course\n";
+    std::cout << "2. Student\n";
+    std::cout << "3. Professor\n";
+    std::cout << "4. Operator <<\n";
+    std::cout << "5. Operator >>\n";
+    std::cout << "6. Operator +=\n";
+    std::cout << "7. Operator -=\n";
+    std::cout << "0. Back\n";
+    std::cout << "Your choice: ";
+    std::cin >> choice;
+
+    switch (choice) {
+    case 1: courseOperators(allCourses); break;
+    case 2: studentOperators(allStudents); break;
+    case 3: professorOperators(allProfs); break;
+
+    case 4: {
+        int t;
+        std::cout << "\n1. Course\n2. Student\n3. Professor\n> ";
+        std::cin >> t;
+        if (t == 1) {
+            Course* C = findCourseByTitle(allCourses);
+            if (C) std::cout << "\n" << *C << "\n";
+        }
+        else if (t == 2) {
+            std::cout << "Enter student name: ";
+            std::string n; std::cin.ignore(); std::getline(std::cin, n);
+            for (size_t i = 0; i < allStudents.size(); ++i)
+                if (allStudents[i]->getName() == n) {
+                    std::cout << "\n" << *allStudents[i] << "\n";
+                    break;
+                }
+        }
+        else if (t == 3) {
+            std::cout << "Enter professor name: ";
+            std::string n; std::cin.ignore(); std::getline(std::cin, n);
+            for (size_t i = 0; i < allProfs.size(); ++i)
+                if (allProfs[i]->getName() == n) {
+                    std::cout << "\n" << *allProfs[i] << "\n";
+                    break;
+                }
+        }
+        break;
+    }
+
+    case 5: {
+        int t;
+        std::cout << "\n1. Course\n2. Student\n> ";
+        std::cin >> t;
+        if (t == 1) {
+            Course* C = findCourseByTitle(allCourses);
+            if (!C) return;
+            std::cin.ignore();
+            std::cin >> *C;
+            if (std::cin) std::cout << "\n" << *C << "\n";
+            else { std::cout << "Fail!\n"; std::cin.clear(); std::cin.ignore(1000, '\n'); }
+        }
+        else if (t == 2) {
+            std::cout << "Enter student name: ";
+            std::string n; std::cin.ignore(); std::getline(std::cin, n);
+            for (size_t i = 0; i < allStudents.size(); ++i)
+                if (allStudents[i]->getName() == n) {
+                    std::cin.ignore();
+                    std::cin >> *allStudents[i];
+                    std::cout << "\n" << *allStudents[i] << "\n";
+                    break;
+                }
+        }
+        break;
+    }
+
+    case 6: {
+        Course* C = findCourseByTitle(allCourses);
+        if (!C) { std::cout << "Course not found\n"; return; }
+        std::cout << "Enter student name: ";
+        std::string n; std::cin.ignore(); std::getline(std::cin, n);
+        Student* S = nullptr;
+        for (size_t i = 0; i < allStudents.size(); ++i)
+            if (allStudents[i]->getName() == n) { S = allStudents[i]; break; }
+        if (!S) { S = new Student(n); allStudents.push_back(S); }
+        *C += S;
+        std::cout << "Students on course: " << C->getCourseCurrCount() << "\n";
+        break;
+    }
+
+    case 7: {
+        Course* C = findCourseByTitle(allCourses);
+        if (!C) { std::cout << "Course not found!\n"; return; }
+        std::cout << "Enter student name: ";
+        std::string n; std::cin.ignore(); std::getline(std::cin, n);
+        Student* S = C->findStudentByName(n);
+        if (!S) { std::cout << "Student not found...\n"; return; }
+        *C -= S;
+        std::cout << "Students on course: " << C->getCourseCurrCount() << "\n";
+        break;
+    }
+
+    case 0: break;
+    default: std::cout << "Invalid choice\n";
+    }
+}
+ 
 int main() {
     std::vector<Professor*> allProfessors;
     std::vector<Student*> allStudents;
@@ -211,6 +471,7 @@ int main() {
         std::cout << "\n7. Remove student from course";
         std::cout << "\n8. Remove professor from course";
         std::cout << "\n9. Delete course";
+        std::cout << "\n10. Show operators";
         std::cout << "\n0. Exit";
         std::cout << "\nYour choice: ";
         if (!(std::cin >> choice)) {
@@ -266,6 +527,7 @@ int main() {
         case 7: kickStudent(allCourses); break;
         case 8: removeProfessor(allCourses); break;
         case 9: deleteCourse(allProfessors, allStudents, allCourses); break;
+        case 10: demonstrateOperators(allCourses, allStudents, allProfessors); break;
         default: break;
         }
     } while (choice != 0);
