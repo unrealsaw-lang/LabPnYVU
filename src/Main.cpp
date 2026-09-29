@@ -6,6 +6,25 @@
 #include "Professor.h"
 #include "Student.h"
 
+Course* findCourseById(const std::vector<Course*>& allCourses, int id) {
+    for (Course* C : allCourses) {
+        if (C->getId() == id) return C;
+    }
+    return nullptr;
+}
+Student* findStudentById(const std::vector<Student*>& allStudents, int id) {
+    for (Student* S : allStudents) {
+        if (S->getId() == id) return S;
+    }
+    return nullptr;
+}
+Professor* findProfessorById(const std::vector<Professor*>& allProfs, int id) {
+    for (Professor* P : allProfs) {
+        if (P->getId() == id) return P;
+    }
+    return nullptr;
+}
+
 Course* findCourseByTitle(const std::vector<Course*>& allCourses) {
     std::string courseTitle;
     std::string courseLevel;
@@ -23,33 +42,17 @@ Course* findCourseByTitle(const std::vector<Course*>& allCourses) {
     }
     return nullptr;
 }
-
 Student* findStudentByName(const std::vector<Student*>& allStudents, const std::string& name) {
     for (Student* S : allStudents) {
         if (S->getName() == name) return S;
     }
     return nullptr;
 }
-
 Professor* findProfessorByName(const std::vector<Professor*>& allProfs, const std::string& name) {
     for (Professor* P : allProfs) {
         if (P->getName() == name) return P;
     }
     return nullptr;
-}
-
-Professor* findOrCreateProfessor(std::vector<Professor*>& allProfs, const std::string& name) {
-    if (Professor* P = findProfessorByName(allProfs, name)) return P;
-    auto newP = new Professor(name);
-    allProfs.push_back(newP);
-    return newP;
-}
-
-Student* findOrCreateStudent(std::vector<Student*>& allStudents, const std::string& name) {
-    if (Student* S = findStudentByName(allStudents, name)) return S;
-    auto newS = new Student(name);
-    allStudents.push_back(newS);
-    return newS;
 }
 
 std::string promptName(const std::string& prompt) {
@@ -58,6 +61,13 @@ std::string promptName(const std::string& prompt) {
     std::cin.ignore();
     std::getline(std::cin, name);
     return name;
+}
+int promptInt(const std::string& prompt) {
+    std::cout << prompt;
+    int value;
+    std::cin >> value;
+    std::cin.ignore();
+    return value;
 }
 
 void showComparisonMenu() {
@@ -70,63 +80,76 @@ void showComparisonMenu() {
     std::cout << "0. Back\n";
     std::cout << "Your choice: ";
 }
-
-void showComparison(int op, const std::string& labelA, const std::string& labelB, bool eq, bool ne, bool lt, bool gt, bool le, bool ge) {
+void showComparison(int op, const std::string& labelA, const std::string& labelB,
+    bool eq, bool ne, bool lt, bool gt, bool le, bool ge) {
     if (op < 1 || op > 6) { std::cout << "Invalid choice\n"; return; }
     static const std::array<const char*, 7> symbols = { "", "==", "!=", "<", ">", "<=", ">=" };
-    bool results[] = { false, eq, ne, lt, gt, le, ge };
+    std::array<bool, 7> results = { false, eq, ne, lt, gt, le, ge };
     std::cout << "\n" << labelA << " " << symbols[op] << " " << labelB
         << " : " << (results[op] ? "TRUE" : "FALSE") << "\n";
 }
 
 void createCourse(std::vector<Professor*>& allProfs, std::vector<Course*>& allCourses) {
-    std::string language;
-    std::string level;
-    std::string profName;
-    std::string schedule;
-    int maxCap = 0;
+    int id = promptInt("Enter course id: ");
 
-    std::cout << "Enter course language: ";
-    std::cin.ignore();
-    std::getline(std::cin, language);
+    std::string language = promptName("Enter course language: ");
+    std::string level = promptName("Enter course level: ");
+    std::string profName = promptName("Enter course professor name: ");
+    std::string schedule = promptName("Enter course schedule: ");
+    int maxCap = promptInt("Enter course max capacity: ");
 
-    std::cout << "Enter course level: ";
-    std::getline(std::cin, level);
+    Professor* prof = findProfessorByName(allProfs, profName);
+    if (prof == nullptr) {
+        int pid = promptInt("Professor not found. Enter professor id: ");
+        prof = new Professor(pid, profName);
+        allProfs.push_back(prof);
+    }
 
-    std::cout << "Enter course professor name: ";
-    std::getline(std::cin, profName);
-
-    std::cout << "Enter course schedule: ";
-    std::getline(std::cin, schedule);
-
-    std::cout << "Enter course max capacity: ";
-    std::cin >> maxCap;
-
-    Professor* prof = findOrCreateProfessor(allProfs, profName);
-    auto C = new Course(language, level, prof, schedule, maxCap);
+    auto C = new Course(id, language, level, prof, schedule, maxCap);
     allCourses.push_back(C);
-
-    std::cout << "\nCourse successfully created!\n";
+    std::cout << "\nCourse(id=" << id << ") created!\n";
 }
-
+void createStudent(std::vector<Student*>& allStudents) {
+    int id = promptInt("Enter student id: ");
+    std::string name = promptName("Enter student name: ");
+    auto S = new Student(id, name);
+    allStudents.push_back(S);
+    std::cout << "\nStudent(id=" << id << ") created!\n";
+}
+void createProfessor(std::vector<Professor*>& allProfs) {
+    int id = promptInt("Enter professor id: ");
+    std::string name = promptName("Enter professor name: ");
+    auto P = new Professor(id, name);
+    allProfs.push_back(P);
+    std::cout << "\nProfessor(id=" << id << ") created!\n";
+}
 void addStudentToCourse(std::vector<Student*>& allStudents, const std::vector<Course*>& allCourses) {
     std::string name = promptName("Enter student name: ");
     Course* C = findCourseByTitle(allCourses);
     if (C == nullptr) { std::cout << "\nCourse not found...\n"; return; }
 
-    Student* S = findOrCreateStudent(allStudents, name);
+    Student* S = findStudentByName(allStudents, name);
+    if (S == nullptr) {
+        int id = promptInt("Student not found. Enter student id: ");
+        S = new Student(id, name);
+        allStudents.push_back(S);
+    }
+
     *C += S;
     std::cout << "\nStudents on course: " << C->getCourseCurrCount() << "\n";
 }
-
 void addProfessorToCourse(std::vector<Professor*>& allProfs, const std::vector<Course*>& allCourses) {
     std::string name = promptName("Enter professor name: ");
     Course* C = findCourseByTitle(allCourses);
     if (C == nullptr) { std::cout << "\nCourse not found...\n"; return; }
 
-    Professor* P = findOrCreateProfessor(allProfs, name);
+    Professor* P = findProfessorByName(allProfs, name);
+    if (P == nullptr) {
+        int id = promptInt("Professor not found. Enter professor id: ");
+        P = new Professor(id, name);
+        allProfs.push_back(P);
+    }
     *C += P;
-    std::cout << "\nProfessor added!\n";
 }
 
 void kickStudent(const std::vector<Course*>& allCourses) {
@@ -142,7 +165,6 @@ void kickStudent(const std::vector<Course*>& allCourses) {
         std::cout << "\nStudent not found in this course...\n";
     }
 }
-
 void removeProfessor(const std::vector<Course*>& allCourses) {
     Course* C = findCourseByTitle(allCourses);
     if (C == nullptr) { std::cout << "\nCourse not found...\n"; return; }
@@ -156,7 +178,6 @@ void removeProfessor(const std::vector<Course*>& allCourses) {
         std::cout << "\nProfessor not found...\n";
     }
 }
-
 void deleteCourse(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds, std::vector<Course*>& allCourses) {
     Course* delC = findCourseByTitle(allCourses);
     if (delC == nullptr) {
@@ -164,8 +185,8 @@ void deleteCourse(std::vector<Professor*>& allProfs, std::vector<Student*>& allS
         return;
     }
 
-    for (Professor* P : allProfs) P->removeCourse(delC);
-    for (Student* S : allStuds) S->removeCourse(delC);
+    for (Professor* P : allProfs) *P -= delC;
+    for (Student* S : allStuds) *S -= delC;
     for (size_t i = 0; i < allCourses.size(); ++i) {
         if (allCourses[i] == delC) {
             delete delC;
@@ -177,86 +198,98 @@ void deleteCourse(std::vector<Professor*>& allProfs, std::vector<Student*>& allS
 }
 
 void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds, std::vector<Course*>& allCourses) {
-    auto P1 = new Professor("Smith");
-    auto P2 = new Professor("Brown");
-    auto P3 = new Professor("Johnson");
-    auto P4 = new Professor("Potapenko");
+    auto P1 = new Professor(1, "Smith");
+    auto P2 = new Professor(2, "Brown");
+    auto P3 = new Professor(3, "Johnson");
+    auto P4 = new Professor(4, "Potapenko");
 
     allProfs.push_back(P1);
     allProfs.push_back(P2);
     allProfs.push_back(P3);
     allProfs.push_back(P4);
 
-    auto C1 = new Course("English", "A1", P1, "Mon 10:00", 30);
-    auto C2 = new Course("Deutsche", "A2", P1, "Tue 12:00", 20);
-    auto C3 = new Course("Russian", "B1", P2, "Wed 10:00", 10);
-    auto C4 = new Course("Deutsche", "C1", P3, "Thu 14:00", 30);
-    auto C5 = new Course("English", "B2", P4, "Fri 16:00", 25);
+    auto C1 = new Course(1, "English", "A1", P1, "Mon 10:00", 30);
+    auto C2 = new Course(2, "Deutsche", "A2", P1, "Tue 12:00", 20);
+    auto C3 = new Course(3, "Russian", "B1", P2, "Wed 10:00", 10);
+    auto C4 = new Course(4, "Deutsche", "C1", P3, "Thu 14:00", 30);
+    auto C5 = new Course(5, "English", "B2", P4, "Fri 16:00", 25);
+    auto C6 = new Course(6, "English", "A1", P4, "Fri 16:05", 15);
 
     allCourses.push_back(C1);
     allCourses.push_back(C2);
     allCourses.push_back(C3);
     allCourses.push_back(C4);
     allCourses.push_back(C5);
+    allCourses.push_back(C6);
 
-    auto S1 = new Student("Steve");
-    auto S2 = new Student("Bob");
+    auto S1 = new Student(2, "Steve");
+    auto S2 = new Student(1, "Bob");
+    auto S3 = new Student(3, "Steve");
     allStuds.push_back(S1);
     allStuds.push_back(S2);
+    allStuds.push_back(S3);
 
     *S1 += C1;
     *S2 += C1;
     *S2 += C2;
+    *S3 += C1;
     *C2 += P2;
 }
 
 void courseOperators(const std::vector<Course*>& allCourses) {
     showComparisonMenu();
-    int op; std::cin >> op;
+    int op;
+    std::cin >> op;
     if (op == 0) return;
 
-    const Course* A = findCourseByTitle(allCourses);
-    if (!A) { std::cout << "Course A not found\n"; return; }
-    const Course* B = findCourseByTitle(allCourses);
-    if (!B) { std::cout << "Course B not found\n"; return; }
+    int id1 = promptInt("Enter course A id: ");
+    int id2 = promptInt("Enter course B id: ");
+
+    const Course* A = findCourseById(allCourses, id1);
+    const Course* B = findCourseById(allCourses, id2);
+    if (!A || !B) { std::cout << "Course not found...\n"; return; }
 
     showComparison(op,
-        A->getCourseLanguage() + " " + A->getCourseLevel(),
-        B->getCourseLanguage() + " " + B->getCourseLevel(),
+        "Course(id=" + std::to_string(A->getId()) + ")",
+        "Course(id=" + std::to_string(B->getId()) + ")",
         *A == *B, *A != *B, *A < *B, *A > *B, *A <= *B, *A >= *B);
 }
 
 void studentOperators(const std::vector<Student*>& allStudents) {
     showComparisonMenu();
-    int op; std::cin >> op;
+    int op;
+    std::cin >> op;
     if (op == 0) return;
 
-    std::string n1 = promptName("Enter student A name: ");
-    std::cout << "Enter student B name: ";
-    std::string n2; std::getline(std::cin, n2);
+    int id1 = promptInt("Enter student A id: ");
+    int id2 = promptInt("Enter student B id: ");
 
-    const Student* A = findStudentByName(allStudents, n1);
-    const Student* B = findStudentByName(allStudents, n2);
+    const Student* A = findStudentById(allStudents, id1);
+    const Student* B = findStudentById(allStudents, id2);
     if (!A || !B) { std::cout << "Student not found...\n"; return; }
 
-    showComparison(op, "Student " + A->getName(), "Student " + B->getName(),
+    showComparison(op,
+        "Student(id=" + std::to_string(A->getId()) + ")",
+        "Student(id=" + std::to_string(B->getId()) + ")",
         *A == *B, *A != *B, *A < *B, *A > *B, *A <= *B, *A >= *B);
 }
 
 void professorOperators(const std::vector<Professor*>& allProfs) {
     showComparisonMenu();
-    int op; std::cin >> op;
+    int op;
+    std::cin >> op;
     if (op == 0) return;
 
-    std::string n1 = promptName("Enter professor A name: ");
-    std::cout << "Enter professor B name: ";
-    std::string n2; std::getline(std::cin, n2);
+    int id1 = promptInt("Enter professor A id: ");
+    int id2 = promptInt("Enter professor B id: ");
 
-    const Professor* A = findProfessorByName(allProfs, n1);
-    const Professor* B = findProfessorByName(allProfs, n2);
+    const Professor* A = findProfessorById(allProfs, id1);
+    const Professor* B = findProfessorById(allProfs, id2);
     if (!A || !B) { std::cout << "Professor not found...\n"; return; }
 
-    showComparison(op, "Professor " + A->getName(), "Professor " + B->getName(),
+    showComparison(op,
+        "Professor(id=" + std::to_string(A->getId()) + ")",
+        "Professor(id=" + std::to_string(B->getId()) + ")",
         *A == *B, *A != *B, *A < *B, *A > *B, *A <= *B, *A >= *B);
 }
 
@@ -280,21 +313,26 @@ void demonstrateOperators(std::vector<Course*>& allCourses, std::vector<Student*
 
     case 4: {
         int t;
-        std::cout << "\n1. Course\n2. Student\n3. Professor\n> ";
-        std::cin >> t; std::cin.ignore();
+        std::cout << "\n1. Course\n2. Student\n3. Professor\n";
+        std::cin >> t;
+        std::cin.ignore();
         if (t == 1) {
-            Course* C = findCourseByTitle(allCourses);
-            if (C) std::cout << "\n" << *C << "\n";
+            int id = promptInt("\nEnter course id: ");
+            Course* C = findCourseById(allCourses, id);
+            if (C) std::cout << "Found: " << *C << "\n";
+            else std::cout << "Course not found...\n";
         }
         else if (t == 2) {
-            std::string n = promptName("Enter student name: ");
-            if (Student* S = findStudentByName(allStudents, n))
-                std::cout << "\n" << *S << "\n";
+            int id = promptInt("\nEnter student id: ");
+            if (Student* S = findStudentById(allStudents, id))
+                std::cout << "Found: " << *S << "\n";
+            else std::cout << "Student not found...\n";
         }
         else if (t == 3) {
-            std::string n = promptName("Enter professor name: ");
-            if (Professor* P = findProfessorByName(allProfs, n))
-                std::cout << "\n" << *P << "\n";
+            int id = promptInt("\nEnter professor id: ");
+            if (Professor* P = findProfessorById(allProfs, id))
+                std::cout << "Found: " << *P << "\n";
+            else std::cout << "Professor not found...\n";
         }
         break;
     }
@@ -305,31 +343,27 @@ void demonstrateOperators(std::vector<Course*>& allCourses, std::vector<Student*
         std::cin >> t;
         std::cin.ignore();
         if (t == 1) {
-            Course* C = findCourseByTitle(allCourses);
+            int id = promptInt("\nEnter course id: ");
+            Course* C = findCourseById(allCourses,id);
             if (!C) return;
+            else std::cout << "Found: " << *C << "\n";
             std::cin >> *C;
             if (std::cin) std::cout << "\n" << *C << "\n";
-            else { std::cout << "Fail!\n"; std::cin.clear(); std::cin.ignore(1000, '\n'); }
+            else { std::cout << "Fail\n"; std::cin.clear(); std::cin.ignore(1000, '\n'); }
         }
         else if (t == 2) {
-            std::string n;
-            std::cout << "Enter student name: ";
-            std::getline(std::cin, n);
-
-            Student* S = findStudentByName(allStudents, n);
+            int id = promptInt("\nEnter student id: ");
+            Student* S = findStudentById(allStudents, id);
             if (!S) { std::cout << "Student not found...\n"; return; }
-
+            else std::cout << "Found: " << *S << "\n";
             std::cin >> *S;
             std::cout << "\n" << *S << "\n";
         }
         else if (t == 3) {
-            std::string n;
-            std::cout << "Enter professor name: ";
-            std::getline(std::cin, n);
-
-            Professor* P = findProfessorByName(allProfs, n);
+            int id = promptInt("\nEnter professor id: ");
+            Professor* P = findProfessorById(allProfs, id);
             if (!P) { std::cout << "Professor not found...\n"; return; }
-
+            else std::cout << "Found: " << *P << "\n";
             std::cin >> *P;
             std::cout << "\n" << *P << "\n";
         }
@@ -337,20 +371,37 @@ void demonstrateOperators(std::vector<Course*>& allCourses, std::vector<Student*
     }
 
     case 6: {
-        Course* C = findCourseByTitle(allCourses);
+        int id = promptInt("\nEnter course id: ");
+        Course* C = findCourseById(allCourses,id);
         if (!C) { std::cout << "Course not found\n"; return; }
-        std::string n = promptName("Enter student name: ");
-        *C += findOrCreateStudent(allStudents, n);
+        else std::cout << "Found: " << *C << "\n";
+        int studid = promptInt("\nEnter student id: ");
+        Student* S = findStudentById(allStudents, studid);
+        if (!S) {
+            std::cout << "\nStudent not found  1 - create new  2 - exit\n";
+            int choice;
+            std::cin >> choice;
+            std::cin.ignore();
+            if (choice != 1) return;
+            std::string n = promptName("Enter student nme: ");
+            S = new Student(studid, n);
+            allStudents.push_back(S);
+        }
+        else std::cout << "Found: " << *S << "\n";
+        *C += S;
         std::cout << "Students on course: " << C->getCourseCurrCount() << "\n";
         break;
     }
 
     case 7: {
-        Course* C = findCourseByTitle(allCourses);
-        if (!C) { std::cout << "Course not found!\n"; return; }
-        std::string n = promptName("Enter student name: ");
-        Student* S = C->findStudentByName(n);
+        int id = promptInt("\nEnter course id: ");
+        Course* C = findCourseById(allCourses,id);
+        if (!C) { std::cout << "Course not found\n"; return; }
+        else std::cout << "Found: " << *C << "\n";
+        int studid = promptInt("\nEnter student id: ");
+        Student* S = findStudentById(allStudents, studid);
         if (!S) { std::cout << "Student not found...\n"; return; }
+        else std::cout << "Found: " << *S << "\n";
         *C -= S;
         std::cout << "Students on course: " << C->getCourseCurrCount() << "\n";
         break;
@@ -362,19 +413,31 @@ void demonstrateOperators(std::vector<Course*>& allCourses, std::vector<Student*
 }
 
 void printAllCourses(const std::vector<Course*>& allCourses) {
+    if (allCourses.empty()) { std::cout << "\nNo courses\n"; return; }
     for (Course* C : allCourses) C->printCourse();
 }
-
-void printStudentByName(const std::vector<Student*>& allStudents) {
-    std::string name = promptName("Enter student name: ");
-    if (Student* S = findStudentByName(allStudents, name)) S->printInfo();
+void printAllStudents(const std::vector<Student*>& allStudents) {
+    if (allStudents.empty()) { std::cout << "\nNo students\n"; return; }
+    for (Student* S : allStudents) S->printInfo();
+}
+void printAllProfessors(const std::vector<Professor*>& allProfs) {
+    if (allProfs.empty()) { std::cout << "\nNo professors\n"; return; }
+    for (Professor* P : allProfs) P->printInfo();
+}
+void printStudentById(const std::vector<Student*>& allStudents) {
+    int id = promptInt("Enter student id: ");
+    if (Student* S = findStudentById(allStudents, id)) S->printInfo();
     else std::cout << "\nStudent not found...\n";
 }
-
-void printProfessorByName(const std::vector<Professor*>& allProfs) {
-    std::string name = promptName("Enter professor name: ");
-    if (Professor* P = findProfessorByName(allProfs, name)) P->printInfo();
+void printProfessorById(const std::vector<Professor*>& allProfs) {
+    int id = promptInt("Enter professor id: ");
+    if (Professor* P = findProfessorById(allProfs, id)) P->printInfo();
     else std::cout << "\nProfessor not found...\n";
+}
+void printCourseById(const std::vector<Course*>& allCourses) {
+    int id = promptInt("Enter course id: ");
+    if (Course* C = findCourseById(allCourses, id)) C->printCourse();
+    else std::cout << "\nCourse not found...\n";
 }
 
 int main() {
@@ -386,33 +449,41 @@ int main() {
 
     int choice;
     do {
-        std::cout << "\n1. Print all courses";
-        std::cout << "\n2. Print student info";
-        std::cout << "\n3. Print professor info";
-        std::cout << "\n4. Add course";
-        std::cout << "\n5. Add student to course";
-        std::cout << "\n6. Add professor to course";
-        std::cout << "\n7. Remove student from course";
-        std::cout << "\n8. Remove professor from course";
-        std::cout << "\n9. Delete course";
-        std::cout << "\n10. Show operators";
-        std::cout << "\n0. Exit";
+        std::cout << "\n1.  Print all courses";
+        std::cout << "\n2.  Print all students";
+        std::cout << "\n3.  Print all professors";
+        std::cout << "\n4.  Print student info";
+        std::cout << "\n5.  Print professor info";
+        std::cout << "\n6.  Create course";
+        std::cout << "\n7.  Create student";
+        std::cout << "\n8.  Create professor";
+        std::cout << "\n9.  Add student to course";
+        std::cout << "\n10. Add professor to course";
+        std::cout << "\n11. Remove student from course";
+        std::cout << "\n12. Remove professor from course";
+        std::cout << "\n13. Delete course";
+        std::cout << "\n14. Show operators";
+        std::cout << "\n0.  Exit";
         std::cout << "\nYour choice: ";
         if (!(std::cin >> choice)) {
             break;
         }
 
         switch (choice) {
-        case 1: printAllCourses(allCourses); break;
-        case 2: printStudentByName(allStudents); break;
-        case 3: printProfessorByName(allProfessors); break;
-        case 4: createCourse(allProfessors, allCourses); break;
-        case 5: addStudentToCourse(allStudents, allCourses); break;
-        case 6: addProfessorToCourse(allProfessors, allCourses); break;
-        case 7: kickStudent(allCourses); break;
-        case 8: removeProfessor(allCourses); break;
-        case 9: deleteCourse(allProfessors, allStudents, allCourses); break;
-        case 10: demonstrateOperators(allCourses, allStudents, allProfessors); break;
+        case 1:  printAllCourses(allCourses);              break;
+        case 2:  printAllStudents(allStudents);            break;
+        case 3:  printAllProfessors(allProfessors);        break;
+        case 4:  printStudentById(allStudents);          break;
+        case 5:  printProfessorById(allProfessors);      break;
+        case 6:  createCourse(allProfessors, allCourses);  break;
+        case 7:  createStudent(allStudents);               break;
+        case 8:  createProfessor(allProfessors);           break;
+        case 9:  addStudentToCourse(allStudents, allCourses); break;
+        case 10: addProfessorToCourse(allProfessors, allCourses); break;
+        case 11: kickStudent(allCourses);                  break;
+        case 12: removeProfessor(allCourses);              break;
+        case 13: deleteCourse(allProfessors, allStudents, allCourses); break;
+        case 14: demonstrateOperators(allCourses, allStudents, allProfessors); break;
         default: break;
         }
     } while (choice != 0);
