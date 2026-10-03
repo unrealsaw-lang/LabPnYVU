@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\Course.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Professor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Student.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Person.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Admin.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Course.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Professor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Student.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Person.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Admin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{0aa52f20-e9da-444b-b9bf-3f492cc62c34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{c8afc935-0bae-48e4-9c67-5e66b15402db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

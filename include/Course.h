@@ -5,10 +5,12 @@
 
 class Professor;
 class Student;
+class Admin;
 
 class Course {
     friend class Student;
     friend class Professor;
+    friend class Admin;
 private:
     int id;
     std::vector<Student*> studs;

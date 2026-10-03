@@ -5,6 +5,7 @@
 #include "Course.h"
 #include "Professor.h"
 #include "Student.h"
+#include "Admin.h"
 
 Course* findCourseById(const std::vector<Course*>& allCourses, int id) {
     for (Course* C : allCourses) {

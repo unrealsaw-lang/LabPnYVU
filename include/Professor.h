@@ -2,38 +2,30 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "Person.h"
 
 class Course;
 
-class Professor {
+class Professor : public Person
+{
+
     friend class Course;
-private:
-    int id;
-    std::vector<Course*> courses;
-    std::string name;
+    std::vector<Course*> profCourses;
 
 public:
-    Professor(int id, const std::string& N);
-    ~Professor() = default;
+    Professor(int id, const std::string& name);
+    ~Professor() override = default;
 
-    int getId() const { return id; }
-    std::string getName() const { return name; }
-    int getCourseCount() const { return (int)courses.size(); }
 
-    void setName(const std::string& N) { name = N; }
+    int getCourseCount() const { return (int)profCourses.size(); }
 
-    friend std::ostream& operator<<(std::ostream& stream, const Professor& P);
-    friend std::istream& operator>>(std::istream& stream, Professor& P);
-
-    friend bool operator==(const Professor& a, const Professor& b) { return a.id == b.id; }
-    friend bool operator!=(const Professor& a, const Professor& b) { return !(a == b); }
     friend bool operator<(const Professor& a, const Professor& b) { return a.getCourseCount() < b.getCourseCount(); }
     friend bool operator>(const Professor& a, const Professor& b) { return b < a; }
     friend bool operator<=(const Professor& a, const Professor& b) { return !(b < a); }
     friend bool operator>=(const Professor& a, const Professor& b) { return !(a < b); }
 
-    Professor& operator+=(Course* c);
-    Professor& operator-=(Course* c);
+    Professor& operator+=(Course* C);
+    Professor& operator-=(Course* C);
 
-    void printInfo() const;
+    void printInfo() const override;
 };
