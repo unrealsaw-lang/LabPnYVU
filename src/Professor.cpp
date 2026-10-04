@@ -15,8 +15,11 @@ Professor& Professor::operator-=(Course* C) {
     return *this;
 }
 
+std::string Professor::getType() const { return "Professor"; }
+int Professor::getWorkload() const { return (int)profCourses.size() * 4; }
+
 void Professor::printInfo() const {
-    std::cout << "\n--------------------------------------\n";
+    std::cout << "--------------------------------------\n";
     std::cout << "Professor(id=" << getId() << "): " << getName() << "\n";
     std::cout << "Leads courses (" << getCourseCount() << "): ";
     if (profCourses.empty()) {

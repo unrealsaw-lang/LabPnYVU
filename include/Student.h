@@ -24,5 +24,7 @@ public:
     Student& operator+=(Course* C);
     Student& operator-=(Course* C);
 
+    std::string getType() const override;
+    int getWorkload() const override;
     void printInfo() const override;
 };

@@ -19,6 +19,9 @@
     <ClCompile Include="src\Admin.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Menu.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Course.h">
@@ -34,6 +37,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Admin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

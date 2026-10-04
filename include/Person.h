@@ -23,7 +23,7 @@ public:
     friend bool operator==(const Person& a, const Person& b) { return a.id == b.id; }
     friend bool operator!=(const Person& a, const Person& b) { return !(a == b); }
 
-
-    virtual void printInfo() const;
-
+    virtual std::string getType() const = 0;
+    virtual int getWorkload() const = 0;
+    virtual void printInfo() const = 0;
 };

@@ -15,5 +15,3 @@ std::istream& operator>>(std::istream& stream, Person& P) {
     std::getline(stream, P.name);
     return stream;
 }
-
-void Person::printInfo() const { std::cout << "Person(id=" << id << ") " << name << "\n"; }

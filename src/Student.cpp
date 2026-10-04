@@ -15,8 +15,16 @@ Student& Student::operator-=(Course* C) {
     return *this;
 }
 
+std::string Student::getType() const {
+    return "Student";
+}
+
+int Student::getWorkload() const {
+    return (int)studCourses.size() * 2;
+}
+
 void Student::printInfo() const {
-    std::cout << "\n--------------------------------------\n";
+    std::cout << "--------------------------------------\n";
     std::cout << "Student(id=" << getId() << "): " << getName() << "\n";
     std::cout << "Enrolled in courses (" << getCourseCount() << "): ";
     if (studCourses.empty()) {
