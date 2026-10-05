@@ -20,10 +20,16 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const Person& S);
     friend std::istream& operator>>(std::istream& stream, Person& S);
 
-    friend bool operator==(const Person& a, const Person& b) { return a.id == b.id; }
-    friend bool operator!=(const Person& a, const Person& b) { return !(a == b); }
-
     virtual std::string getType() const = 0;
+    virtual int getCount() const = 0;
     virtual int getWorkload() const = 0;
     virtual void printInfo() const = 0;
+
+
+    friend bool operator==(const Person& A, const Person& B) { return A.id==B.id; }
+    friend bool operator!=(const Person& A, const Person& B) { return !(A == B); }
+    friend bool operator<(const Person& A, const Person& B) { return A.getCount() < B.getCount(); }
+    friend bool operator>(const Person& A, const Person& B) { return B < A; }
+    friend bool operator<=(const Person& A, const Person& B) { return !(B < A); }
+    friend bool operator>=(const Person& A, const Person& B) { return !(A < B); }
 };

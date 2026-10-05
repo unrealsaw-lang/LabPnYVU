@@ -38,7 +38,6 @@ Admin& Admin::operator-=(Course* C) {
     return *this;
 }
 
-int Admin::getManagedCount() const { return (int)adminCourses.size(); }
 std::string Admin::getResponsibility() const { return responsibility; }
 std::string Admin::getType() const { return "Admin"; }
 int Admin::getWorkload() const { return (int)adminCourses.size(); }
@@ -47,7 +46,7 @@ void Admin::printInfo() const {
     std::cout << "--------------------------------------\n";
     std::cout << "Admin(id=" << getId() << "): " << getName()
         << " [Responsibility: " << responsibility << "]\n";
-    std::cout << "Manages courses (" << getManagedCount() << "): ";
+    std::cout << "Manages courses (" << getCount() << "): ";
     if (adminCourses.empty()) {
         std::cout << "None\n";
         return;

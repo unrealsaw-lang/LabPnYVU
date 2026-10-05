@@ -21,7 +21,7 @@ int Professor::getWorkload() const { return (int)profCourses.size() * 4; }
 void Professor::printInfo() const {
     std::cout << "--------------------------------------\n";
     std::cout << "Professor(id=" << getId() << "): " << getName() << "\n";
-    std::cout << "Leads courses (" << getCourseCount() << "): ";
+    std::cout << "Leads courses (" << getCount() << "): ";
     if (profCourses.empty()) {
         std::cout << "None";
     }

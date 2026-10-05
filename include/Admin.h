@@ -13,18 +13,13 @@ public:
     Admin(int id, const std::string& name, const std::string& dept);
     ~Admin() override = default;
 
-    int getManagedCount() const;
     std::string getResponsibility() const;
-
-    friend bool operator<(const Admin& a, const Admin& b) { return a.getManagedCount() < b.getManagedCount(); }
-    friend bool operator>(const Admin& a, const Admin& b) { return b < a; }
-    friend bool operator<=(const Admin& a, const Admin& b) { return !(b < a); }
-    friend bool operator>=(const Admin& a, const Admin& b) { return !(a < b); }
 
     Admin& operator+=(Course* C);
     Admin& operator-=(Course* C);
 
     std::string getType() const override;
+    int getCount() const override { return (int)adminCourses.size(); };
     int getWorkload() const override;
     void printInfo() const override;
 
