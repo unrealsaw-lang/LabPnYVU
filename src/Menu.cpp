@@ -216,20 +216,17 @@ void operatorsMenu(std::vector<Course*>& allCourses,
 static void showAllAsPerson(const std::vector<Student*>& allStudents,
     const std::vector<Professor*>& allProfs,
     const std::vector<Admin*>& allAdmins) {
-    std::cout << "\n============================================\n";
-    std::cout << "  POLYMORPHISM VIA BASE CLASS Person*\n";
-    std::cout << "============================================\n";
 
     std::vector<Person*> everyone;
     for (Student* s : allStudents) everyone.push_back(s);
     for (Professor* p : allProfs)  everyone.push_back(p);
     for (Admin* a : allAdmins)     everyone.push_back(a);
 
-    std::cout << "Collection size: " << everyone.size() << " people\n";
+    std::cout << "\nCollection size: " << everyone.size() << " people\n";
 
     int i = 1;
     for (Person* p : everyone) {
-        std::cout << "\n--- [" << i++ << "] " << p->getType()
+        std::cout << "\n[" << i++ << "] " << p->getType()
             << " (id=" << p->getId() << ", name=" << p->getName() << ") ---\n";
         p->printInfo();
     }
@@ -238,8 +235,7 @@ static void showAllAsPerson(const std::vector<Student*>& allStudents,
 static void showInheritedMethods(const std::vector<Student*>& allStudents,
     const std::vector<Professor*>& allProfs,
     const std::vector<Admin*>& allAdmins) {
-    std::cout << "\n=== INHERITED METHODS ===\n";
-    std::cout << "getId(), getName(), operator== are defined ONCE in Person\n\n";
+    std::cout << "\ngetId(), getName(), operator== are defined ONCE in Person\n\n";
 
     if (!allStudents.empty())
         std::cout << "Student   : id=" << allStudents[0]->getId()
@@ -262,9 +258,6 @@ static void showInheritedMethods(const std::vector<Student*>& allStudents,
 static void showVirtualMethods(const std::vector<Student*>& allStudents,
     const std::vector<Professor*>& allProfs,
     const std::vector<Admin*>& allAdmins) {
-    std::cout << "\n============================================\n";
-    std::cout << "  THREE VIRTUAL METHODS via Person*\n";
-    std::cout << "============================================\n";
 
     std::vector<Person*> everyone;
     for (Student* s : allStudents) everyone.push_back(s);
@@ -276,14 +269,13 @@ static void showVirtualMethods(const std::vector<Student*>& allStudents,
     for (Person* p : everyone) {
         int w = p->getWorkload();
         totalWorkload += w;
-        std::cout << "[" << i++ << "] getType()     -> " << p->getType() << "\n";
-        std::cout << "      getWorkload() -> " << w << " h/week\n";
+        std::cout << "[" << i++ << "] getType()     - " << p->getType() << "\n";
+        std::cout << "    getWorkload() -> " << w << " h/week\n";
     }
 
-    std::cout << "\n--------------------------------------------\n";
+    std::cout << "--------------------------------------------\n";
     std::cout << "Total weekly workload: " << totalWorkload << " hours\n";
     std::cout << "Each getWorkload() returned a DIFFERENT value.\n";
-    std::cout << "============================================\n";
 }
 
 static void adminLogicMenu(std::vector<Admin*>& allAdmins, std::vector<Course*>& allCourses) {
@@ -320,8 +312,7 @@ void inheritanceMenu(std::vector<Course*>& allCourses,
     std::vector<Professor*>& allProfs,
     std::vector<Admin*>& allAdmins) {
     while (true) {
-        std::cout << "\n===== INHERITANCE =====\n";
-        std::cout << "1. Show polymorphism (Person*)\n";
+        std::cout << "\n1. Show polymorphism (Person*)\n";
         std::cout << "2. Show inherited methods\n";
         std::cout << "3. Show virtual methods (getType/getWorkload)\n";
         std::cout << "4. Admin logic\n";
