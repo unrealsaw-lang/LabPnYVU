@@ -2,11 +2,17 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "Course.h"
 
-class Person {
-private:
+class Person 
+{
+
+    friend class Course;
+
+protected:
     int id;
     std::string name;
+    std::vector<Course*> courses;
 
 public:
     Person(int id, const std::string& N);
@@ -21,15 +27,18 @@ public:
     friend std::istream& operator>>(std::istream& stream, Person& S);
 
     virtual std::string getType() const = 0;
-    virtual int getCount() const = 0;
+    virtual int getCount() const { return (int)courses.size(); };
     virtual int getWorkload() const = 0;
     virtual void printInfo() const = 0;
 
 
-    friend bool operator==(const Person& A, const Person& B) { return A.id==B.id; }
-    friend bool operator!=(const Person& A, const Person& B) { return !(A == B); }
-    friend bool operator<(const Person& A, const Person& B) { return A.getCount() < B.getCount(); }
-    friend bool operator>(const Person& A, const Person& B) { return B < A; }
-    friend bool operator<=(const Person& A, const Person& B) { return !(B < A); }
-    friend bool operator>=(const Person& A, const Person& B) { return !(A < B); }
+    friend std::istream& operator>>(std::istream& stream, Person& P);
+    friend std::istream& operator<<(std::istream& stream, Person& P);
+
+    friend bool operator==(const Person& P1, const Person& P2) { return P1.id== P2.id; }
+    friend bool operator!=(const Person& P1, const Person& P2) { return !(P1 == P2); }
+    friend bool operator<(const Person& P1, const Person& P2) { return P1.getCount() < P2.getCount(); }
+    friend bool operator>(const Person& P1, const Person& P2) { return P2 < P1; }
+    friend bool operator<=(const Person& P1, const Person& P2) { return !(P2 < P1); }
+    friend bool operator>=(const Person& P1, const Person& P2) { return !(P1 < P2); }
 };

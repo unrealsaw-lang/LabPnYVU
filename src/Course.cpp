@@ -68,7 +68,7 @@ Course& Course::operator+=(Student* s) {
         if (existing == s) { std::cout << "Student already enrolled\n"; return *this; }
     }
     studs.push_back(s);
-    s->studCourses.push_back(this);
+    s->courses.push_back(this);
     return *this;
 }
 Course& Course::operator-=(Student* s) {
@@ -76,9 +76,9 @@ Course& Course::operator-=(Student* s) {
     for (size_t i = 0; i < studs.size(); ++i) {
         if (studs[i] == s) {
             studs.erase(studs.begin() + i);
-            for (size_t j = 0; j < s->studCourses.size(); ++j) {
-                if (s->studCourses[j] == this) {
-                    s->studCourses.erase(s->studCourses.begin() + j);
+            for (size_t j = 0; j < s->courses.size(); ++j) {
+                if (s->courses[j] == this) {
+                    s->courses.erase(s->courses.begin() + j);
                     break;
                 }
             }
@@ -96,7 +96,7 @@ Course& Course::operator+=(Professor* p) {
         if (existing == p) { std::cout << "Professor already assigned\n"; return *this; }
     }
     profs.push_back(p);
-    p->profCourses.push_back(this);
+    p->courses.push_back(this);
     return *this;
 }
 Course& Course::operator-=(Professor* p) {
@@ -104,9 +104,9 @@ Course& Course::operator-=(Professor* p) {
     for (size_t i = 0; i < profs.size(); ++i) {
         if (profs[i] == p) {
             profs.erase(profs.begin() + i);
-            for (size_t j = 0; j < p->profCourses.size(); ++j) {
-                if (p->profCourses[j] == this) {
-                    p->profCourses.erase(p->profCourses.begin() + j);
+            for (size_t j = 0; j < p->courses.size(); ++j) {
+                if (p->courses[j] == this) {
+                    p->courses.erase(p->courses.begin() + j);
                     break;
                 }
             }
@@ -120,7 +120,7 @@ Course& Course::operator-=(Professor* p) {
 
 void Course::printCourse() const {
     std::cout << "--------------------------------------\n";
-    std::cout << "Course(id=" << id << "): " << language << " (" << level << ")\n";
+    std::cout << "Course (id = " << id << "): " << language << " (" << level << ")\n";
     std::cout << "Professor(s): ";
     if (profs.empty()) {
         std::cout << "None";

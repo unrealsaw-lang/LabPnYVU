@@ -9,7 +9,6 @@ std::ostream& operator<<(std::ostream& stream, const Person& P) {
     stream << "Person(id=" << P.id << ") " << P.name;
     return stream;
 }
-
 std::istream& operator>>(std::istream& stream, Person& P) {
     std::cout << "Enter  name: ";
     std::getline(stream, P.name);

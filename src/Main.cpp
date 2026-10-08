@@ -8,10 +8,10 @@
 #include "Menu.h"
 
 void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds, std::vector<Course*>& allCourses, std::vector<Admin*>& allAdmins) {
-    auto P1 = new Professor(1, "Smith");
-    auto P2 = new Professor(2, "Brown");
-    auto P3 = new Professor(3, "Johnson");
-    auto P4 = new Professor(4, "Potapenko");
+    auto P1 = new Professor(1, "Smith", "Foreign");
+    auto P2 = new Professor(2, "Brown", "Native");
+    auto P3 = new Professor(3, "Johnson", "Foreign");
+    auto P4 = new Professor(4, "Potapenko", "Foreign");
     allProfs.push_back(P1);
     allProfs.push_back(P2);
     allProfs.push_back(P3);
@@ -30,10 +30,10 @@ void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds
     allCourses.push_back(C5);
     allCourses.push_back(C6);
 
-    auto S1 = new Student(1, "Steve");
-    auto S2 = new Student(2, "Bob");
-    auto S3 = new Student(3, "Alice");
-    auto S4 = new Student(4, "Steve");
+    auto S1 = new Student(1, "Steve", "5503038");
+    auto S2 = new Student(2, "Bob", "7510082");
+    auto S3 = new Student(3, "Alice", "5292131");
+    auto S4 = new Student(4, "Steve", "4523072");
     allStuds.push_back(S1);
     allStuds.push_back(S2);
     allStuds.push_back(S3);
@@ -64,20 +64,18 @@ int main() {
     initData(allProfessors, allStudents, allCourses, allAdmins);
 
     while (true) {
-        std::cout << "\n1. Operators\n";
-        std::cout << "2. Inheritance\n";
-        std::cout << "3. Print\n";
-        std::cout << "4. Create\n";
-        std::cout << "5. Delete\n";
+        std::cout << "\n1. Inheritance\n";
+        std::cout << "2. Print\n";
+        std::cout << "3. Create\n";
+        std::cout << "4. Delete\n";
         std::cout << "0. Exit\n";
         int choice = promptInt("Your choice: ");
         if (choice == 0) break;
 
-        if (choice == 1) operatorsMenu(allCourses, allStudents, allProfessors, allAdmins);
-        else if (choice == 2) inheritanceMenu(allCourses, allStudents, allProfessors, allAdmins);
-        else if (choice == 3) printMenu(allCourses, allStudents, allProfessors, allAdmins);
-        else if (choice == 4) createMenu(allCourses, allStudents, allProfessors, allAdmins);
-        else if (choice == 5) deleteMenu(allCourses, allStudents, allProfessors, allAdmins);
+        else if (choice == 1) inheritanceMenu(allCourses, allStudents, allProfessors, allAdmins);
+        else if (choice == 2) printMenu(allCourses, allStudents, allProfessors, allAdmins);
+        else if (choice == 3) createMenu(allCourses, allStudents, allProfessors, allAdmins);
+        else if (choice == 4) deleteMenu(allCourses, allStudents, allProfessors, allAdmins);
         else std::cout << "Invalid\n";
     }
 
