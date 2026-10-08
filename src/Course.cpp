@@ -58,26 +58,32 @@ std::istream& operator>>(std::istream& stream, Course& course) {
     return stream;
 }
 
-Course& Course::operator+=(Student* s) {
-    if (s == nullptr) { std::cout << "Null\n"; return *this; }
+Course& Course::operator+=(Student* S) {
+    if (S == nullptr) { std::cout << "Null\n"; return *this; }
     if (studs.size() >= maxCount) {
         std::cout << "Course is full (max " << maxCount << ")!\n";
         return *this;
     }
     for (Student* existing : studs) {
-        if (existing == s) { std::cout << "Student already enrolled\n"; return *this; }
+        if (existing == S) { std::cout << "Student already enrolled\n"; return *this; }
     }
-    studs.push_back(s);
+    studs.push_back(S); 
+    bool found = false;
+    for (Course* C : S->courses) {
+        if (C == this) { found = true; break; }
+    }
+    if (!found) S->courses.push_back(this);
+
     return *this;
 }
-Course& Course::operator-=(Student* s) {
-    if (s == nullptr) { std::cout << "Null\n"; return *this; }
+Course& Course::operator-=(Student* S) {
+    if (S == nullptr) { std::cout << "Null\n"; return *this; }
     for (size_t i = 0; i < studs.size(); ++i) {
-        if (studs[i] == s) {
+        if (studs[i] == S) {
             studs.erase(studs.begin() + i);
-            for (size_t j = 0; j < s->courses.size(); ++j) {
-                if (s->courses[j] == this) {
-                    s->courses.erase(s->courses.begin() + j);
+            for (size_t j = 0; j < S->courses.size(); ++j) {
+                if (S->courses[j] == this) {
+                    S->courses.erase(S->courses.begin() + j);
                     break;
                 }
             }
@@ -89,22 +95,28 @@ Course& Course::operator-=(Student* s) {
     return *this;
 }
 
-Course& Course::operator+=(Professor* p) {
-    if (p == nullptr) { std::cout << "Null\n"; return *this; }
+Course& Course::operator+=(Professor* P) {
+    if (P == nullptr) { std::cout << "Null\n"; return *this; }
     for (Professor* existing : profs) {
-        if (existing == p) { std::cout << "Professor already assigned\n"; return *this; }
+        if (existing == P) { std::cout << "Professor already assigned\n"; return *this; }
     }
-    profs.push_back(p);
+    profs.push_back(P);
+    bool found = false;
+    for (Course* C : P->courses) {
+        if (C == this) { found = true; break; }
+    }
+    if (!found) P->courses.push_back(this);
+
     return *this;
 }
-Course& Course::operator-=(Professor* p) {
-    if (p == nullptr) { std::cout << "Null\n"; return *this; }
+Course& Course::operator-=(Professor* P) {
+    if (P == nullptr) { std::cout << "Null\n"; return *this; }
     for (size_t i = 0; i < profs.size(); ++i) {
-        if (profs[i] == p) {
+        if (profs[i] == P) {
             profs.erase(profs.begin() + i);
-            for (size_t j = 0; j < p->courses.size(); ++j) {
-                if (p->courses[j] == this) {
-                    p->courses.erase(p->courses.begin() + j);
+            for (size_t j = 0; j < P->courses.size(); ++j) {
+                if (P->courses[j] == this) {
+                    P->courses.erase(P->courses.begin() + j);
                     break;
                 }
             }
