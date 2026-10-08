@@ -41,4 +41,7 @@ public:
     friend bool operator>(const Person& P1, const Person& P2) { return P2 < P1; }
     friend bool operator<=(const Person& P1, const Person& P2) { return !(P2 < P1); }
     friend bool operator>=(const Person& P1, const Person& P2) { return !(P1 < P2); }
+
+    Person& operator+=(Course* C);
+    Person& operator-=(Course* C); 
 };

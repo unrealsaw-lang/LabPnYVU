@@ -18,23 +18,11 @@ std::istream& operator>>(std::istream& stream, Admin& A) {
 }
 
 Admin& Admin::operator+=(Course* C) {
-    if (C == nullptr) { std::cout << "Null\n"; return *this; }
-    for (Course* existing : courses) {
-        if (existing == C) { std::cout << "Already managed\n"; return *this; }
-    }
-    courses.push_back(C);
+    Person::operator+=(C);
     return *this;
 }
 Admin& Admin::operator-=(Course* C) {
-    if (C == nullptr) { std::cout << "Null\n"; return *this; }
-    for (size_t i = 0; i < courses.size(); ++i) {
-        if (courses[i] == C) {
-            courses.erase(courses.begin() + i);
-            std::cout << "Course removed from admin!\n";
-            return *this;
-        }
-    }
-    std::cout << "Course not found...\n";
+    Person::operator-=(C);
     return *this;
 }
 

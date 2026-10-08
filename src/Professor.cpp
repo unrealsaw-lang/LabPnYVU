@@ -18,12 +18,12 @@ std::istream& operator>>(std::istream& stream, Professor& P) {
 }
 
 Professor& Professor::operator+=(Course* C) {
-    if (C == nullptr) { std::cout << "Null\n"; return *this; }
+    Person::operator+=(C);
     (*C) += this;
     return *this;
 }
 Professor& Professor::operator-=(Course* C) {
-    if (C == nullptr) { std::cout << "Null\n"; return *this; }
+    Person::operator-=(C);
     (*C) -= this;
     return *this;
 }
