@@ -17,8 +17,8 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const Admin& A);
     friend std::istream& operator>>(std::istream& stream, Admin& A);
 
-    Admin& operator+=(Course* C);
-    Admin& operator-=(Course* C);
+    Admin& operator+=(Course* C) override;
+    Admin& operator-=(Course* C) override;
 
     std::string getResponsibility() const;
     std::string getType() const override;

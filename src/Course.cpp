@@ -68,7 +68,6 @@ Course& Course::operator+=(Student* s) {
         if (existing == s) { std::cout << "Student already enrolled\n"; return *this; }
     }
     studs.push_back(s);
-    s->courses.push_back(this);
     return *this;
 }
 Course& Course::operator-=(Student* s) {
@@ -96,7 +95,6 @@ Course& Course::operator+=(Professor* p) {
         if (existing == p) { std::cout << "Professor already assigned\n"; return *this; }
     }
     profs.push_back(p);
-    p->courses.push_back(this);
     return *this;
 }
 Course& Course::operator-=(Professor* p) {

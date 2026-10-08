@@ -31,9 +31,8 @@ public:
     virtual int getWorkload() const = 0;
     virtual void printInfo() const = 0;
 
-
-    friend std::istream& operator>>(std::istream& stream, Person& P);
-    friend std::istream& operator<<(std::istream& stream, Person& P);
+    friend std::ostream& operator<<(std::ostream& stream, const Person& S);
+    friend std::istream& operator>>(std::istream& stream, Person& S);
 
     friend bool operator==(const Person& P1, const Person& P2) { return P1.id== P2.id; }
     friend bool operator!=(const Person& P1, const Person& P2) { return !(P1 == P2); }
@@ -42,6 +41,6 @@ public:
     friend bool operator<=(const Person& P1, const Person& P2) { return !(P2 < P1); }
     friend bool operator>=(const Person& P1, const Person& P2) { return !(P1 < P2); }
 
-    Person& operator+=(Course* C);
-    Person& operator-=(Course* C); 
+    virtual Person& operator+=(Course* C);
+    virtual Person& operator-=(Course* C);
 };

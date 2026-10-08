@@ -18,8 +18,8 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const Professor& P);
     friend std::istream& operator>>(std::istream& stream, Professor& P);
 
-    Professor& operator+=(Course* C);
-    Professor& operator-=(Course* C);
+    Professor& operator+=(Course* C) override;
+    Professor& operator-=(Course* C) override;
 
     std::string getType() const override; 
     std::string getDepartment() const { return department; }
