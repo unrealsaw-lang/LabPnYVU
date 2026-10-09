@@ -68,6 +68,7 @@ int main() {
         std::cout << "2. Print\n";
         std::cout << "3. Create\n";
         std::cout << "4. Delete\n";
+        std::cout << "5. Add/remove from course\n";
         std::cout << "0. Exit\n";
         int choice = promptInt("Your choice: ");
         if (choice == 0) break;
@@ -76,6 +77,7 @@ int main() {
         else if (choice == 2) printMenu(allCourses, allStudents, allProfessors, allAdmins);
         else if (choice == 3) createMenu(allCourses, allStudents, allProfessors, allAdmins);
         else if (choice == 4) deleteMenu(allCourses, allStudents, allProfessors, allAdmins);
+        else if (choice == 5) enrollMenu(allCourses, allStudents, allProfessors, allAdmins);
         else std::cout << "Invalid\n";
     }
 

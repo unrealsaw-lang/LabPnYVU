@@ -326,3 +326,66 @@ void deleteMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStud
         }
     }
 }
+void enrollMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStudents, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
+    while (true) {
+        std::cout << "\n1. Add student to course\n";
+        std::cout << "2. Add professor to course\n";
+        std::cout << "3. Add admin to course\n";
+        std::cout << "4. Remove student from course\n";
+        std::cout << "5. Remove professor from course\n";
+        std::cout << "6. Remove admin from course\n";
+        std::cout << "0. Back\n";
+        int c = promptInt("Your choice: ");
+        if (c == 0) return;
+        if (c < 1 || c > 6) { std::cout << "Invalid\n"; continue; }
+
+        int cid = promptInt("Course id: ");
+        Course* C = findCourseById(allCourses, cid);
+        if (!C) { std::cout << "Course not found...\n"; continue; }
+
+        if (c == 1 || c == 4) {
+            int sid = promptInt("Student id: ");
+            Student* S = findStudentById(allStudents, sid);
+            if (!S) { std::cout << "Student not found...\n"; continue; }
+
+            if (c == 1) {
+                int before = S->getCount();
+                *S += C;
+                if (S->getCount() > before) std::cout << "Student added!\n";
+            }
+            else {
+                *C -= S;
+            }
+        }
+        else if (c == 2 || c == 5) {
+            int pid = promptInt("Professor id: ");
+            Professor* P = findProfessorById(allProfs, pid);
+            if (!P) { std::cout << "Professor not found...\n"; continue; }
+
+            if (c == 2) {
+                int before = P->getCount();
+                *P += C;
+                if (P->getCount() > before) std::cout << "Professor added!\n";
+            }
+            else {
+                *C -= P;
+            }
+        }
+        else {
+            int aid = promptInt("Admin id: ");
+            Admin* A = findAdminById(allAdmins, aid);
+            if (!A) { std::cout << "Admin not found...\n"; continue; }
+
+            if (c == 3) {
+                int before = A->getCount();
+                *A += C;
+                if (A->getCount() > before) std::cout << "Admin added!\n";
+            }
+            else {
+                int before = A->getCount();
+                *A -= C;
+                if (A->getCount() < before) std::cout << "Admin removed!\n";
+            }
+        }
+    }
+}
