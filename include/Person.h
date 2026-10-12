@@ -28,7 +28,7 @@ public:
 
     virtual std::string getType() const = 0;
     virtual int getCount() const { return (int)courses.size(); };
-    virtual int getWorkload() const = 0;
+    virtual int calculateWorkload() const = 0;
     virtual void printInfo() const = 0;
 
     friend std::ostream& operator<<(std::ostream& stream, const Person& S);

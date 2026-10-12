@@ -1,6 +1,6 @@
 #include "Professor.h"
 #include "Course.h"
-#include <iostream>
+#include "Menu.h"
 
 Professor::Professor(int id, const std::string& N, const std::string& dep) : Person(id,N), department(dep) {}
 
@@ -29,7 +29,7 @@ Professor& Professor::operator-=(Course* C) {
 }
 
 std::string Professor::getType() const { return "Professor"; }
-int Professor::getWorkload() const { return (int)courses.size() * 4; }
+int Professor::calculateWorkload() const { return (int)courses.size() * 4; }
 
 void Professor::printInfo() const {
     std::cout << "--------------------------------------\n";
@@ -45,4 +45,20 @@ void Professor::printInfo() const {
         }
     }
     std::cout << "\n";
+}
+
+double Professor::calculateAverageRating() const {
+if (feedbacks.empty()) return 0.0;
+double avg = 0.0;
+for (int i = 0; i < (int)feedbacks.size(); i++) avg += feedbacks[i];
+avg /= (int)feedbacks.size();
+return avg;
+}
+void Professor::professorRateMenu(Professor* P) {
+    int r; std::cout << "Enter rate: ";
+    std::cin >> r;
+    P->rate(r);
+    std::cout << "Success!";
+    std::cout << "\nCurrent professor " << P->getName() << " (id = " << P->getId() << ")";
+    std::cout << "\nAverage rating : " << P->calculateAverageRating();
 }

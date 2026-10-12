@@ -52,6 +52,8 @@ void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds
     allAdmins.push_back(A2);
 
     *A1 += C1;
+    *A1 += C2;
+    *A1 += C4;
     *A2 += C3;
 }
 

@@ -7,11 +7,15 @@
 class Student : public Person
 {
     friend class Course;
-    std::string studentId;
+    std::string studentNumber;
+    std::vector<int> marks;
 
 public:
     Student(int id, const std::string& name, const std::string& sId);
-    ~Student() override = default;
+    ~Student() override {
+        std::cout << "\n~Student() " << "Student '" << getName() << "' (id = " << getId() << ") deleted: ";
+        std::cout << "\nstudentId = " << studentNumber << " and " << marks.size() << " mark(s)\n";
+    }
 
     friend std::ostream& operator<<(std::ostream& stream, const Student& S);
     friend std::istream& operator>>(std::istream& stream, Student& S);
@@ -20,8 +24,13 @@ public:
     Student& operator-=(Course* C) override;
 
     std::string getType() const override; 
-    std::string getStudentId() const { return studentId; }
-    int getWorkload() const override;
+    std::string getStudentId() const { return studentNumber; }
+
+    void addMark(int m) { marks.push_back(m); }
+    double calculateAverageMark() const;
+    void studentMarkInfo(Student* S);
+
+    int calculateWorkload() const override;
     void printInfo() const override;
 
 };

@@ -11,7 +11,10 @@ class Admin : public Person
 
 public:
     Admin(int id, const std::string& name, const std::string& resp);
-    ~Admin() override = default;
+    ~Admin() override {
+    std::cout << "\n~Admin() Admin '" << getName() << "' (id = " << getId() << ") deleted: ";
+    std::cout << "\nresponsibility: " << responsibility << "\n";
+    }
 
 
     friend std::ostream& operator<<(std::ostream& stream, const Admin& A);
@@ -22,6 +25,9 @@ public:
 
     std::string getResponsibility() const;
     std::string getType() const override;
-    int getWorkload() const override;
+
+    void calculateDominantLanguage() const;
+
+    int calculateWorkload() const override;
     void printInfo() const override;
 };

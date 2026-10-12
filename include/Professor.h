@@ -10,10 +10,14 @@ class Professor : public Person
 {
     friend class Course;
     std::string department;
+    std::vector<int> feedbacks;
 
 public:
     Professor(int id, const std::string& name, const std::string& dep);
-    ~Professor() override = default;
+    ~Professor() override {
+    std::cout << "\n~Professor() Professor '" << getName() << "' (id = " << getId() << ") deleted: ";
+    std::cout << "\ndepartment: " << department << " and " << feedbacks.size() << " feedback(s)\n";
+    }
 
     friend std::ostream& operator<<(std::ostream& stream, const Professor& P);
     friend std::istream& operator>>(std::istream& stream, Professor& P);
@@ -23,6 +27,11 @@ public:
 
     std::string getType() const override; 
     std::string getDepartment() const { return department; }
-    int getWorkload() const override;
+
+    void rate(int r) { feedbacks.push_back(r); }
+    double calculateAverageRating() const;
+    void professorRateMenu(Professor* P);
+
+    int calculateWorkload() const override;
     void printInfo() const override;
 };

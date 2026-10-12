@@ -53,10 +53,9 @@ Course* findCourseByTitle(const std::vector<Course*>& v) {
     return nullptr;
 }
 
-//наследование
-static void showPolymorphism(const std::vector<Student*>& allStudents, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
+static void showPolymorphism(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
     std::vector<Person*> everyone;
-    for (Student* s : allStudents) everyone.push_back(s);
+    for (Student* s : allStuds) everyone.push_back(s);
     for (Professor* p : allProfs)  everyone.push_back(p);
     for (Admin* a : allAdmins)     everyone.push_back(a);
 
@@ -71,16 +70,16 @@ static void showPolymorphism(const std::vector<Student*>& allStudents, const std
         p->printInfo();
     }
 }
-static void showInheritedMethods(const std::vector<Student*>& allStudents, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
-    if (!allStudents.empty()) {
-        const Student* s = allStudents[0];
+static void showInheritedMethods(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
+    if (!allStuds.empty()) {
+        const Student* s = allStuds[0];
         std::cout << "\nclass Student:\n";
         std::cout << "[inherited] id            = " << s->getId() << "\n";
         std::cout << "[inherited] name          = " << s->getName() << "\n";
         std::cout << "[inherited] courses count = " << s->getCount() << "\n";
         std::cout << "[special] studentId       = " << s->getStudentId() << "\n";
         std::cout << "[override] getType()      = " << s->getType() << "\n";
-        std::cout << "[override] getWorkload()  = " << s->getWorkload() << " h/week\n";
+        std::cout << "[override] calculateWorkload()  = " << s->calculateWorkload() << " h/week\n";
     }
 
     if (!allProfs.empty()) {
@@ -91,7 +90,7 @@ static void showInheritedMethods(const std::vector<Student*>& allStudents, const
         std::cout << "[inherited] courses count = " << p->getCount() << "\n";
         std::cout << "[special] department      = " << p->getDepartment() << "\n";
         std::cout << "[override] getType()      = " << p->getType() << "\n";
-        std::cout << "[override] getWorkload()  = " << p->getWorkload() << " h/week\n";
+        std::cout << "[override] calculateWorkload()  = " << p->calculateWorkload() << " h/week\n";
     }
 
     if (!allAdmins.empty()) {
@@ -102,22 +101,22 @@ static void showInheritedMethods(const std::vector<Student*>& allStudents, const
         std::cout << "[inherited] courses count  = " << a->getCount() << "\n";
         std::cout << "[special] responsibility   = " << a->getResponsibility() << "\n";
         std::cout << "[override] getType()       = " << a->getType() << "\n";
-        std::cout << "[override] getWorkload()   = " << a->getWorkload() << " h/week\n";
+        std::cout << "[override] calculateWorkload()   = " << a->calculateWorkload() << " h/week\n";
     }
 }
-static void showVirtualMethods(const std::vector<Student*>& allStudents, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
+static void showVirtualMethods(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
     std::vector<Person*> everyone;
-    for (Student* s : allStudents) everyone.push_back(s);
+    for (Student* s : allStuds) everyone.push_back(s);
     for (Professor* p : allProfs)  everyone.push_back(p);
     for (Admin* a : allAdmins)     everyone.push_back(a);
 
     int totalWorkload = 0;
     int i = 1;
     for (Person* p : everyone) {
-        int w = p->getWorkload();
+        int w = p->calculateWorkload();
         totalWorkload += w;
-        std::cout << i++ << ") getType()     - " << p->getType() << "\n";
-        std::cout << "   getWorkload() - " << w << " h/week\n";
+        std::cout << p->getName() << "(" << i++ << ") getType()     - " << p->getType() << "\n";
+        std::cout << "   calculateWorkload() - " << w << " h/week\n";
     }
 
     std::cout << "--------------------------------------------\n";
@@ -133,6 +132,7 @@ static void showAdminLogic(std::vector<Admin*>& allAdmins, std::vector<Course*>&
     std::cout << "\n1. Add course to admin (+=)\n";
     std::cout << "2. Remove course from admin (-=)\n";
     std::cout << "3. Show admin info\n";
+    std::cout << "4. Calculate dominant language (special method)\n";
     int c = promptInt("Choice: ");
 
     if (c == 1) {
@@ -150,26 +150,67 @@ static void showAdminLogic(std::vector<Admin*>& allAdmins, std::vector<Course*>&
         *A -= C;
     }
     else if (c == 3) A->printInfo();
+    else if (c == 4)A->calculateDominantLanguage();
 }
-void inheritanceMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStudents, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
+static void markStudentMenu(std::vector<Student*>& allStuds) {
+    int id; std::cout << "Enter student id: ";
+    std::cin >> id;
+    Student* S = findStudentById(allStuds, id);
+    S->studentMarkInfo(S);
+}
+static void rateProfessorMenu(std::vector<Professor*>& allProfs) {
+    int id; std::cout << "Enter professor id: ";
+    std::cin >> id;
+    Professor* P = findProfessorById(allProfs, id);
+    P->professorRateMenu(P);
+}
+static void showVirtualDestructor() {
+    std::cout << "\nVirtual ~Person() show: \n";
+
+    Person* P1 = new Student(001, "TempStudent", "testStudentId");
+    Person* P2 = new Professor(002, "TempProfessor", "testDepartment");
+    Person* P3 = new Admin(003, "TempAdmin", "testResponsibility"); 
+    Student* S = static_cast<Student*>(P1);
+    S->addMark(5);
+    S->addMark(4);
+    Professor* P = static_cast<Professor*>(P2);
+    P->rate(2);
+
+    P1->printInfo();
+    P2->printInfo();
+    P3->printInfo();
+
+    std::cout << '\n';
+
+    delete P1;
+    delete P2;
+    delete P3;
+}
+void inheritanceMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
     while (true) {
         std::cout << "\n1. Show polymorphism\n";
         std::cout << "2. Show inherited methods\n";
         std::cout << "3. Show virtual methods\n";
         std::cout << "4. Admin logic\n";
+        std::cout << "5. Add mark to student (special method)\n";
+        std::cout << "6. Rate professor (special method)\n";
+        std::cout << "7. Show virtual destructor\n";
         std::cout << "0. Back\n";
         int c = promptInt("Your choice: ");
         if (c == 0) return;
 
-        if (c == 1) showPolymorphism(allStudents, allProfs, allAdmins);
-        else if (c == 2) showInheritedMethods(allStudents, allProfs, allAdmins);
-        else if (c == 3) showVirtualMethods(allStudents, allProfs, allAdmins);
+        if (c == 1) showPolymorphism(allStuds, allProfs, allAdmins);
+        else if (c == 2) showInheritedMethods(allStuds, allProfs, allAdmins);
+        else if (c == 3) showVirtualMethods(allStuds, allProfs, allAdmins);
         else if (c == 4) showAdminLogic(allAdmins, allCourses);
+        else if (c == 5) markStudentMenu(allStuds);
+        else if (c == 6) rateProfessorMenu(allProfs);
+        else if (c == 7)showVirtualDestructor();
         else std::cout << "Invalid\n";
     }
 }
 
-void printMenu(std::vector<Course*>& allCourses,std::vector<Student*>& allStudents,std::vector<Professor*>& allProfs,std::vector<Admin*>& allAdmins) {
+void printMenu(std::vector<Course*>& allCourses,std::vector<Student*>& allStuds,std::vector<Professor*>& allProfs,std::vector<Admin*>& allAdmins) {
     while (true) {
         std::cout << "\n1. All courses\n";
         std::cout << "2. All students\n";
@@ -184,17 +225,17 @@ void printMenu(std::vector<Course*>& allCourses,std::vector<Student*>& allStuden
         if (c == 0) return;
 
         if (c == 1) { for (Course* x : allCourses) x->printCourse(); }
-        else if (c == 2) { for (Student* x : allStudents) x->printInfo(); }
+        else if (c == 2) { for (Student* x : allStuds) x->printInfo(); }
         else if (c == 3) { for (Professor* x : allProfs) x->printInfo(); }
         else if (c == 4) { for (Admin* x : allAdmins) x->printInfo(); }
         else if (c == 5) { int id = promptInt("id: "); Course* x = findCourseById(allCourses, id); if (x) x->printCourse(); else std::cout << "Not found\n"; }
-        else if (c == 6) { int id = promptInt("id: "); Student* x = findStudentById(allStudents, id); if (x) x->printInfo(); else std::cout << "Not found\n"; }
+        else if (c == 6) { int id = promptInt("id: "); Student* x = findStudentById(allStuds, id); if (x) x->printInfo(); else std::cout << "Not found\n"; }
         else if (c == 7) { int id = promptInt("id: "); Professor* x = findProfessorById(allProfs, id); if (x) x->printInfo(); else std::cout << "Not found\n"; }
         else if (c == 8) { int id = promptInt("id: "); Admin* x = findAdminById(allAdmins, id); if (x) x->printInfo(); else std::cout << "Not found\n"; }
         else std::cout << "Invalid\n";
     }
 }
-void createMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStudents, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
+void createMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
     while (true) {
         std::cout << "\n1. Course\n2. Student\n3. Professor\n4. Admin\n0. Back\n";
         int c = promptInt("Your choice: ");
@@ -222,7 +263,7 @@ void createMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStud
             int id = promptInt("Student id: ");
             std::string name = promptName("Name: "); 
             std::string sId = promptName("Student ID: ");
-            allStudents.push_back(new Student(id, name, sId));
+            allStuds.push_back(new Student(id, name, sId));
             std::cout << "Student created!\n";
         }
         else if (c == 3) {
@@ -242,7 +283,7 @@ void createMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStud
         else std::cout << "Invalid\n";
     }
 }
-void deleteMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStudents, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
+void deleteMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
     while (true) {
         std::cout << "\n1. Delete course\n";
         std::cout << "2. Delete student from course\n";
@@ -257,7 +298,7 @@ void deleteMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStud
         if (c == 1) {
             Course* C = findCourseByTitle(allCourses);
             if (!C) { std::cout << "Course not found...\n"; continue; }
-            for (Student* s : allStudents) *s -= C;
+            for (Student* s : allStuds) *s -= C;
             for (Professor* p : allProfs) *p -= C;
             for (Admin* a : allAdmins) *a -= C;
             for (size_t i = 0; i < allCourses.size(); ++i) {
@@ -274,7 +315,7 @@ void deleteMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStud
             Course* C = findCourseById(allCourses, cid);
             if (!C) { std::cout << "Course not found...\n"; continue; }
             int sid = promptInt("Student id: ");
-            Student* S = findStudentById(allStudents, sid);
+            Student* S = findStudentById(allStuds, sid);
             if (!S) { std::cout << "Student not found...\n"; continue; }
             *C -= S;
         }
@@ -289,12 +330,12 @@ void deleteMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStud
         }
         else if (c == 4) {
             int id = promptInt("Student id: ");
-            for (size_t i = 0; i < allStudents.size(); ++i) {
-                if (allStudents[i]->getId() == id) {
-                    Student* S = allStudents[i];
+            for (size_t i = 0; i < allStuds.size(); ++i) {
+                if (allStuds[i]->getId() == id) {
+                    Student* S = allStuds[i];
                     for (Course* C : allCourses) *C -= S;
                     delete S;
-                    allStudents.erase(allStudents.begin() + i);
+                    allStuds.erase(allStuds.begin() + i);
                     std::cout << "Deleted!\n";
                     break;
                 }
@@ -326,7 +367,7 @@ void deleteMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStud
         }
     }
 }
-void enrollMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStudents, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
+void enrollMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
     while (true) {
         std::cout << "\n1. Add student to course\n";
         std::cout << "2. Add professor to course\n";
@@ -345,7 +386,7 @@ void enrollMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStud
 
         if (c == 1 || c == 4) {
             int sid = promptInt("Student id: ");
-            Student* S = findStudentById(allStudents, sid);
+            Student* S = findStudentById(allStuds, sid);
             if (!S) { std::cout << "Student not found...\n"; continue; }
 
             if (c == 1) {
