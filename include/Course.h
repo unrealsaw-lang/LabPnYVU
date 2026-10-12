@@ -24,20 +24,20 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const Course& course);
     friend std::istream& operator>>(std::istream& stream, Course& course);
 
-    friend bool operator==(const Course& a, const Course& b) { return a.id == b.id; }
-    friend bool operator!=(const Course& a, const Course& b) { return !(a == b); }
-    friend bool operator<(const Course& a, const Course& b) { return a.getCourseCurrCount() < b.getCourseCurrCount(); }
-    friend bool operator>(const Course& a, const Course& b) { return b < a; }
-    friend bool operator<=(const Course& a, const Course& b) { return !(b < a); }
-    friend bool operator>=(const Course& a, const Course& b) { return !(a < b); }
+    friend bool operator==(const Course& C1, const Course& C2) { return C1.id == C2.id; }
+    friend bool operator!=(const Course& C1, const Course& C2) { return !(C1 == C2); }
+    friend bool operator<(const Course& C1, const Course& C2) { return C1.getCourseCurrCount() < C2.getCourseCurrCount(); }
+    friend bool operator>(const Course& C1, const Course& C2) { return C2 < C1; }
+    friend bool operator<=(const Course& C1, const Course& C2) { return !(C2 < C1); }
+    friend bool operator>=(const Course& C1, const Course& C2) { return !(C1 < C2); }
 
     Course(int id, const std::string& lang, const std::string& lvl, Professor* P, const std::string& sched, int max);
     ~Course() = default;
 
-    Course& operator+=(Student* s);
-    Course& operator-=(Student* s);
-    Course& operator+=(Professor* p);
-    Course& operator-=(Professor* p);
+    Course& operator+=(Student* S);
+    Course& operator-=(Student* S);
+    Course& operator+=(Professor* P);
+    Course& operator-=(Professor* P);
 
     int getId() const { return id; }
     std::string getCourseLevel() const { return level; }

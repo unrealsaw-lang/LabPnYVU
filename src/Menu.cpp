@@ -19,103 +19,103 @@ int promptInt(const std::string& prompt) {
     return v;
 }
 
-Course* findCourseById(const std::vector<Course*>& v, int id) {
-    for (Course* C : v) if (C->getId() == id) return C;
+Course* findCourseById(const std::vector<Course*>& allCourses, int id) {
+    for (Course* C : allCourses) if (C->getId() == id) return C;
     return nullptr;
 }
-Student* findStudentById(const std::vector<Student*>& v, int id) {
-    for (Student* S : v) if (S->getId() == id) return S;
+Student* findStudentById(const std::vector<Student*>& allStuds, int id) {
+    for (Student* S : allStuds) if (S->getId() == id) return S;
     return nullptr;
 }
-Professor* findProfessorById(const std::vector<Professor*>& v, int id) {
-    for (Professor* P : v) if (P->getId() == id) return P;
+Professor* findProfessorById(const std::vector<Professor*>& allProfs, int id) {
+    for (Professor* P : allProfs) if (P->getId() == id) return P;
     return nullptr;
 }
-Admin* findAdminById(const std::vector<Admin*>& v, int id) {
-    for (Admin* A : v) if (A->getId() == id) return A;
+Admin* findAdminById(const std::vector<Admin*>& allAdmins, int id) {
+    for (Admin* A : allAdmins) if (A->getId() == id) return A;
     return nullptr;
 }
-Student* findStudentByName(const std::vector<Student*>& v, const std::string& name) {
-    for (Student* S : v) if (S->getName() == name) return S;
+Student* findStudentByName(const std::vector<Student*>& allStuds, const std::string& name) {
+    for (Student* S : allStuds) if (S->getName() == name) return S;
     return nullptr;
 }
-Professor* findProfessorByName(const std::vector<Professor*>& v, const std::string& name) {
-    for (Professor* P : v) if (P->getName() == name) return P;
+Professor* findProfessorByName(const std::vector<Professor*>& allProfs, const std::string& name) {
+    for (Professor* P : allProfs) if (P->getName() == name) return P;
     return nullptr;
 }
-Course* findCourseByTitle(const std::vector<Course*>& v) {
-    std::string t, l;
-    std::cout << "Course language: "; std::cin >> t;
-    std::cout << "Course level: ";    std::cin >> l;
+Course* findCourseByTitle(const std::vector<Course*>& allCourses) {
+    std::string lvl, lang;
+    std::cout << "Course language: "; std::cin >> lang;
+    std::cout << "Course level: ";    std::cin >> lvl;
     std::cin.ignore();
-    for (Course* C : v)
-        if (C->getCourseLanguage() == t && C->getCourseLevel() == l) return C;
+    for (Course* C : allCourses)
+    if (C->getCourseLanguage() == lang && C->getCourseLevel() == lvl) return C;
     return nullptr;
 }
 
 static void showPolymorphism(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
     std::vector<Person*> everyone;
-    for (Student* s : allStuds) everyone.push_back(s);
-    for (Professor* p : allProfs)  everyone.push_back(p);
-    for (Admin* a : allAdmins)     everyone.push_back(a);
+    for (Student* S : allStuds) everyone.push_back(S);
+    for (Professor* P : allProfs)  everyone.push_back(P);
+    for (Admin* A : allAdmins)     everyone.push_back(A);
 
     std::cout << "\nCollection size: " << everyone.size() << " people\n";
 
     int i = 1;
-    for (Person* p : everyone) {
-        std::cout << "\n" << i++ << ") " << p->getType()
-            << " (id = " << p->getId()
-            << ", name: " << p->getName()
-            << ", courses = " << p->getCount() << ")\n";
-        p->printInfo();
+    for (Person* P : everyone) {
+        std::cout << "\n" << i++ << ") " << P->getType()
+        << " (id = " << P->getId()
+        << ", name: " << P->getName()
+        << ", courses = " << P->getCount() << ")\n";
+        P->printInfo();
     }
 }
 static void showInheritedMethods(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
     if (!allStuds.empty()) {
-        const Student* s = allStuds[0];
+        const Student* S = allStuds[0];
         std::cout << "\nclass Student:\n";
-        std::cout << "[inherited] id            = " << s->getId() << "\n";
-        std::cout << "[inherited] name          = " << s->getName() << "\n";
-        std::cout << "[inherited] courses count = " << s->getCount() << "\n";
-        std::cout << "[special] studentId       = " << s->getStudentId() << "\n";
-        std::cout << "[override] getType()      = " << s->getType() << "\n";
-        std::cout << "[override] calculateWorkload()  = " << s->calculateWorkload() << " h/week\n";
+        std::cout << "[inherited] id            = " << S->getId() << "\n";
+        std::cout << "[inherited] name          = " << S->getName() << "\n";
+        std::cout << "[inherited] courses count = " << S->getCount() << "\n";
+        std::cout << "[special] studentId       = " << S->getStudentId() << "\n";
+        std::cout << "[override] getType()      = " << S->getType() << "\n";
+        std::cout << "[override] calculateWorkload()  = " << S->calculateWorkload() << " h/week\n";
     }
 
     if (!allProfs.empty()) {
-        const Professor* p = allProfs[0];
+        const Professor* P = allProfs[0];
         std::cout << "\nclass Professor:\n";
-        std::cout << "[inherited] id            = " << p->getId() << "\n";
-        std::cout << "[inherited] name          = " << p->getName() << "\n";
-        std::cout << "[inherited] courses count = " << p->getCount() << "\n";
-        std::cout << "[special] department      = " << p->getDepartment() << "\n";
-        std::cout << "[override] getType()      = " << p->getType() << "\n";
-        std::cout << "[override] calculateWorkload()  = " << p->calculateWorkload() << " h/week\n";
+        std::cout << "[inherited] id            = " << P->getId() << "\n";
+        std::cout << "[inherited] name          = " << P->getName() << "\n";
+        std::cout << "[inherited] courses count = " << P->getCount() << "\n";
+        std::cout << "[special] department      = " << P->getDepartment() << "\n";
+        std::cout << "[override] getType()      = " << P->getType() << "\n";
+        std::cout << "[override] calculateWorkload()  = " << P->calculateWorkload() << " h/week\n";
     }
 
     if (!allAdmins.empty()) {
-        const Admin* a = allAdmins[0];
+        const Admin* A = allAdmins[0];
         std::cout << "\nclass Admin:\n";
-        std::cout << "[inherited] id             = " << a->getId() << "\n";
-        std::cout << "[inherited] name           = " << a->getName() << "\n";
-        std::cout << "[inherited] courses count  = " << a->getCount() << "\n";
-        std::cout << "[special] responsibility   = " << a->getResponsibility() << "\n";
-        std::cout << "[override] getType()       = " << a->getType() << "\n";
-        std::cout << "[override] calculateWorkload()   = " << a->calculateWorkload() << " h/week\n";
+        std::cout << "[inherited] id             = " << A->getId() << "\n";
+        std::cout << "[inherited] name           = " << A->getName() << "\n";
+        std::cout << "[inherited] courses count  = " << A->getCount() << "\n";
+        std::cout << "[special] responsibility   = " << A->getResponsibility() << "\n";
+        std::cout << "[override] getType()       = " << A->getType() << "\n";
+        std::cout << "[override] calculateWorkload()   = " << A->calculateWorkload() << " h/week\n";
     }
 }
 static void showVirtualMethods(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
     std::vector<Person*> everyone;
-    for (Student* s : allStuds) everyone.push_back(s);
-    for (Professor* p : allProfs)  everyone.push_back(p);
-    for (Admin* a : allAdmins)     everyone.push_back(a);
+    for (Student* S : allStuds) everyone.push_back(S);
+    for (Professor* P : allProfs)  everyone.push_back(P);
+    for (Admin* A : allAdmins)     everyone.push_back(A);
 
     int totalWorkload = 0;
     int i = 1;
-    for (Person* p : everyone) {
-        int w = p->calculateWorkload();
+    for (Person* P : everyone) {
+        int w = P->calculateWorkload();
         totalWorkload += w;
-        std::cout << p->getName() << "(" << i++ << ") getType()     - " << p->getType() << "\n";
+        std::cout << P->getName() << "(" << i++ << ") getType()     - " << P->getType() << "\n";
         std::cout << "   calculateWorkload() - " << w << " h/week\n";
     }
 
@@ -224,14 +224,14 @@ void printMenu(std::vector<Course*>& allCourses,std::vector<Student*>& allStuds,
         int c = promptInt("Your choice: ");
         if (c == 0) return;
 
-        if (c == 1) { for (Course* x : allCourses) x->printCourse(); }
-        else if (c == 2) { for (Student* x : allStuds) x->printInfo(); }
-        else if (c == 3) { for (Professor* x : allProfs) x->printInfo(); }
-        else if (c == 4) { for (Admin* x : allAdmins) x->printInfo(); }
-        else if (c == 5) { int id = promptInt("id: "); Course* x = findCourseById(allCourses, id); if (x) x->printCourse(); else std::cout << "Not found\n"; }
-        else if (c == 6) { int id = promptInt("id: "); Student* x = findStudentById(allStuds, id); if (x) x->printInfo(); else std::cout << "Not found\n"; }
-        else if (c == 7) { int id = promptInt("id: "); Professor* x = findProfessorById(allProfs, id); if (x) x->printInfo(); else std::cout << "Not found\n"; }
-        else if (c == 8) { int id = promptInt("id: "); Admin* x = findAdminById(allAdmins, id); if (x) x->printInfo(); else std::cout << "Not found\n"; }
+        if (c == 1) { for (Course* C : allCourses) C->printCourse(); }
+        else if (c == 2) { for (Student* S : allStuds) S->printInfo(); }
+        else if (c == 3) { for (Professor* P : allProfs) P->printInfo(); }
+        else if (c == 4) { for (Admin* A : allAdmins) A->printInfo(); }
+        else if (c == 5) { int id = promptInt("id: "); Course* C = findCourseById(allCourses, id); if (C) C->printCourse(); else std::cout << "Not found\n"; }
+        else if (c == 6) { int id = promptInt("id: "); Student* S = findStudentById(allStuds, id); if (S) S->printInfo(); else std::cout << "Not found\n"; }
+        else if (c == 7) { int id = promptInt("id: "); Professor* P = findProfessorById(allProfs, id); if (P) P->printInfo(); else std::cout << "Not found\n"; }
+        else if (c == 8) { int id = promptInt("id: "); Admin* A = findAdminById(allAdmins, id); if (A) A->printInfo(); else std::cout << "Not found\n"; }
         else std::cout << "Invalid\n";
     }
 }
