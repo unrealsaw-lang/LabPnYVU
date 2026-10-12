@@ -63,11 +63,11 @@ static void showPolymorphism(const std::vector<Student*>& allStuds, const std::v
 
     int i = 1;
     for (Person* P : everyone) {
-        std::cout << "\n" << i++ << ") " << P->getType()
+        std::cout << "\n" << i++ << ") [Person->getType...getName]\n" << P->getType()
         << " (id = " << P->getId()
         << ", name: " << P->getName()
         << ", courses = " << P->getCount() << ")\n";
-        P->printInfo();
+        std::cout << "\n[Person->printInfo]\n";  P->printInfo();
     }
 }
 static void showInheritedMethods(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
