@@ -63,10 +63,15 @@ int main() {
     std::vector<Course*> allCourses;
     std::vector<Admin*> allAdmins;
 
+    collection<Professor*> allProfs;
+    collection<Student*> allStuds;
+    collection<Course*> allCs;
+    collection<Admin*> allAs;
+
     initData(allProfessors, allStudents, allCourses, allAdmins);
 
     while (true) {
-        std::cout << "\n1. Inheritance\n";
+        std::cout << "\n1. Templates\n";
         std::cout << "2. Print\n";
         std::cout << "3. Create\n";
         std::cout << "4. Delete\n";
@@ -75,7 +80,8 @@ int main() {
         int choice = promptInt("Your choice: ");
         if (choice == 0) break;
 
-        else if (choice == 1) inheritanceMenu(allCourses, allStudents, allProfessors, allAdmins);
+
+        else if (choice == 1) templatesMenu(allCs, allStuds, allProfs, allAs);
         else if (choice == 2) printMenu(allCourses, allStudents, allProfessors, allAdmins);
         else if (choice == 3) createMenu(allCourses, allStudents, allProfessors, allAdmins);
         else if (choice == 4) deleteMenu(allCourses, allStudents, allProfessors, allAdmins);

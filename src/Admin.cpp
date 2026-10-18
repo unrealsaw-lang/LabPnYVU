@@ -40,8 +40,8 @@ void Admin::printInfo() const {
         return;
     }
     for (size_t i = 0; i < courses.size(); ++i) {
-        std::cout << courses[i]->getCourseLanguage()
-            << " (" << courses[i]->getCourseLevel() << ", course id = " << courses[i]->getId() <<")";
+        std::cout << courses[i]->getLanguage()
+            << " (" << courses[i]->getLevel() << ", course id = " << courses[i]->getId() <<")";
         if (i != courses.size() - 1) std::cout << ", ";
     }
     std::cout << "\n";
@@ -59,7 +59,7 @@ void Admin::calculateDominantLanguage() const {
     std::vector<int> counts;
 
     for (Course* c : courses) {
-        std::string lang = c->getCourseLanguage();
+        std::string lang = c->getLanguage();
 
         int index = -1;
         for (size_t i = 0; i < languages.size(); ++i) {

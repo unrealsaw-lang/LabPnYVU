@@ -10,7 +10,7 @@ Course::Course(int id, const std::string& lang, const std::string& lvl, Professo
 
 std::ostream& operator<<(std::ostream& stream, const Course& course) {
     stream << "Course(id=" << course.getId() << ") "
-        << course.getCourseLanguage() << " " << course.getCourseLevel();
+        << course.getLanguage() << " " << course.getLevel();
     stream << "\nProfessor(s): ";
     if (course.profs.empty()) {
         stream << "None";
@@ -21,8 +21,8 @@ std::ostream& operator<<(std::ostream& stream, const Course& course) {
             if (i != course.profs.size() - 1) stream << ", ";
         }
     }
-    stream << "\nSchedule: " << course.getCourseSchedule();
-    stream << "\nMax capacity: " << course.getCourseMaxCount();
+    stream << "\nSchedule: " << course.getSchedule();
+    stream << "\nMax capacity: " << course.getMaxCount();
     return stream;
 }
 std::istream& operator>>(std::istream& stream, Course& course) {
@@ -128,7 +128,7 @@ Course& Course::operator-=(Professor* P) {
     return *this;
 }
 
-void Course::printCourse() const {
+void Course::printInfo() const {
     std::cout << "--------------------------------------\n";
     std::cout << "Course (id = " << id << "): " << language << " (" << level << ")\n";
     std::cout << "Professor(s): ";

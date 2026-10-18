@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "Collection.h"
 
 class Course;
 class Professor;
@@ -18,7 +19,7 @@ Student* findStudentByName(const std::vector<Student*>& allStuds, const std::str
 Professor* findProfessorByName(const std::vector<Professor*>& allProfs, const std::string& name);
 Course* findCourseByTitle(const std::vector<Course*>& allCourses);
 
-void inheritanceMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins);
+void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, collection<Professor*>& allProfs, collection<Admin*>& allAdmins);
 
 void printMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins);
 void createMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins);

@@ -3,7 +3,27 @@
 #include "Professor.h"
 #include "Student.h"
 #include "Admin.h"
+#include "Collection.h"
 #include <iostream>
+
+template <typename T, typename F> T findBy(std::vector<T>& vec, F condition) {
+    for (const T& item : vec) {
+        if (condition(item)) return item;
+    }
+    return T();
+}
+template <typename T> static void addToCollection(T* obj, collection<T*>& col) {
+    if (obj) { col.add(obj); std::cout << "\nSuccess!"; }
+    else std::cout << "\nNull!";
+}
+template <typename T> static void removeFromCollection(T* obj, collection<T*>& col) {
+    if (obj) { col.remove(obj); std::cout << "\nSucces!"; }
+    else std::cout << "\nNull!";
+}
+template <typename T> static void getCollectionSize(collection<T*>& col) {
+    if (col.getSize() != 0) std::cout << "\nSize of the collection: " << col.getSize();
+    else std::cout << "\nCollection is empty...";
+}
 
 std::string promptName(const std::string& prompt) {
     std::cout << prompt;
@@ -49,109 +69,10 @@ Course* findCourseByTitle(const std::vector<Course*>& allCourses) {
     std::cout << "Course level: ";    std::cin >> lvl;
     std::cin.ignore();
     for (Course* C : allCourses)
-    if (C->getCourseLanguage() == lang && C->getCourseLevel() == lvl) return C;
+    if (C->getLanguage() == lang && C->getLevel() == lvl) return C;
     return nullptr;
 }
 
-static void showPolymorphism(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
-    std::vector<Person*> everyone;
-    for (Student* S : allStuds) everyone.push_back(S);
-    for (Professor* P : allProfs)  everyone.push_back(P);
-    for (Admin* A : allAdmins)     everyone.push_back(A);
-
-    std::cout << "\nCollection size: " << everyone.size() << " people\n";
-
-    int i = 1;
-    for (Person* P : everyone) {
-        std::cout << "\n" << i++ << ") [Person->getType...getName]\n" << P->getType()
-        << " (id = " << P->getId()
-        << ", name: " << P->getName()
-        << ", courses = " << P->getCount() << ")\n";
-        std::cout << "\n[Person->printInfo]\n";  P->printInfo();
-    }
-}
-static void showInheritedMethods(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
-    if (!allStuds.empty()) {
-        const Student* S = allStuds[0];
-        std::cout << "\nclass Student:\n";
-        std::cout << "[inherited] id            = " << S->getId() << "\n";
-        std::cout << "[inherited] name          = " << S->getName() << "\n";
-        std::cout << "[inherited] courses count = " << S->getCount() << "\n";
-        std::cout << "[special] studentId       = " << S->getStudentId() << "\n";
-        std::cout << "[override] getType()      = " << S->getType() << "\n";
-        std::cout << "[override] calculateWorkload()  = " << S->calculateWorkload() << " h/week\n";
-    }
-
-    if (!allProfs.empty()) {
-        const Professor* P = allProfs[0];
-        std::cout << "\nclass Professor:\n";
-        std::cout << "[inherited] id            = " << P->getId() << "\n";
-        std::cout << "[inherited] name          = " << P->getName() << "\n";
-        std::cout << "[inherited] courses count = " << P->getCount() << "\n";
-        std::cout << "[special] department      = " << P->getDepartment() << "\n";
-        std::cout << "[override] getType()      = " << P->getType() << "\n";
-        std::cout << "[override] calculateWorkload()  = " << P->calculateWorkload() << " h/week\n";
-    }
-
-    if (!allAdmins.empty()) {
-        const Admin* A = allAdmins[0];
-        std::cout << "\nclass Admin:\n";
-        std::cout << "[inherited] id             = " << A->getId() << "\n";
-        std::cout << "[inherited] name           = " << A->getName() << "\n";
-        std::cout << "[inherited] courses count  = " << A->getCount() << "\n";
-        std::cout << "[special] responsibility   = " << A->getResponsibility() << "\n";
-        std::cout << "[override] getType()       = " << A->getType() << "\n";
-        std::cout << "[override] calculateWorkload()   = " << A->calculateWorkload() << " h/week\n";
-    }
-}
-static void showVirtualMethods(const std::vector<Student*>& allStuds, const std::vector<Professor*>& allProfs, const std::vector<Admin*>& allAdmins) {
-    std::vector<Person*> everyone;
-    for (Student* S : allStuds) everyone.push_back(S);
-    for (Professor* P : allProfs)  everyone.push_back(P);
-    for (Admin* A : allAdmins)     everyone.push_back(A);
-
-    int totalWorkload = 0;
-    int i = 1;
-    for (Person* P : everyone) {
-        int w = P->calculateWorkload();
-        totalWorkload += w;
-        std::cout << P->getName() << "(" << i++ << ") getType()     - " << P->getType() << "\n";
-        std::cout << "   calculateWorkload() - " << w << " h/week\n";
-    }
-
-    std::cout << "--------------------------------------------\n";
-    std::cout << "Total weekly workload: " << totalWorkload << " hours\n";
-}
-static void showAdminLogic(std::vector<Admin*>& allAdmins, std::vector<Course*>& allCourses) {
-    if (allAdmins.empty()) { std::cout << "\nNo admins\n"; return; }
-
-    int id = promptInt("Admin id: ");
-    Admin* A = findAdminById(allAdmins, id);
-    if (!A) { std::cout << "Not found\n"; return; }
-
-    std::cout << "\n1. Add course to admin (+=)\n";
-    std::cout << "2. Remove course from admin (-=)\n";
-    std::cout << "3. Show admin info\n";
-    std::cout << "4. Calculate dominant language (special method)\n";
-    int c = promptInt("Choice: ");
-
-    if (c == 1) {
-        int cid = promptInt("Course id: ");
-        Course* C = findCourseById(allCourses, cid);
-        if (!C) { std::cout << "Course not found\n"; return; }
-        std::cout << "Success!\n";
-        *A += C;
-    }
-    else if (c == 2) {
-        int cid = promptInt("Course id: ");
-        Course* C = findCourseById(allCourses, cid);
-        if (!C) { std::cout << "Course not found\n"; return; }
-        std::cout << "Success!\n";
-        *A -= C;
-    }
-    else if (c == 3) A->printInfo();
-    else if (c == 4)A->calculateDominantLanguage();
-}
 static void markStudentMenu(std::vector<Student*>& allStuds) {
     int id; std::cout << "Enter student id: ";
     std::cin >> id;
@@ -164,48 +85,386 @@ static void rateProfessorMenu(std::vector<Professor*>& allProfs) {
     Professor* P = findProfessorById(allProfs, id);
     P->professorRateMenu(P);
 }
-static void showVirtualDestructor() {
-    std::cout << "\nVirtual ~Person() show: \n";
 
-    Person* P1 = new Student(001, "TempStudent", "testStudentId");
-    Person* P2 = new Professor(002, "TempProfessor", "testDepartment");
-    Person* P3 = new Admin(003, "TempAdmin", "testResponsibility"); 
-    Student* S = static_cast<Student*>(P1);
-    S->addMark(5);
-    S->addMark(4);
-    Professor* P = static_cast<Professor*>(P2);
-    P->rate(2);
-
-    P1->printInfo();
-    P2->printInfo();
-    P3->printInfo();
-
-    std::cout << '\n';
-
-    delete P1;
-    delete P2;
-    delete P3;
-}
-void inheritanceMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins) {
+static Course* findCourse(const collection<Course*> allCourses) {
     while (true) {
-        std::cout << "\n1. Show polymorphism\n";
-        std::cout << "2. Show inherited methods\n";
-        std::cout << "3. Show virtual methods\n";
-        std::cout << "4. Admin logic\n";
-        std::cout << "5. Add mark to student (special method)\n";
-        std::cout << "6. Rate professor (special method)\n";
-        std::cout << "7. Show virtual destructor\n";
+        std::cout << "\n1. By id\n";
+        std::cout << "2. By language\n";
+        std::cout << "3. By level\n";
+        std::cout << "4. By schdeule\n";
+        std::cout << "5. By student count\n";
+        std::cout << "6. By professor count\n";
+        std::cout << "7. By max count\n";
+        std::cout << "0. Back\n";
+        int c = promptInt("Your choice: ");
+        if (c == 0) return nullptr;
+
+        Course* found = nullptr;
+        if (c == 1) {
+            int id = promptInt("Enter id: ");
+            found = allCourses.findBy([&](Course* C) { return C->getId() == id; });
+        }
+        if (c == 2) {
+            std::string lang = promptName("Enter language: ");
+            found = allCourses.findBy([&](Course* C) { return C->getLanguage() == lang; });
+        }
+        if (c == 3) {
+            std::string lvl = promptName("Enter level: ");
+            found = allCourses.findBy([&](Course* C) { return C->getLevel() == lvl; });
+        }if (c == 4) {
+            std::string sched = promptName("Enter schedule: ");
+            found = allCourses.findBy([&](Course* C) { return C->getSchedule() == sched; });
+        }
+        if (c == 5) {
+            int sCount = promptInt("Enter course count: ");
+            found = allCourses.findBy([&](Course* C) { return C->getStudentCount() == sCount; });
+        }
+        if (c == 6) {
+            int pCount = promptInt("Enter professor count: ");
+            found = allCourses.findBy([&](Course* C) { return C->getProfessorCount() == pCount; });
+        }
+        if (c == 7) {
+            int max = promptInt("Enter max count: ");
+            found = allCourses.findBy([&](Course* C) { return C->getMaxCount() == max; });
+        }
+
+        if (found) {
+            std::cout << "\nFound:\n";
+            return found;
+        }
+        else std::cout << "\nNot found\n";
+
+    }
+}
+static Student* findStudent(const collection<Student*>& allStuds) {
+    while (true) {
+        std::cout << "\n1. By id\n";
+        std::cout << "2. By student id\n";
+        std::cout << "3. By name\n";
+        std::cout << "4. By course count\n";
+        std::cout << "5. By average grade\n";
+        std::cout << "0. Back\n";
+        int c = promptInt("Your choice: ");
+        if (c == 0) return nullptr;
+
+        Student* found = nullptr;
+        if (c == 1) {
+            int id = promptInt("Enter id: ");
+            found = allStuds.findBy([&](Student* S) { return S->getId() == id; });
+        }
+        if (c == 2) {
+            std::string sId = promptName("Enter student id: ");
+            found = allStuds.findBy([&](Student* S) { return S->getStudentId() == sId; });
+        }
+        if (c == 3) {
+            std::string n = promptName("Enter student name: ");
+            found = allStuds.findBy([&](Student* S) { return S->getName() == n; });
+        }
+        if (c == 4) {
+            int count = promptInt("Enter course count: ");
+            found = allStuds.findBy([&](Student* S) { return S->getCount() == count; });
+        }
+        if (c == 5) {
+            double avg = promptInt("Enter min average grade: ");
+            found = allStuds.findBy([&](Student* S) { return S->calculateAverageMark() > avg; });
+        }
+
+        if (found) {
+            std::cout << "\nFound:\n";
+            return found;
+        }
+        else std::cout << "\nNot found\n";
+
+    }
+}
+static Professor* findProfessor(const collection<Professor*>& allProfs) {
+    while (true) {
+        std::cout << "\n1. By id\n";
+        std::cout << "2. By department\n";
+        std::cout << "3. By name\n";
+        std::cout << "4. By course count\n";
+        std::cout << "5. By average rating\n";
+        std::cout << "0. Back\n";
+        int c = promptInt("Your choice: ");
+        if (c == 0) return nullptr;
+
+        Professor* found = nullptr;
+        if (c == 1) {
+            int id = promptInt("Enter id: ");
+            found = allProfs.findBy([&](Professor* P) { return P->getId() == id; });
+        }
+        if (c == 2) {
+            std::string dep = promptName("Enter professor department: ");
+            found = allProfs.findBy([&](Professor* P) { return P->getDepartment() == dep; });
+        }
+        if (c == 3) {
+            std::string n = promptName("Enter professor name: ");
+            found = allProfs.findBy([&](Professor* P) { return P->getName() == n; });
+        }
+        if (c == 4) {
+            int count = promptInt("Enter course count: ");
+            found = allProfs.findBy([&](Professor* P) { return P->getCount() == count; });
+        }
+        if (c == 5) {
+            double avg = promptInt("Enter min average rating: ");
+            found = allProfs.findBy([&](Professor* P) { return P->calculateAverageRating() > avg; });
+        }
+
+        if (found) {
+            std::cout << "\nFound:\n";
+            return found;
+        }
+        else std::cout << "\nNot found\n";
+
+    }
+}
+static Admin* findAdmin(const collection<Admin*>& allAdmins) {
+    while (true) {
+        std::cout << "\n1. By id\n";
+        std::cout << "2. By responsibility\n";
+        std::cout << "3. By name\n";
+        std::cout << "4. By course count\n";
+        std::cout << "0. Back\n";
+        int c = promptInt("Your choice: ");
+        if (c == 0) return nullptr;
+
+        Admin* found = nullptr;
+        if (c == 1) {
+            int id = promptInt("Enter id: ");
+            found = allAdmins.findBy([&](Admin* A) { return A->getId() == id; });
+        }
+        if (c == 2) {
+            std::string resp = promptName("Enter admin responsibility: ");
+            found = allAdmins.findBy([&](Admin* A) { return A->getResponsibility() == resp; });
+        }
+        if (c == 3) {
+            std::string n = promptName("Enter professor name: ");
+            found = allAdmins.findBy([&](Admin* A) { return A->getName() == n; });
+        }
+        if (c == 4) {
+            int count = promptInt("Enter course count: ");
+            found = allAdmins.findBy([&](Admin* A) { return A->getCount() == count; });
+        }
+
+        if (found) {
+            std::cout << "\nFound:\n";
+            return found;
+        }
+        else std::cout << "\nNot found\n";
+
+    }
+}
+
+void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, collection<Professor*>& allProfs, collection<Admin*>& allAdmins) {
+    while (true) {
+        std::cout << "\n1. Find object to the collection\n";
+        std::cout << "2. Get object from the collection\n";
+        std::cout << "3. Add object to the collection\n";
+        std::cout << "4. Remove object from the collection\n";
+        std::cout << "5. Get collection size\n";
+        std::cout << "6. Clear collection\n";
+        std::cout << "7. Demo with different data types\n";
         std::cout << "0. Back\n";
         int c = promptInt("Your choice: ");
         if (c == 0) return;
 
-        if (c == 1) showPolymorphism(allStuds, allProfs, allAdmins);
-        else if (c == 2) showInheritedMethods(allStuds, allProfs, allAdmins);
-        else if (c == 3) showVirtualMethods(allStuds, allProfs, allAdmins);
-        else if (c == 4) showAdminLogic(allAdmins, allCourses);
-        else if (c == 5) markStudentMenu(allStuds);
-        else if (c == 6) rateProfessorMenu(allProfs);
-        else if (c == 7)showVirtualDestructor();
+        int subC;
+        if (c == 1) {
+            while (true) {
+            std::cout << "\n1. Find student\n";
+            std::cout << "2. Find professor\n";
+            std::cout << "3. Find admin\n";
+            std::cout << "4. Find course\n";
+            std::cout << "0. Back\n";
+
+            subC = promptInt("Your choice: ");
+
+            if (subC == 1) {
+                Student* found = findStudent(allStuds);
+                if (found) found->printInfo();
+            }
+            else if (subC == 2) {
+                Professor* found = findProfessor(allProfs);
+                if (found) found->printInfo();
+            }
+            else if (subC == 3) {
+                Admin* found = findAdmin(allAdmins);
+                if (found) found->printInfo();
+            }
+            else if (subC == 4) {
+                Course* found = findCourse(allCourses);
+                if (found) found->printInfo();
+            }
+            else if (subC == 0) break;
+            else std::cout << "\nInvalid!";
+            }
+        }
+        else if (c == 2) {
+            while (true) {
+                std::cout << "\n1. Get student\n";
+                std::cout << "2. Get professor\n";
+                std::cout << "3. Get admin\n";
+                std::cout << "4. Get course\n";
+                std::cout << "0. Back\n";
+
+                subC = promptInt("Your choice: ");
+                int index = promptInt("Enter index: ");
+                if (subC == 1) {
+                    Student* S = allStuds.get(index);
+                    if (S) S->printInfo();
+                }
+                else if (subC == 2) {
+                    Professor* P = allProfs.get(index);
+                    if (P) P->printInfo();
+                }
+                else if (subC == 3) {
+                    Admin* A = allAdmins.get(index);
+                    if (A) A->printInfo();
+                }
+                else if (subC == 4) {
+                    Course* C = allCourses.get(index);
+                    if (C) C->printInfo();
+                }
+                else if (subC == 0) break;
+                else std::cout << "\nInvalid!";
+            }
+        }
+        else if (c == 3) {
+            while (true) {
+                std::cout << "\n1. Add student\n";
+                std::cout << "2. Add professor\n";
+                std::cout << "3. Add admin\n";
+                std::cout << "4. Add course\n";
+                std::cout << "0. Back\n";
+
+                subC = promptInt("Your choice: ");
+                if (subC == 0) break;
+
+                if (subC == 1) {
+                    int id = promptInt("Student id: ");
+                    std::string name = promptName("Name: ");
+                    std::string sId = promptName("Student ID: ");
+                    Student* newStudent = new Student(id, name, sId);
+                    addToCollection(newStudent, allStuds);
+                }
+                else if (subC == 2) {
+                    int id = promptInt("Professor id: ");
+                    std::string name = promptName("Name: ");
+                    std::string dep = promptName("Department: ");
+                    Professor* newProfessor = new Professor(id, name, dep);
+                    addToCollection(newProfessor, allProfs);
+                }
+                else if (subC == 3) {
+                    int id = promptInt("Admin id: ");
+                    std::string name = promptName("Name: ");
+                    std::string resp = promptName("Responsibility: ");
+                    Admin* newAdmin = new Admin(id, name, resp);
+                    addToCollection(newAdmin, allAdmins);
+                }
+                else if (subC == 4) {
+                    int id = promptInt("Course id: ");
+                    std::string lang = promptName("Language: ");
+                    std::string lvl = promptName("Level: ");
+                    std::string pname = promptName("Professor name: ");
+                    std::string sched = promptName("Schedule: ");
+                    int max = promptInt("Max capacity: ");
+
+                    Professor* P = allProfs.findBy([&](Professor* p) { return p->getName() == pname; });
+
+                    if (!P) {
+                        int pid = promptInt("Professor not found. Enter new professor id: ");
+                        std::string dep = promptName("Department: ");
+                        P = new Professor(pid, pname, dep);
+                        addToCollection(P, allProfs);
+                    }
+
+                    Course* newCourse = new Course(id, lang, lvl, P, sched, max);
+                    addToCollection(newCourse, allCourses);
+                }
+                else std::cout << "\nInvalid!\n";
+            }
+        }
+        else if (c == 4) {
+            while (true) {
+                std::cout << "\n1. Remove student\n";
+                std::cout << "2. Remove professor\n";
+                std::cout << "3. Remove admin\n";
+                std::cout << "4. Remove course\n";
+                std::cout << "0. Back\n";
+
+                subC = promptInt("Your choice: ");
+
+                if (subC == 1) removeFromCollection(findStudent(allStuds), allStuds);
+                else if (subC == 2) removeFromCollection(findProfessor(allProfs), allProfs);
+                else if (subC == 3) removeFromCollection(findAdmin(allAdmins), allAdmins);
+                else if (subC == 4) removeFromCollection(findCourse(allCourses), allCourses);
+                else if (subC == 0) break;
+                else std::cout << "\nInvalid!";
+            }
+        }
+        else if (c == 5) {
+            while (true) {
+                std::cout << "\n1. Get students size\n";
+                std::cout << "2. Get professors size\n";
+                std::cout << "3. Get admins size\n";
+                std::cout << "4. Get courses size\n";
+                std::cout << "0. Back\n";
+
+                subC = promptInt("Your choice: ");
+                if (subC == 1) getCollectionSize(allStuds);
+                else if (subC == 2) getCollectionSize(allProfs);
+                else if (subC == 3) getCollectionSize(allAdmins);
+                else if (subC == 4) getCollectionSize(allCourses);
+                else if (subC == 0) break;
+                else std::cout << "\nInvalid!";
+            }
+        }
+        else if (c == 6) {
+            while (true) {
+                std::cout << "\n1. Clear students\n";
+                std::cout << "2. Clear professors\n";
+                std::cout << "3. Clear admins\n";
+                std::cout << "4. Clear courses\n";
+                std::cout << "0. Back\n";
+
+                subC = promptInt("Your choice: ");
+                if (subC == 1) allStuds.clear();
+                else if (subC == 2) allProfs.clear();
+                else if (subC == 3) allAdmins.clear();
+                else if (subC == 4) allCourses.clear();
+                else if (subC == 0) break;
+                else std::cout << "\nInvalid!";
+            }
+        }
+        else if (c == 7) {
+            std::cout << "\nInt collection: \n";
+            collection<int> nums;
+            nums.add(10);
+            nums.add(20);
+            nums.add(30);
+            nums.print();
+
+            std::cout << "Size: " << nums.getSize() << "\n";
+            std::cout << "Get(1): " << nums.get(1) << "\n";
+            std::cout << "Find(20): " << nums.find(20) << "\n";
+            std::cout << "FindBy(>15): " << nums.findBy([](int x) { return x > 15; }) << "\n";
+            nums.remove(20);
+            std::cout << "After remove(20): size = " << nums.getSize() << "\n";
+            nums.clear();
+            std::cout << "After clear: size = " << nums.getSize() << "\n";
+
+            std::cout << "\nString collection: \n";
+            collection<std::string> words;
+            words.add("String1");
+            words.add("STRING");
+            words.add("str3");
+            words.print();
+
+            std::cout << "Size: " << words.getSize() << "\n";
+            std::cout << "FindBy(len>6): " << words.findBy([](const std::string& s) {
+                return s.size() > 6;
+                }) << "\n";
+        }
         else std::cout << "Invalid\n";
     }
 }
@@ -224,11 +483,11 @@ void printMenu(std::vector<Course*>& allCourses,std::vector<Student*>& allStuds,
         int c = promptInt("Your choice: ");
         if (c == 0) return;
 
-        if (c == 1) { for (Course* C : allCourses) C->printCourse(); }
+        if (c == 1) { for (Course* C : allCourses) C->printInfo(); }
         else if (c == 2) { for (Student* S : allStuds) S->printInfo(); }
         else if (c == 3) { for (Professor* P : allProfs) P->printInfo(); }
         else if (c == 4) { for (Admin* A : allAdmins) A->printInfo(); }
-        else if (c == 5) { int id = promptInt("id: "); Course* C = findCourseById(allCourses, id); if (C) C->printCourse(); else std::cout << "Not found\n"; }
+        else if (c == 5) { int id = promptInt("id: "); Course* C = findCourseById(allCourses, id); if (C) C->printInfo(); else std::cout << "Not found\n"; }
         else if (c == 6) { int id = promptInt("id: "); Student* S = findStudentById(allStuds, id); if (S) S->printInfo(); else std::cout << "Not found\n"; }
         else if (c == 7) { int id = promptInt("id: "); Professor* P = findProfessorById(allProfs, id); if (P) P->printInfo(); else std::cout << "Not found\n"; }
         else if (c == 8) { int id = promptInt("id: "); Admin* A = findAdminById(allAdmins, id); if (A) A->printInfo(); else std::cout << "Not found\n"; }

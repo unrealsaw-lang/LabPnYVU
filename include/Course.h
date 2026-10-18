@@ -26,7 +26,7 @@ public:
 
     friend bool operator==(const Course& C1, const Course& C2) { return C1.id == C2.id; }
     friend bool operator!=(const Course& C1, const Course& C2) { return !(C1 == C2); }
-    friend bool operator<(const Course& C1, const Course& C2) { return C1.getCourseCurrCount() < C2.getCourseCurrCount(); }
+    friend bool operator<(const Course& C1, const Course& C2) { return C1.getStudentCount() < C2.getStudentCount(); }
     friend bool operator>(const Course& C1, const Course& C2) { return C2 < C1; }
     friend bool operator<=(const Course& C1, const Course& C2) { return !(C2 < C1); }
     friend bool operator>=(const Course& C1, const Course& C2) { return !(C1 < C2); }
@@ -40,17 +40,14 @@ public:
     Course& operator-=(Professor* P);
 
     int getId() const { return id; }
-    std::string getCourseLevel() const { return level; }
-    std::string getCourseLanguage() const { return language; }
-    std::string getCourseSchedule() const { return schedule; }
-    int getCourseCurrCount() const { return (int)studs.size(); }
-    int getCourseMaxCount() const { return maxCount; }
+    std::string getLevel() const { return level; }
+    std::string getLanguage() const { return language; }
+    std::string getSchedule() const { return schedule; }
+    int getStudentCount() const { return static_cast<int>(studs.size()); }
+    int getProfessorCount() const { return static_cast<int>(profs.size()); }
+    int getMaxCount() const { return maxCount; }
 
-    void setCourseSchedule(const std::string& schd) { schedule = schd; }
-    void setCourseLanguage(const std::string& lang) { language = lang; }
-    void setCourseLevel(const std::string& lvl) { level = lvl; }
-
-    void printCourse() const;
+    void printInfo() const;
     Student* findStudentByName(const std::string& name) const;
     Professor* findProfessorByName(const std::string& name) const;
 };
