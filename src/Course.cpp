@@ -12,19 +12,20 @@ std::ostream& operator<<(std::ostream& stream, const Course& course) {
     stream << "Course(id=" << course.getId() << ") "
         << course.getLanguage() << " " << course.getLevel();
     stream << "\nProfessor(s): ";
-    if (course.profs.empty()) {
+    if (course.profs.getSize() == 0) {
         stream << "None";
     }
     else {
-        for (size_t i = 0; i < course.profs.size(); ++i) {
-            stream << course.profs[i]->getName();
-            if (i != course.profs.size() - 1) stream << ", ";
+        for (int i = 0; i < course.profs.getSize(); ++i) {
+            stream << course.profs.get(i)->getName();
+            if (i != course.profs.getSize() - 1) stream << ", ";
         }
     }
     stream << "\nSchedule: " << course.getSchedule();
     stream << "\nMax capacity: " << course.getMaxCount();
     return stream;
 }
+
 std::istream& operator>>(std::istream& stream, Course& course) {
     std::string lang, lvl, sched;
     int max;
@@ -60,71 +61,57 @@ std::istream& operator>>(std::istream& stream, Course& course) {
 
 Course& Course::operator+=(Student* S) {
     if (S == nullptr) { std::cout << "Null\n"; return *this; }
-    if (studs.size() >= maxCount) {
+    if (studs.getSize() >= maxCount) {
         std::cout << "Course is full (max " << maxCount << ")!\n";
         return *this;
     }
-    for (Student* existing : studs) {
-        if (existing == S) { std::cout << "Student already enrolled\n"; return *this; }
+    if (studs.find(S) != -1) {
+        std::cout << "Student already enrolled\n";
+        return *this;
     }
-    studs.push_back(S); 
-    bool found = false;
-    for (Course* C : S->courses) {
-        if (C == this) { found = true; break; }
-    }
-    if (!found) S->courses.push_back(this);
+
+    studs.add(S);
+    if (S->courses.find(this) == -1) S->courses.add(this);
 
     return *this;
 }
+
 Course& Course::operator-=(Student* S) {
     if (S == nullptr) { std::cout << "Null\n"; return *this; }
-    for (size_t i = 0; i < studs.size(); ++i) {
-        if (studs[i] == S) {
-            studs.erase(studs.begin() + i);
-            for (size_t j = 0; j < S->courses.size(); ++j) {
-                if (S->courses[j] == this) {
-                    S->courses.erase(S->courses.begin() + j);
-                    break;
-                }
-            }
-            std::cout << "Student removed!\n";
-            return *this;
-        }
+    if (studs.find(S) != -1) {
+        studs.remove(S);
+        S->courses.remove(this);
+        std::cout << "Student removed!\n";
     }
-    std::cout << "Student not found...\n";
+    else {
+        std::cout << "Student not found...\n";
+    }
     return *this;
 }
 
 Course& Course::operator+=(Professor* P) {
     if (P == nullptr) { std::cout << "Null\n"; return *this; }
-    for (Professor* existing : profs) {
-        if (existing == P) { std::cout << "Professor already assigned\n"; return *this; }
+    if (profs.find(P) != -1) {
+        std::cout << "Professor already assigned\n";
+        return *this;
     }
-    profs.push_back(P);
-    bool found = false;
-    for (Course* C : P->courses) {
-        if (C == this) { found = true; break; }
-    }
-    if (!found) P->courses.push_back(this);
+
+    profs.add(P);
+    if (P->courses.find(this) == -1) P->courses.add(this);
 
     return *this;
 }
+
 Course& Course::operator-=(Professor* P) {
     if (P == nullptr) { std::cout << "Null\n"; return *this; }
-    for (size_t i = 0; i < profs.size(); ++i) {
-        if (profs[i] == P) {
-            profs.erase(profs.begin() + i);
-            for (size_t j = 0; j < P->courses.size(); ++j) {
-                if (P->courses[j] == this) {
-                    P->courses.erase(P->courses.begin() + j);
-                    break;
-                }
-            }
-            std::cout << "Professor removed!\n";
-            return *this;
-        }
+    if (profs.find(P) != -1) {
+        profs.remove(P);
+        P->courses.remove(this);
+        std::cout << "Professor removed!\n";
     }
-    std::cout << "Professor not found...\n";
+    else {
+        std::cout << "Professor not found...\n";
+    }
     return *this;
 }
 
@@ -132,28 +119,23 @@ void Course::printInfo() const {
     std::cout << "--------------------------------------\n";
     std::cout << "Course (id = " << id << "): " << language << " (" << level << ")\n";
     std::cout << "Professor(s): ";
-    if (profs.empty()) {
+    if (profs.getSize() == 0) {
         std::cout << "None";
     }
     else {
-        for (size_t i = 0; i < profs.size(); ++i) {
-            std::cout << profs[i]->getName();
-            if (i != profs.size() - 1) std::cout << ", ";
+        for (int i = 0; i < profs.getSize(); ++i) {
+            std::cout << profs.get(i)->getName();
+            if (i != profs.getSize() - 1) std::cout << ", ";
         }
     }
-    std::cout << "\nStudents capacity: " << studs.size() << " / " << maxCount << "\n";
+    std::cout << "\nStudents capacity: " << studs.getSize() << " / " << maxCount << "\n";
     std::cout << "Schedule: " << schedule << "\n";
 }
 
 Student* Course::findStudentByName(const std::string& name) const {
-    for (Student* S : studs) {
-        if (S->getName() == name) return S;
-    }
-    return nullptr;
+    return studs.findBy([&](Student* S) { return S->getName() == name; });
 }
+
 Professor* Course::findProfessorByName(const std::string& name) const {
-    for (Professor* P : profs) {
-        if (P->getName() == name) return P;
-    }
-    return nullptr;
+    return profs.findBy([&](Professor* P) { return P->getName() == name; });
 }

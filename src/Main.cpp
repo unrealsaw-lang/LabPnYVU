@@ -5,109 +5,38 @@
 #include "Professor.h"
 #include "Student.h"
 #include "Admin.h"
+#include "Collection.h"
 #include "Menu.h"
 
-void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds, std::vector<Course*>& allCourses, std::vector<Admin*>& allAdmins) {
-    auto P1 = new Professor(1, "Smith", "Foreign");
-    auto P2 = new Professor(2, "Brown", "Native");
-    auto P3 = new Professor(3, "Johnson", "Foreign");
-    auto P4 = new Professor(4, "Potapenko", "Foreign");
-    allProfs.push_back(P1);
-    allProfs.push_back(P2);
-    allProfs.push_back(P3);
-    allProfs.push_back(P4);
-
-    auto C1 = new Course(1, "English", "A1", P1, "Mon 10:00", 30);
-    auto C2 = new Course(2, "Deutsche", "A2", P1, "Tue 12:00", 20);
-    auto C3 = new Course(3, "Russian", "B1", P2, "Wed 10:00", 10);
-    auto C4 = new Course(4, "Deutsche", "C1", P3, "Thu 14:00", 30);
-    auto C5 = new Course(5, "English", "B2", P4, "Fri 16:00", 25);
-    auto C6 = new Course(6, "English", "A1", P4, "Fri 16:05", 15);
-    allCourses.push_back(C1);
-    allCourses.push_back(C2);
-    allCourses.push_back(C3);
-    allCourses.push_back(C4);
-    allCourses.push_back(C5);
-    allCourses.push_back(C6);
-
-    auto S1 = new Student(1, "Steve", "5503038");
-    auto S2 = new Student(2, "Bob", "7510082");
-    auto S3 = new Student(3, "Alice", "5292131");
-    auto S4 = new Student(4, "Steve", "4523072");
-    allStuds.push_back(S1);
-    allStuds.push_back(S2);
-    allStuds.push_back(S3);
-    allStuds.push_back(S4);
-
-    *S1 += C1;
-    *S2 += C1;
-    *S2 += C2;
-    *S3 += C3;
-    *S4 += C5;
-    *C2 += P2;
-
-    auto A1 = new Admin(100, "Anna", "Admissions");
-    auto A2 = new Admin(101, "Igor", "Scheduling");
-    allAdmins.push_back(A1);
-    allAdmins.push_back(A2);
-
-    *A1 += C1;
-    *A1 += C2;
-    *A1 += C4;
-    *A2 += C3;
-}
-void initCollectionData(collection<Professor*>& allProfs, collection<Student*>& allStuds, collection<Course*>& allCs, collection<Admin*>& allAs) {
+void initCollectionData(collection<Professor*>& allProfs, collection<Student*>& allStuds, collection<Course*>& allCourses, collection<Admin*>& allAdmins) {
     auto P1 = new Professor(11, "Prof11", "Foreign");
     auto P2 = new Professor(12, "Prof12", "Native");
     allProfs.add(P1);
     allProfs.add(P2);
 
     auto C1 = new Course(111, "C1", "LVL", P1, "Mon 12:00", 6);
-    allCs.add(C1);
+    allCourses.add(C1);
 
     auto S1 = new Student(33, "Stud", "studId template");
     allStuds.add(S1);
 
     auto A1 = new Admin(101, "Adm", "Admissions");
-    allAs.add(A1);
+    allAdmins.add(A1);
 }
 int main() {
-    std::vector<Professor*> allProfessors;
-    std::vector<Student*> allStudents;
-    std::vector<Course*> allCourses;
-    std::vector<Admin*> allAdmins;
-
     collection<Professor*> allProfs;
     collection<Student*> allStuds;
-    collection<Course*> allCs;
-    collection<Admin*> allAs;
+    collection<Course*> allCourses;
+    collection<Admin*> allAdmins;
 
-    initData(allProfessors, allStudents, allCourses, allAdmins);
-    initCollectionData(allProfs, allStuds, allCs, allAs);
+    initCollectionData(allProfs, allStuds, allCourses, allAdmins);
+    
+    templatesMenu(allCourses, allStuds, allProfs, allAdmins);
 
-    while (true) {
-        std::cout << "\n1. Templates\n";
-        std::cout << "2. Print\n";
-        std::cout << "3. Create\n";
-        std::cout << "4. Delete\n";
-        std::cout << "5. Add/remove from course\n";
-        std::cout << "0. Exit\n";
-        int choice = promptInt("Your choice: ");
-        if (choice == 0) break;
-
-
-        else if (choice == 1) templatesMenu(allCs, allStuds, allProfs, allAs);
-        else if (choice == 2) printMenu(allCourses, allStudents, allProfessors, allAdmins);
-        else if (choice == 3) createMenu(allCourses, allStudents, allProfessors, allAdmins);
-        else if (choice == 4) deleteMenu(allCourses, allStudents, allProfessors, allAdmins);
-        else if (choice == 5) enrollMenu(allCourses, allStudents, allProfessors, allAdmins);
-        else std::cout << "Invalid\n";
-    }
-
-    for (Course* C : allCourses)       delete C;
-    for (Professor* P : allProfessors) delete P;
-    for (Student* S : allStudents)     delete S;
-    for (Admin* A : allAdmins)         delete A;
+    for (int i = 0; i < allCourses.getSize(); ++i) delete allCourses.get(i);
+    for (int i = 0; i < allProfs.getSize(); ++i) delete allProfs.get(i);
+    for (int i = 0; i < allStuds.getSize(); ++i) delete allStuds.get(i);
+    for (int i = 0; i < allAdmins.getSize(); ++i) delete allAdmins.get(i);
 
     return 0;
 }

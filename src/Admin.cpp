@@ -1,5 +1,6 @@
 #include "Admin.h"
 #include "Course.h"
+#include "Collection.h"
 #include <iostream>
 
 Admin::Admin(int id, const std::string& name, const std::string& resp) : Person(id, name), responsibility(resp) {}
@@ -10,6 +11,7 @@ std::ostream& operator<<(std::ostream& stream, const Admin& A) {
     stream << "responsibility: " << A.responsibility << " )";
     return stream;
 }
+
 std::istream& operator>>(std::istream& stream, Admin& A) {
     stream >> static_cast<Person&>(A);
     std::cout << "Enter responsibility: ";
@@ -21,6 +23,7 @@ Admin& Admin::operator+=(Course* C) {
     Person::operator+=(C);
     return *this;
 }
+
 Admin& Admin::operator-=(Course* C) {
     Person::operator-=(C);
     return *this;
@@ -28,75 +31,78 @@ Admin& Admin::operator-=(Course* C) {
 
 std::string Admin::getResponsibility() const { return responsibility; }
 std::string Admin::getType() const { return "Admin"; }
-int Admin::calculateWorkload() const { return (int)courses.size(); }
+int Admin::calculateWorkload() const { return courses.getSize(); }
 
 void Admin::printInfo() const {
     std::cout << "--------------------------------------\n";
     std::cout << "Admin " << getName() << " (id = " << getId() << ")\n";
     std::cout << "Responsibility: " << responsibility << "\n";
     std::cout << "Manages " << getCount() << " course(s): ";
-    if (courses.empty()) {
+    if (courses.getSize() == 0) {
         std::cout << "None\n";
         return;
     }
-    for (size_t i = 0; i < courses.size(); ++i) {
-        std::cout << courses[i]->getLanguage()
-            << " (" << courses[i]->getLevel() << ", course id = " << courses[i]->getId() <<")";
-        if (i != courses.size() - 1) std::cout << ", ";
+    for (int i = 0; i < courses.getSize(); ++i) {
+        std::cout << courses.get(i)->getLanguage()
+            << " (" << courses.get(i)->getLevel() << ", course id = " << courses.get(i)->getId() << ")";
+        if (i != courses.getSize() - 1) std::cout << ", ";
     }
     std::cout << "\n";
 }
 
 void Admin::calculateDominantLanguage() const {
-    if (courses.empty()) {
+    if (courses.getSize() == 0) {
         std::cout << "\nAdmin " << getName() << " manages 0 courses\n";
         return;
     }
 
-    std::cout << "\nAdmin " << getName() << " manages " << courses.size() << " course(s):\n";
+    std::cout << "\nAdmin " << getName() << " manages " << courses.getSize() << " course(s):\n";
 
-    std::vector<std::string> languages;
-    std::vector<int> counts;
+    collection<std::string> languages;
+    collection<int> counts;
 
-    for (Course* c : courses) {
-        std::string lang = c->getLanguage();
-
-        int index = -1;
-        for (size_t i = 0; i < languages.size(); ++i) {
-            if (languages[i] == lang) { index = (int)i; break; }
-        }
+    for (int i = 0; i < courses.getSize(); ++i) {
+        std::string lang = courses.get(i)->getLanguage();
+        int index = languages.find(lang);
 
         if (index == -1) {
-            languages.push_back(lang);
-            counts.push_back(1);
+            languages.add(lang);
+            counts.add(1);
         }
-        else counts[index]++;
+        else {
+            collection<int> tempCounts;
+            for (int k = 0; k < counts.getSize(); ++k) {
+                if (k == index) tempCounts.add(counts.get(k) + 1);
+                else tempCounts.add(counts.get(k));
+            }
+            counts = tempCounts;
+        }
     }
 
-    for (size_t i = 0; i < languages.size(); ++i) {
-        double percent = 100.0 * counts[i] / courses.size();
-        std::cout << i+1 << ") " << languages[i] << ": "
-        << counts[i] << " (" << percent << "%)\n";
+    for (int i = 0; i < languages.getSize(); ++i) {
+        double percent = 100.0 * counts.get(i) / courses.getSize();
+        std::cout << i + 1 << ") " << languages.get(i) << ": "
+            << counts.get(i) << " (" << percent << "%)\n";
     }
 
     int maxCount = 0;
-    for (size_t i = 0; i < counts.size(); ++i) {
-        if (counts[i] > maxCount) maxCount = counts[i];
+    for (int i = 0; i < counts.getSize(); ++i) {
+        if (counts.get(i) > maxCount) maxCount = counts.get(i);
     }
 
-    std::vector<std::string> top;
-    for (size_t i = 0; i < languages.size(); ++i) {
-        if (counts[i] == maxCount) top.push_back(languages[i]);
+    collection<std::string> top;
+    for (int i = 0; i < languages.getSize(); ++i) {
+        if (counts.get(i) == maxCount) top.add(languages.get(i));
     }
 
     std::cout << "Dominant language: ";
-    if (top.size() == 1) {
-        std::cout << top[0] << "\n";
+    if (top.getSize() == 1) {
+        std::cout << top.get(0) << "\n";
     }
     else {
-        for (size_t i = 0; i < top.size(); ++i) {
-            std::cout << top[i];
-            if (i != top.size() - 1) std::cout << " and ";
+        for (int i = 0; i < top.getSize(); ++i) {
+            std::cout << top.get(i);
+            if (i != top.getSize() - 1) std::cout << " and ";
         }
         std::cout << "\n";
     }

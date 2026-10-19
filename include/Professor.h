@@ -14,10 +14,7 @@ class Professor : public Person
 
 public:
     Professor(int id, const std::string& name, const std::string& dep);
-    ~Professor() override {
-    std::cout << "\n~Professor() Professor '" << getName() << "' (id = " << getId() << ") deleted: ";
-    std::cout << "\ndepartment: " << department << " and " << feedbacks.size() << " feedback(s)\n";
-    }
+    ~Professor() override = default;
 
     friend std::ostream& operator<<(std::ostream& stream, const Professor& P);
     friend std::istream& operator>>(std::istream& stream, Professor& P);
@@ -25,7 +22,7 @@ public:
     Professor& operator+=(Course* C) override;
     Professor& operator-=(Course* C) override;
 
-    std::string getType() const override; 
+    std::string getType() const override;
     std::string getDepartment() const { return department; }
 
     void rate(int r) { feedbacks.push_back(r); }

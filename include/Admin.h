@@ -1,21 +1,16 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <vector>
 #include "Person.h"
 
-class Admin : public Person 
+class Admin : public Person
 {
-    friend class Course; 
+    friend class Course;
     std::string responsibility;
 
 public:
     Admin(int id, const std::string& name, const std::string& resp);
-    ~Admin() override {
-    std::cout << "\n~Admin() Admin '" << getName() << "' (id = " << getId() << ") deleted: ";
-    std::cout << "\nresponsibility: " << responsibility << "\n";
-    }
-
+    ~Admin() override = default;
 
     friend std::ostream& operator<<(std::ostream& stream, const Admin& A);
     friend std::istream& operator>>(std::istream& stream, Admin& A);

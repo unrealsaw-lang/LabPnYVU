@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include "Course.h"
+#include "Collection.h"
 
 class Person 
 {
@@ -12,7 +13,7 @@ class Person
 protected:
     int id;
     std::string name;
-    std::vector<Course*> courses;
+    collection<Course*> courses;
 
 public:
     Person(int id, const std::string& N);
@@ -27,7 +28,7 @@ public:
     friend std::istream& operator>>(std::istream& stream, Person& S);
 
     virtual std::string getType() const = 0;
-    virtual int getCount() const { return (int)courses.size(); };
+    virtual int getCount() const { return (int)courses.getSize(); };
     virtual int calculateWorkload() const = 0;
     virtual void printInfo() const = 0;
 

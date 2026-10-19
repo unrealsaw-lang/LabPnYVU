@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <vector>
 #include "Collection.h"
 
 class Course;
@@ -11,19 +10,18 @@ class Admin;
 std::string promptName(const std::string& prompt);
 int promptInt(const std::string& prompt);
 
-Course* findCourseById(const std::vector<Course*>& allCourses, int id);
-Student* findStudentById(const std::vector<Student*>& allStuds, int id);
-Professor* findProfessorById(const std::vector<Professor*>& allProfs, int id);
-Admin* findAdminById(const std::vector<Admin*>& allAdmins, int id);
-Student* findStudentByName(const std::vector<Student*>& allStuds, const std::string& name);
-Professor* findProfessorByName(const std::vector<Professor*>& allProfs, const std::string& name);
-Course* findCourseByTitle(const std::vector<Course*>& allCourses);
+Course* findCourseById(const collection<Course*>& allCourses, int id);
+Student* findStudentById(const collection<Student*>& allStuds, int id);
+Professor* findProfessorById(const collection<Professor*>& allProfs, int id);
+Admin* findAdminById(const collection<Admin*>& allAdmins, int id);
+Student* findStudentByName(const collection<Student*>& allStuds, const std::string& name);
+Professor* findProfessorByName(const collection<Professor*>& allProfs, const std::string& name);
+Course* findCourseByTitle(const collection<Course*>& allCourses);
 
-void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, collection<Professor*>& allProfs, collection<Admin*>& allAdmins);
+void templatesMenu(collection<Course*>&, collection<Student*>&, collection<Professor*>&, collection<Admin*>&);
+void printMenu(collection<Course*>&, collection<Student*>&, collection<Professor*>&, collection<Admin*>&);
+void createMenu(collection<Course*>&, collection<Student*>&, collection<Professor*>&, collection<Admin*>&);
+void deleteMenu(collection<Course*>&, collection<Student*>&, collection<Professor*>&, collection<Admin*>&);
+void enrollMenu(collection<Course*>&, collection<Student*>&, collection<Professor*>&, collection<Admin*>&);
 
-void printMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins);
-void createMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins);
-void deleteMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins);
-void enrollMenu(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins);
-
-void inputById(std::vector<Course*>& allCourses, std::vector<Student*>& allStuds, std::vector<Professor*>& allProfs, std::vector<Admin*>& allAdmins);
+void printByLanguageLevel(const collection<Course*>& allCourses);

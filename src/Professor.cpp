@@ -2,7 +2,7 @@
 #include "Course.h"
 #include "Menu.h"
 
-Professor::Professor(int id, const std::string& N, const std::string& dep) : Person(id,N), department(dep) {}
+Professor::Professor(int id, const std::string& N, const std::string& dep) : Person(id, N), department(dep) {}
 
 std::ostream& operator<<(std::ostream& stream, const Professor& P) {
     stream << "Professor " << P.name << " (";
@@ -10,6 +10,7 @@ std::ostream& operator<<(std::ostream& stream, const Professor& P) {
     stream << "department: " << P.department << " )";
     return stream;
 }
+
 std::istream& operator>>(std::istream& stream, Professor& P) {
     stream >> static_cast<Person&>(P);
     std::cout << "Enter department: ";
@@ -22,6 +23,7 @@ Professor& Professor::operator+=(Course* C) {
     (*C) += this;
     return *this;
 }
+
 Professor& Professor::operator-=(Course* C) {
     Person::operator-=(C);
     (*C) -= this;
@@ -29,31 +31,32 @@ Professor& Professor::operator-=(Course* C) {
 }
 
 std::string Professor::getType() const { return "Professor"; }
-int Professor::calculateWorkload() const { return (int)courses.size() * 4; }
+int Professor::calculateWorkload() const { return courses.getSize() * 4; }
 
 void Professor::printInfo() const {
     std::cout << "--------------------------------------\n";
     std::cout << "Professor " << getName() << " (id = " << getId() << ", department: " << department << ")\n";
     std::cout << "Leads " << getCount() << " course(s): ";
-    if (courses.empty()) {
+    if (courses.getSize() == 0) {
         std::cout << "None";
     }
     else {
-        for (size_t i = 0; i < courses.size(); ++i) {
-            std::cout << courses[i]->getLanguage() << " (" << courses[i]->getLevel() << ", course id = " << courses[i]->getId() << ")";
-            if (i != courses.size() - 1) std::cout << ", ";
+        for (int i = 0; i < courses.getSize(); ++i) {
+            std::cout << courses.get(i)->getLanguage() << " (" << courses.get(i)->getLevel() << ", course id = " << courses.get(i)->getId() << ")";
+            if (i != courses.getSize() - 1) std::cout << ", ";
         }
     }
     std::cout << "\n";
 }
 
 double Professor::calculateAverageRating() const {
-if (feedbacks.empty()) return 0.0;
-double avg = 0.0;
-for (int i = 0; i < (int)feedbacks.size(); i++) avg += feedbacks[i];
-avg /= (int)feedbacks.size();
-return avg;
+    if (feedbacks.empty()) return 0.0;
+    double avg = 0.0;
+    for (size_t i = 0; i < feedbacks.size(); i++) avg += feedbacks[i];
+    avg /= feedbacks.size();
+    return avg;
 }
+
 void Professor::professorRateMenu(Professor* P) {
     int r; std::cout << "Enter rate: ";
     std::cin >> r;

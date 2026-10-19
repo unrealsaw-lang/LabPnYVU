@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include <vector>
 #include <iostream>
+#include "Collection.h"
 
 class Professor;
 class Student;
@@ -13,8 +13,8 @@ class Course {
     friend class Admin;
 private:
     int id;
-    std::vector<Student*> studs;
-    std::vector<Professor*> profs;
+    collection<Student*> studs;
+    collection<Professor*> profs;
     int maxCount;
     std::string level;
     std::string language;
@@ -43,8 +43,8 @@ public:
     std::string getLevel() const { return level; }
     std::string getLanguage() const { return language; }
     std::string getSchedule() const { return schedule; }
-    int getStudentCount() const { return static_cast<int>(studs.size()); }
-    int getProfessorCount() const { return static_cast<int>(profs.size()); }
+    int getStudentCount() const { return studs.getSize(); }
+    int getProfessorCount() const { return profs.getSize(); }
     int getMaxCount() const { return maxCount; }
 
     void printInfo() const;
