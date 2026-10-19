@@ -6,7 +6,7 @@ Professor::Professor(int id, const std::string& N, const std::string& dep) : Per
 
 std::ostream& operator<<(std::ostream& stream, const Professor& P) {
     stream << "Professor " << P.name << " (";
-    stream << static_cast<const Person&>(P);
+    stream << static_cast<const Person&>(P) << ", ";
     stream << "department: " << P.department << " )";
     return stream;
 }

@@ -128,10 +128,7 @@ static Course* findCourse(const collection<Course*> allCourses) {
             found = allCourses.findBy([&](Course* C) { return C->getMaxCount() == max; });
         }
 
-        if (found) {
-            std::cout << "\nFound:\n";
-            return found;
-        }
+        if (found) return found;
         else std::cout << "\nNot found\n";
 
     }
@@ -264,6 +261,7 @@ void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStu
         std::cout << "5. Get collection size\n";
         std::cout << "6. Clear collection\n";
         std::cout << "7. Demo with different data types\n";
+        std::cout << "8. Print\n";
         std::cout << "0. Back\n";
         int c = promptInt("Your choice: ");
         if (c == 0) return;
@@ -308,6 +306,14 @@ void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStu
                 std::cout << "0. Back\n";
 
                 subC = promptInt("Your choice: ");
+
+                if (subC == 0) break;
+
+                if (subC < 1 || subC > 4) {
+                    std::cout << "\nInvalid!\n";
+                    continue;
+                }
+
                 int index = promptInt("Enter index: ");
                 if (subC == 1) {
                     Student* S = allStuds.get(index);
@@ -325,8 +331,6 @@ void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStu
                     Course* C = allCourses.get(index);
                     if (C) C->printInfo();
                 }
-                else if (subC == 0) break;
-                else std::cout << "\nInvalid!";
             }
         }
         else if (c == 3) {
@@ -464,6 +468,23 @@ void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStu
             std::cout << "FindBy(len>6): " << words.findBy([](const std::string& s) {
                 return s.size() > 6;
                 }) << "\n";
+        }
+        else if (c == 8) {
+            while (true) {
+                std::cout << "\n1. Students\n";
+                std::cout << "2. Professors\n";
+                std::cout << "3. Admins\n";
+                std::cout << "4. Courses\n";
+                std::cout << "0. Back\n";
+                int subC = promptInt("Your choice: ");
+                if (subC == 0) return;
+
+                if (subC == 1) allStuds.print();
+                else if (subC == 2) allProfs.print();
+                else if (subC == 3) allAdmins.print();
+                else if (subC == 4) allCourses.print();
+                else std::cout << "Invalid\n";
+            }
         }
         else std::cout << "Invalid\n";
     }

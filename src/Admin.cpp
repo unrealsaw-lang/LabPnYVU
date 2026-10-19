@@ -6,7 +6,7 @@ Admin::Admin(int id, const std::string& name, const std::string& resp) : Person(
 
 std::ostream& operator<<(std::ostream& stream, const Admin& A) {
     stream << "Admin " << A.name << " (";
-    stream << static_cast<const Person&>(A);
+    stream << static_cast<const Person&>(A) << ", ";
     stream << "responsibility: " << A.responsibility << " )";
     return stream;
 }

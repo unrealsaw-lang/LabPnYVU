@@ -6,7 +6,7 @@ Student::Student(int id, const std::string& N, const std::string& sId) : Person(
 
 std::ostream& operator<<(std::ostream& stream, const Student& S) {
     stream << "Student " << S.name << " (";
-    stream << static_cast<const Person&>(S);
+    stream << static_cast<const Person&>(S) << ", ";
     stream << "student id = " << S.studentNumber << ")";
     return stream;
 }

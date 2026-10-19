@@ -6,7 +6,7 @@
 Person::Person(int id, const std::string& N): id(id), name(N){}
 
 std::ostream& operator<<(std::ostream& stream, const Person& P) {
-    stream << "Person(id=" << P.id << ") " << P.name;
+    stream << "Person id = " << P.id << " , name: " << P.name << " ";
     return stream;
 }
 std::istream& operator>>(std::istream& stream, Person& P) {
