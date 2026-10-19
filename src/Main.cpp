@@ -56,7 +56,21 @@ void initData(std::vector<Professor*>& allProfs, std::vector<Student*>& allStuds
     *A1 += C4;
     *A2 += C3;
 }
+void initCollectionData(collection<Professor*>& allProfs, collection<Student*>& allStuds, collection<Course*>& allCs, collection<Admin*>& allAs) {
+    auto P1 = new Professor(11, "Prof11", "Foreign");
+    auto P2 = new Professor(12, "Prof12", "Native");
+    allProfs.add(P1);
+    allProfs.add(P2);
 
+    auto C1 = new Course(111, "C1", "LVL", P1, "Mon 12:00", 6);
+    allCs.add(C1);
+
+    auto S1 = new Student(33, "Stud", "studId template");
+    allStuds.add(S1);
+
+    auto A1 = new Admin(101, "Adm", "Admissions");
+    allAs.add(A1);
+}
 int main() {
     std::vector<Professor*> allProfessors;
     std::vector<Student*> allStudents;
@@ -69,6 +83,7 @@ int main() {
     collection<Admin*> allAs;
 
     initData(allProfessors, allStudents, allCourses, allAdmins);
+    initCollectionData(allProfs, allStuds, allCs, allAs);
 
     while (true) {
         std::cout << "\n1. Templates\n";
