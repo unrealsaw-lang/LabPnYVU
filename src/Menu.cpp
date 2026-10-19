@@ -115,7 +115,7 @@ void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStu
         std::cout << "\n1. Find object in collection\n2. Get object from collection\n"
             "3. Add object to collection\n4. Remove object from collection\n"
             "5. Get collection size\n6. Clear collection\n"
-            "7. Demo with different data types\n8. Print\n0. Back\n";
+            "7. Demo with different data types\n8. Print\n9. Print courses by language and level\n0. Back";
         int c = promptInt("Your choice: ");
         if (c == 0) return;
 
@@ -281,6 +281,7 @@ void templatesMenu(collection<Course*>& allCourses, collection<Student*>& allStu
             else if (subC == 3) allAdmins.print();
             else if (subC == 4) allCourses.print();
         }
+        else if (c == 9) printByLanguageLevel(allCourses);
         else std::cout << "Invalid\n";
     }
 }
