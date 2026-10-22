@@ -6,9 +6,7 @@
 Admin::Admin(int id, const std::string& name, const std::string& resp) : Person(id, name), responsibility(resp) {}
 
 std::ostream& operator<<(std::ostream& stream, const Admin& A) {
-    stream << "Admin " << A.name << " (";
-    stream << static_cast<const Person&>(A) << ", ";
-    stream << "responsibility: " << A.responsibility << " )";
+    stream << "Admin " << A.name << " (" << static_cast<const Person&>(A) << ", responsibility: " << A.responsibility << " )";
     return stream;
 }
 
@@ -42,10 +40,10 @@ void Admin::printInfo() const {
         std::cout << "None\n";
         return;
     }
-    for (int i = 0; i < courses.getSize(); ++i) {
-        std::cout << courses.get(i)->getLanguage()
-            << " (" << courses.get(i)->getLevel() << ", course id = " << courses.get(i)->getId() << ")";
-        if (i != courses.getSize() - 1) std::cout << ", ";
+    int idx = 0;
+    for (auto crs : courses) {
+        std::cout << crs->getLanguage() << " (" << crs->getLevel() << ", course id = " << crs->getId() << ")";
+        if (++idx < courses.getSize()) std::cout << ", ";
     }
     std::cout << "\n";
 }
@@ -55,14 +53,13 @@ void Admin::calculateDominantLanguage() const {
         std::cout << "\nAdmin " << getName() << " manages 0 courses\n";
         return;
     }
-
     std::cout << "\nAdmin " << getName() << " manages " << courses.getSize() << " course(s):\n";
 
     collection<std::string> languages;
     collection<int> counts;
 
-    for (int i = 0; i < courses.getSize(); ++i) {
-        std::string lang = courses.get(i)->getLanguage();
+    for (auto crs : courses) {
+        std::string lang = crs->getLanguage();
         int index = languages.find(lang);
 
         if (index == -1) {
@@ -81,8 +78,7 @@ void Admin::calculateDominantLanguage() const {
 
     for (int i = 0; i < languages.getSize(); ++i) {
         double percent = 100.0 * counts.get(i) / courses.getSize();
-        std::cout << i + 1 << ") " << languages.get(i) << ": "
-            << counts.get(i) << " (" << percent << "%)\n";
+        std::cout << i + 1 << ") " << languages.get(i) << ": " << counts.get(i) << " (" << percent << "%)\n";
     }
 
     int maxCount = 0;
@@ -100,9 +96,10 @@ void Admin::calculateDominantLanguage() const {
         std::cout << top.get(0) << "\n";
     }
     else {
-        for (int i = 0; i < top.getSize(); ++i) {
-            std::cout << top.get(i);
-            if (i != top.getSize() - 1) std::cout << " and ";
+        int idx = 0;
+        for (auto t : top) {
+            std::cout << t;
+            if (++idx < top.getSize()) std::cout << " and ";
         }
         std::cout << "\n";
     }

@@ -6,9 +6,7 @@
 Student::Student(int id, const std::string& N, const std::string& sId) : Person(id, N), studentNumber(sId) {}
 
 std::ostream& operator<<(std::ostream& stream, const Student& S) {
-    stream << "Student " << S.name << " (";
-    stream << static_cast<const Person&>(S) << ", ";
-    stream << "student id = " << S.studentNumber << ")";
+    stream << "Student " << S.name << " (" << static_cast<const Person&>(S) << ", student id = " << S.studentNumber << ")";
     return stream;
 }
 
@@ -20,10 +18,7 @@ std::istream& operator>>(std::istream& stream, Student& S) {
 }
 
 Student& Student::operator+=(Course* C) {
-    if (C == nullptr) {
-        throw missingObjectError("Null pointer to Course object");
-        return *this;
-    }
+    if (C == nullptr) throw missingObjectError("Null pointer to Course object");
     (*C) += this;
     return *this;
 }
@@ -38,14 +33,10 @@ std::string Student::getType() const { return "Student"; }
 int Student::calculateWorkload() const { return courses.getSize() * 2; }
 
 double Student::calculateAverageMark() const {
-    if (marks.empty()) {
-        throw missingObjectError("Student does not have any marks");
-        return 0.0;
-    }
+    if (marks.empty()) throw missingObjectError("Student does not have any marks");
     double avg = 0.0;
-    for (size_t i = 0; i < marks.size(); i++) avg += marks[i];
-    avg /= marks.size();
-    return avg;
+    for (auto m : marks) avg += m;
+    return avg / marks.size();
 }
 
 void Student::studentMarkInfo(Student* S) {
@@ -54,9 +45,10 @@ void Student::studentMarkInfo(Student* S) {
     S->addMark(mark);
     std::cout << "\nSuccess!\n";
     std::cout << "\nCurrent student " << S->getName() << " (id = " << S->getId() << ") marks: ";
-    for (size_t i = 0; i < marks.size(); i++) {
-        if (i != S->marks.size() - 1) std::cout << S->marks[i] << ", ";
-        else std::cout << S->marks[i];
+    int idx = 0;
+    for (auto m : marks) {
+        std::cout << m;
+        if (++idx < marks.size()) std::cout << ", ";
     }
     std::cout << "\nAverage mark: " << S->calculateAverageMark();
 }
@@ -69,9 +61,10 @@ void Student::printInfo() const {
         std::cout << "None\n";
         return;
     }
-    for (int i = 0; i < courses.getSize(); ++i) {
-        std::cout << courses.get(i)->getLanguage() << " (" << courses.get(i)->getLevel() << ", course id = " << courses.get(i)->getId() << ")";
-        if (i != courses.getSize() - 1) std::cout << ", ";
+    int idx = 0;
+    for (auto crs : courses) {
+        std::cout << crs->getLanguage() << " (" << crs->getLevel() << ", course id = " << crs->getId() << ")";
+        if (++idx < courses.getSize()) std::cout << ", ";
     }
     std::cout << "\n";
 }

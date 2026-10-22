@@ -63,4 +63,9 @@ public:
 			os << "\n";
 		}
 	}
+
+	auto begin() { return objects.begin(); }
+	auto end() { return objects.end(); }
+	auto begin() const { return objects.begin(); }
+	auto end() const { return objects.end(); }
 };

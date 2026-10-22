@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <vector>
+#include <memory>
 #include "Course.h"
 #include "Professor.h"
 #include "Student.h"
@@ -9,45 +9,66 @@
 #include "Menu.h"
 
 void initData(collection<Professor*>& allProfs, collection<Student*>& allStuds, collection<Course*>& allCourses, collection<Admin*>& allAdmins) {
-    auto P1 = new Professor(1, "Andrew", "Foreign");
-    auto P2 = new Professor(2, "Bob", "Native");
-    allProfs.add(P1);
-    allProfs.add(P2);
+    auto P1 = std::make_unique<Professor>(1, "Andrew", "Foreign");
+    auto P1_raw = P1.get();
+    allProfs.add(P1.release());
 
-    auto C1 = new Course(1, "English", "A1", P1, "Mon 12:00", 6);
-    auto C2 = new Course(2, "Russian", "B2", P1, "Mon 10:00", 12);
-    auto C3 = new Course(3, "English", "A2", P1, "Tue 10:00", 10);
-    allCourses.add(C1);
-    allCourses.add(C2);
-    allCourses.add(C3);
+    auto P2 = std::make_unique<Professor>(2, "Bob", "Native");
+    auto P2_raw = P2.get();
+    allProfs.add(P2.release());
 
-    auto S1 = new Student(1, "Steve", "50128");
-    auto S2 = new Student(2, "Bob", "44101");
-    auto S3 = new Student(3, "Alex", "15223");
-    auto S4 = new Student(4, "Andrew", "73077");
-    auto S5 = new Student(5, "David", "22401");
-    auto S6 = new Student(6, "George", "55940");
-    auto S7 = new Student(7, "TEST", "TESTID");
-    allStuds.add(S1);
-    allStuds.add(S2);
-    allStuds.add(S3); 
-    allStuds.add(S4);
-    allStuds.add(S5);
-    allStuds.add(S6);
-    allStuds.add(S7);
+    auto C1 = std::make_unique<Course>(1, "English", "A1", P1_raw, "Mon 12:00", 6);
+    auto C1_raw = C1.get();
+    allCourses.add(C1.release());
 
-    auto A1 = new Admin(101, "Ann", "Admissions");
-    allAdmins.add(A1);
+    auto C2 = std::make_unique<Course>(2, "Russian", "B2", P1_raw, "Mon 10:00", 12);
+    auto C2_raw = C2.get();
+    allCourses.add(C2.release());
 
-    *C1 += S1;
-    *C1 += S2;
-    *C1 += S3;
-    *C1 += S4;
-    *C1 += S5;
-    *C1 += S6;
+    auto C3 = std::make_unique<Course>(3, "English", "A2", P1_raw, "Tue 10:00", 10);
+    auto C3_raw = C3.get();
+    allCourses.add(C3.release());
 
-    *C2 += S1;
+    auto S1 = std::make_unique<Student>(1, "Steve", "50128");
+    auto S1_raw = S1.get();
+    allStuds.add(S1.release());
+
+    auto S2 = std::make_unique<Student>(2, "Bob", "44101");
+    auto S2_raw = S2.get();
+    allStuds.add(S2.release());
+
+    auto S3 = std::make_unique<Student>(3, "Alex", "15223");
+    auto S3_raw = S3.get();
+    allStuds.add(S3.release());
+
+    auto S4 = std::make_unique<Student>(4, "Andrew", "73077");
+    auto S4_raw = S4.get();
+    allStuds.add(S4.release());
+
+    auto S5 = std::make_unique<Student>(5, "David", "22401");
+    auto S5_raw = S5.get();
+    allStuds.add(S5.release());
+
+    auto S6 = std::make_unique<Student>(6, "George", "55940");
+    auto S6_raw = S6.get();
+    allStuds.add(S6.release());
+
+    auto S7 = std::make_unique<Student>(7, "TEST", "TESTID");
+    allStuds.add(S7.release());
+
+    auto A1 = std::make_unique<Admin>(101, "Ann", "Admissions");
+    allAdmins.add(A1.release());
+
+    *C1_raw += S1_raw;
+    *C1_raw += S2_raw;
+    *C1_raw += S3_raw;
+    *C1_raw += S4_raw;
+    *C1_raw += S5_raw;
+    *C1_raw += S6_raw;
+
+    *C2_raw += S1_raw;
 }
+
 int main() {
     collection<Professor*> allProfs;
     collection<Student*> allStuds;
@@ -55,13 +76,13 @@ int main() {
     collection<Admin*> allAdmins;
 
     initData(allProfs, allStuds, allCourses, allAdmins);
-    
+
     templatesMenu(allCourses, allStuds, allProfs, allAdmins);
 
-    for (int i = 0; i < allCourses.getSize(); ++i) delete allCourses.get(i);
-    for (int i = 0; i < allProfs.getSize(); ++i) delete allProfs.get(i);
-    for (int i = 0; i < allStuds.getSize(); ++i) delete allStuds.get(i);
-    for (int i = 0; i < allAdmins.getSize(); ++i) delete allAdmins.get(i);
+    for (auto crs : allCourses) delete crs;
+    for (auto prof : allProfs) delete prof;
+    for (auto stud : allStuds) delete stud;
+    for (auto adm : allAdmins) delete adm;
 
     return 0;
 }
