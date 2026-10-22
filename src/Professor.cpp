@@ -1,5 +1,6 @@
 #include "Professor.h"
 #include "Course.h"
+#include "Exceptions.h"
 #include "Menu.h"
 
 Professor::Professor(int id, const std::string& N, const std::string& dep) : Person(id, N), department(dep) {}
@@ -19,7 +20,10 @@ std::istream& operator>>(std::istream& stream, Professor& P) {
 }
 
 Professor& Professor::operator+=(Course* C) {
-    if (C == nullptr) { std::cout << "Null\n"; return *this; }
+    if (C == nullptr) {
+        throw missingObjectError("Null pointer to Course object");
+        return *this;
+    }
     (*C) += this;
     return *this;
 }
@@ -50,7 +54,10 @@ void Professor::printInfo() const {
 }
 
 double Professor::calculateAverageRating() const {
-    if (feedbacks.empty()) return 0.0;
+    if (feedbacks.empty()) {
+        throw missingObjectError("Professor does not have any feedbacks");
+        return 0.0;
+    }
     double avg = 0.0;
     for (size_t i = 0; i < feedbacks.size(); i++) avg += feedbacks[i];
     avg /= feedbacks.size();
@@ -61,7 +68,7 @@ void Professor::professorRateMenu(Professor* P) {
     int r; std::cout << "Enter rate: ";
     std::cin >> r;
     P->rate(r);
-    std::cout << "Success!";
+    std::cout << "\nSuccess!\n";
     std::cout << "\nCurrent professor " << P->getName() << " (id = " << P->getId() << ")";
     std::cout << "\nAverage rating : " << P->calculateAverageRating();
 }

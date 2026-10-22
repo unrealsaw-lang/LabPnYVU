@@ -1,5 +1,6 @@
 #include "Student.h"
 #include "Course.h"
+#include "Exceptions.h"
 #include "Menu.h"
 
 Student::Student(int id, const std::string& N, const std::string& sId) : Person(id, N), studentNumber(sId) {}
@@ -19,7 +20,10 @@ std::istream& operator>>(std::istream& stream, Student& S) {
 }
 
 Student& Student::operator+=(Course* C) {
-    if (C == nullptr) { std::cout << "Null\n"; return *this; }
+    if (C == nullptr) {
+        throw missingObjectError("Null pointer to Course object");
+        return *this;
+    }
     (*C) += this;
     return *this;
 }
@@ -34,7 +38,10 @@ std::string Student::getType() const { return "Student"; }
 int Student::calculateWorkload() const { return courses.getSize() * 2; }
 
 double Student::calculateAverageMark() const {
-    if (marks.empty()) return 0.0;
+    if (marks.empty()) {
+        throw missingObjectError("Student does not have any marks");
+        return 0.0;
+    }
     double avg = 0.0;
     for (size_t i = 0; i < marks.size(); i++) avg += marks[i];
     avg /= marks.size();
@@ -45,7 +52,7 @@ void Student::studentMarkInfo(Student* S) {
     int mark; std::cout << "Enter mark: ";
     std::cin >> mark;
     S->addMark(mark);
-    std::cout << "Success!";
+    std::cout << "\nSuccess!\n";
     std::cout << "\nCurrent student " << S->getName() << " (id = " << S->getId() << ") marks: ";
     for (size_t i = 0; i < marks.size(); i++) {
         if (i != S->marks.size() - 1) std::cout << S->marks[i] << ", ";

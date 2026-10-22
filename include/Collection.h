@@ -3,6 +3,7 @@
 #include <vector>
 #include <type_traits>
 #include <ostream>
+#include "Exceptions.h"
 
 template<typename T> class collection {
 std::vector<T> objects;
@@ -14,13 +15,17 @@ public:
 		for (size_t i = 0; i < objects.size(); i++) {
 			if (objects[i] == O){
 				objects.erase(objects.begin() + i);
-				break;
+				return;
 			}
 		}
+		throw missingObjectError("Collection does not include given object");
 	}
 
 	T get(int index) const {
-		if (index < 0 || index >= static_cast<int>(objects.size())) return T();
+		if (index < 0 || index >= static_cast<int>(objects.size())) {
+			throw limitViolationError("Index shoud be >= 0 and < collection size");
+			return T();
+		}
 		else return objects[index];
 	}
 
@@ -36,7 +41,7 @@ public:
 		for (const T& object : objects) {
 			if (condition(object)) return object;
 		}
-		return T();
+		throw missingObjectError("No object matching given condition");
 	}
 
 	int getSize() const { return static_cast<int>(objects.size());}
