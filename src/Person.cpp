@@ -18,19 +18,17 @@ std::istream& operator>>(std::istream& stream, Person& P) {
 }
 
 Person& Person::operator+=(Course* C) {
-    if (C == nullptr) { 
+    if (C == nullptr)
         throw missingObjectError("Null pointer to Course object");
-    }
     if (courses.find(C) != -1) { std::cout << "Already added\n"; return *this; }
     courses.add(C);
     return *this;
 }
 
 Person& Person::operator-=(Course* C) {
-    if (C == nullptr) { 
+    if (C == nullptr)
         throw missingObjectError("Null pointer to Course object");
-    }
     if (courses.find(C) != -1) courses.remove(C);
-    else std::cout << "Course not found\n";
+    else throw missingObjectError("Course is not assigned to this person");
     return *this;
 }

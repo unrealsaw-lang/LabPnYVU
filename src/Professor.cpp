@@ -24,7 +24,7 @@ Professor& Professor::operator+=(Course* C) {
 }
 
 Professor& Professor::operator-=(Course* C) {
-    Person::operator-=(C);
+    if (C == nullptr) throw missingObjectError("Null pointer to Course object");
     (*C) -= this;
     return *this;
 }
@@ -36,9 +36,7 @@ void Professor::printInfo() const {
     std::cout << "--------------------------------------\n";
     std::cout << "Professor " << getName() << " (id = " << getId() << ", department: " << department << ")\n";
     std::cout << "Leads " << getCount() << " course(s): ";
-    if (courses.getSize() == 0) {
-        std::cout << "None";
-    }
+    if (courses.getSize() == 0) { std::cout << "None"; }
     else {
         int idx = 0;
         for (auto crs : courses) {

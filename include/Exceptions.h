@@ -1,39 +1,28 @@
 #pragma once
-#include <exception>
+#include <stdexcept>
 #include <string>
 
-class myException : public std::exception {
-	std::string message;
+class invalidDataError : public std::runtime_error {
 public:
-	explicit myException(const std::string& msg) : message(msg){}
-	const char* what() const noexcept override { return message.c_str(); }
+    explicit invalidDataError(const std::string& msg) : std::runtime_error("Invalid data: " + msg) {}
 };
 
-class invalidDataError : public myException {
+class limitViolationError : public std::runtime_error {
 public:
-	explicit invalidDataError(const std::string& msg) :myException("Invalid data: " + msg){}
+    explicit limitViolationError(const std::string& msg) : std::runtime_error("Data above the limits: " + msg) {}
 };
 
-class limitViolationError : public myException {
+class missingObjectError : public std::runtime_error {
 public:
-	explicit limitViolationError(const std::string& msg) :myException("Data above the limits: " + msg) {}
-
+    explicit missingObjectError(const std::string& msg) : std::runtime_error("Object not found: " + msg) {}
 };
 
-class missingObjectError : public myException {
+class uniqueIdDuplicationError : public std::runtime_error {
 public:
-	explicit missingObjectError(const std::string& msg) :myException("Object not found: " + msg) {}
-
+    explicit uniqueIdDuplicationError(const std::string& msg) : std::runtime_error("Unique identificator duplicated: " + msg) {}
 };
 
-class uniqueIdDuplicationError : public myException {
+class invalidOperationError : public std::runtime_error {
 public:
-	explicit uniqueIdDuplicationError(const std::string& msg) :myException("Unique identificator duplicated: " + msg) {}
-
-};
-
-class invalidOperationError : public myException {
-public:
-	explicit invalidOperationError(const std::string& msg) :myException("Invalid operator used for object: " + msg) {}
-
+    explicit invalidOperationError(const std::string& msg) : std::runtime_error("Invalid operator used for object: " + msg) {}
 };

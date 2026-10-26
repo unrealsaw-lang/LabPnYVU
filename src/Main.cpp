@@ -74,10 +74,12 @@ int main() {
     collection<Student*> allStuds;
     collection<Course*> allCourses;
     collection<Admin*> allAdmins;
-
-    initData(allProfs, allStuds, allCourses, allAdmins);
-
-    templatesMenu(allCourses, allStuds, allProfs, allAdmins);
+    
+    try {
+        initData(allProfs, allStuds, allCourses, allAdmins);
+        mainMenu(allCourses, allStuds, allProfs, allAdmins);
+    }
+    catch (const std::exception& e) { std::cerr << "Error. Program will be closed safely\n"; }
 
     for (auto crs : allCourses) delete crs;
     for (auto prof : allProfs) delete prof;
