@@ -23,7 +23,7 @@ public:
 
     T get(int index) const {
         if (index < 0 || index >= static_cast<int>(objects.size()))
-            throw limitViolationError("Index shoud be >= 0 and < collection size");
+            throw courseLimitViolationError("Index shoud be >= 0 and < collection size");
         return objects[index];
     }
 

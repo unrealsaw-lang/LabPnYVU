@@ -158,7 +158,7 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
                     else if (subC == 3) { const auto* A = allAdmins.get(idx); if (A) A->printInfo(); }
                     else if (subC == 4) { const auto* C = allCourses.get(idx); if (C) C->printInfo(); }
                 }
-                catch (const limitViolationError& e) { std::cout << "\n[Index out of range] " << e.what() << "\n"; }
+                catch (const courseLimitViolationError& e) { std::cout << "\n[Index out of range] " << e.what() << "\n"; }
                 catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
             }
         }
@@ -215,7 +215,7 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
                 catch (const uniqueIdDuplicationError& e) { std::cout << "\n[Duplicate ID] " << e.what() << "\n"; }
                 catch (const invalidDataError& e) { std::cout << "\n[Invalid data] " << e.what() << "\n"; }
                 catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
-                catch (const limitViolationError& e) { std::cout << "\n[Limit exceeded] " << e.what() << "\n"; }
+                catch (const courseLimitViolationError& e) { std::cout << "\n[Limit exceeded] " << e.what() << "\n"; }
                 catch (const invalidOperationError& e) { std::cout << "\n[Invalid operation] " << e.what() << "\n"; }
                 catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
             }
@@ -307,7 +307,7 @@ void enrollMenu(const collection<Course*>& allCourses, const collection<Student*
                 else { int before = A->getCount(); *A -= C; if (A->getCount() < before) std::cout << "Admin removed!\n"; }
             }
         }
-        catch (const limitViolationError& e) { std::cout << "\n[Limit exceeded] " << e.what() << "\n"; }
+        catch (const courseLimitViolationError& e) { std::cout << "\n[Limit exceeded] " << e.what() << "\n"; }
         catch (const invalidOperationError& e) { std::cout << "\n[Invalid operation] " << e.what() << "\n"; }
         catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
         catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }

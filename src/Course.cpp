@@ -55,7 +55,7 @@ std::istream& operator>>(std::istream& stream, Course& course) {
 
 Course& Course::operator+=(Student* S) {
     if (S == nullptr) throw missingObjectError("Null pointer to Student object");
-    if (studs.getSize() >= maxCount) throw limitViolationError("Current course limit is " + std::to_string(maxCount));
+    if (studs.getSize() >= maxCount) throw courseLimitViolationError("Current course limit is " + std::to_string(maxCount));
     if (studs.find(S) != -1) throw invalidOperationError("Student already assigned");
 
     studs.add(S);

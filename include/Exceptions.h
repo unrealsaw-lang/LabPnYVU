@@ -13,9 +13,9 @@ public:
     explicit invalidDataError(const std::string& msg) : myException("Invalid data: " + msg) {}
 };
 
-class limitViolationError : public myException {
+class courseLimitViolationError : public myException {
 public:
-    explicit limitViolationError(const std::string& msg) : myException("Data above the limits: " + msg) {}
+    explicit courseLimitViolationError(const std::string& msg) : myException("Data above the limits: " + msg) {}
 };
 
 class missingObjectError : public myException {
