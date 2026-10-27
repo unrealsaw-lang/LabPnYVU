@@ -2,27 +2,33 @@
 #include <stdexcept>
 #include <string>
 
-class invalidDataError : public std::runtime_error {
+class myException : public std::runtime_error {
 public:
-    explicit invalidDataError(const std::string& msg) : std::runtime_error("Invalid data: " + msg) {}
+    explicit myException(const std::string& msg)
+        : std::runtime_error("[Language school system error] " + msg) {}
 };
 
-class limitViolationError : public std::runtime_error {
+class invalidDataError : public myException {
 public:
-    explicit limitViolationError(const std::string& msg) : std::runtime_error("Data above the limits: " + msg) {}
+    explicit invalidDataError(const std::string& msg) : myException("Invalid data: " + msg) {}
 };
 
-class missingObjectError : public std::runtime_error {
+class limitViolationError : public myException {
 public:
-    explicit missingObjectError(const std::string& msg) : std::runtime_error("Object not found: " + msg) {}
+    explicit limitViolationError(const std::string& msg) : myException("Data above the limits: " + msg) {}
 };
 
-class uniqueIdDuplicationError : public std::runtime_error {
+class missingObjectError : public myException {
 public:
-    explicit uniqueIdDuplicationError(const std::string& msg) : std::runtime_error("Unique identificator duplicated: " + msg) {}
+    explicit missingObjectError(const std::string& msg) : myException("Object not found: " + msg) {}
 };
 
-class invalidOperationError : public std::runtime_error {
+class uniqueIdDuplicationError : public myException {
 public:
-    explicit invalidOperationError(const std::string& msg) : std::runtime_error("Invalid operator used for object: " + msg) {}
+    explicit uniqueIdDuplicationError(const std::string& msg) : myException("Unique identificator duplicated: " + msg) {}
+};
+
+class invalidOperationError : public myException {
+public:
+    explicit invalidOperationError(const std::string& msg) : myException("Invalid operator used for object: " + msg) {}
 };

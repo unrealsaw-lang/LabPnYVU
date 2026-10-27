@@ -76,7 +76,7 @@ static Course* findCourse(const collection<Course*>& allCourses) {
             else if (c == 7) { int n = promptInt("Enter max count: "); return allCourses.findBy([n](const Course* crs) { return crs->getMaxCount() == n; }); }
         }
         catch (const missingObjectError& e) { std::cout << "\n[Not found] " << e.what() << ". Try again\n"; }
-        catch (const std::exception& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
+        catch (const myException& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
     }
 }
 static Student* findStudent(const collection<Student*>& allStuds) {
@@ -92,7 +92,7 @@ static Student* findStudent(const collection<Student*>& allStuds) {
             else if (c == 5) { double a = promptInt("Enter min average: "); return allStuds.findBy([a](const Student* stud) { return stud->calculateAverageMark() > a; }); }
         }
         catch (const missingObjectError& e) { std::cout << "\n[Not found] " << e.what() << ". Try again\n"; }
-        catch (const std::exception& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
+        catch (const myException& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
     }
 }
 static Professor* findProfessor(const collection<Professor*>& allProfs) {
@@ -108,7 +108,7 @@ static Professor* findProfessor(const collection<Professor*>& allProfs) {
             else if (c == 5) { double a = promptInt("Enter min average: "); return allProfs.findBy([a](const Professor* prof) { return prof->calculateAverageRating() > a; }); }
         }
         catch (const missingObjectError& e) { std::cout << "\n[Not found] " << e.what() << ". Try again\n"; }
-        catch (const std::exception& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
+        catch (const myException& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
     }
 }
 static Admin* findAdmin(const collection<Admin*>& allAdmins) {
@@ -123,7 +123,7 @@ static Admin* findAdmin(const collection<Admin*>& allAdmins) {
             else if (c == 4) { int n = promptInt("Enter course count: "); return allAdmins.findBy([n](const Admin* adm) { return adm->getCount() == n; }); }
         }
         catch (const missingObjectError& e) { std::cout << "\n[Not found] " << e.what() << ". Try again\n"; }
-        catch (const std::exception& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
+        catch (const myException& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
     }
 }
 
@@ -159,7 +159,7 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
                     else if (subC == 4) { const auto* C = allCourses.get(idx); if (C) C->printInfo(); }
                 }
                 catch (const limitViolationError& e) { std::cout << "\n[Index out of range] " << e.what() << "\n"; }
-                catch (const std::exception& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+                catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
             }
         }
         else if (c == 3) {
@@ -217,7 +217,7 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
                 catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
                 catch (const limitViolationError& e) { std::cout << "\n[Limit exceeded] " << e.what() << "\n"; }
                 catch (const invalidOperationError& e) { std::cout << "\n[Invalid operation] " << e.what() << "\n"; }
-                catch (const std::exception& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+                catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
             }
         }
         else if (c == 4) {
@@ -273,7 +273,7 @@ void printMenu(const collection<Course*>& allCourses, const collection<Student*>
             else if (c == 8) { int id = promptInt("id: "); const auto* A = allAdmins.findBy([id](const Admin* adm) { return adm->getId() == id; }); if (A) A->printInfo(); }
         }
         catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
-        catch (const std::exception& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+        catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
     }
 }
 
@@ -310,6 +310,6 @@ void enrollMenu(const collection<Course*>& allCourses, const collection<Student*
         catch (const limitViolationError& e) { std::cout << "\n[Limit exceeded] " << e.what() << "\n"; }
         catch (const invalidOperationError& e) { std::cout << "\n[Invalid operation] " << e.what() << "\n"; }
         catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
-        catch (const std::exception& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+        catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
     }
 }
