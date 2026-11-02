@@ -48,7 +48,7 @@ void Professor::printInfo() const {
 }
 
 double Professor::calculateAverageRating() const {
-    if (feedbacks.empty()) throw missingObjectError("Professor does not have any feedbacks");
+    if (feedbacks.empty()) throw invalidOperationError("Professor does not have any feedbacks to calculate average");
     double avg = 0.0;
     for (auto f : feedbacks) avg += f;
     return avg / feedbacks.size();

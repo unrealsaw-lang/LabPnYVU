@@ -33,7 +33,7 @@ std::string Student::getType() const { return "Student"; }
 int Student::calculateWorkload() const { return courses.getSize() * 2; }
 
 double Student::calculateAverageMark() const {
-    if (marks.empty()) throw missingObjectError("Student does not have any marks");
+    if (marks.empty()) throw invalidOperationError("Student does not have any marks to calculate average");
     double avg = 0.0;
     for (auto m : marks) avg += m;
     return avg / marks.size();

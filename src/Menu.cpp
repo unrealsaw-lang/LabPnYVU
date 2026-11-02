@@ -129,7 +129,7 @@ static Admin* findAdmin(const collection<Admin*>& allAdmins) {
 
 void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, collection<Professor*>& allProfs, collection<Admin*>& allAdmins) {
     while (true) {
-        std::cout << "\n1. Find object in collection\n2. Get object from collection\n3. Add object to collection\n4. Remove object from collection\n5. Get collection size\n6. Clear collection\n7. Print\n8. Enroll menu\n0. Back\n";
+        std::cout << "\n1. Find object in collection\n2. Get object from collection\n3. Add object to collection\n4. Remove object from collection\n5. Get collection size\n6. Clear collection\n7. Print\n8. Enroll menu\n9. Grade/Rating menu\n0. Back\n";
         int c = promptInt("Your choice: ");
         if (c == 0) return;
 
@@ -253,6 +253,7 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
         }
         else if (c == 7) printMenu(allCourses, allStuds, allProfs, allAdmins);
         else if (c == 8) enrollMenu(allCourses, allStuds, allProfs, allAdmins);
+        else if (c == 9) evaluationMenu(allCourses, allStuds, allProfs, allAdmins);
         else std::cout << "Invalid\n";
     }
 }
@@ -311,5 +312,50 @@ void enrollMenu(const collection<Course*>& allCourses, const collection<Student*
         catch (const invalidOperationError& e) { std::cout << "\n[Invalid operation] " << e.what() << "\n"; }
         catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
         catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+    }
+}
+void evaluationMenu(const collection<Course*>& allCourses, const collection<Student*>& allStuds, const collection<Professor*>& allProfs, const collection<Admin*>& allAdmins) {
+    while (true) {
+        std::cout << "\n1. Add mark to student\n";
+        std::cout << "2. Add rating to professor\n";
+        std::cout << "0. Back\n";
+
+        int c = promptInt("Your choice: ");
+        if (c == 0) return;
+
+        try {
+            if (c == 1) {
+                int sid = promptInt("Enter student id: ");
+                Student* S = allStuds.findBy([sid](const Student* stud) { return stud->getId() == sid; });
+
+                int mark = promptInt("Enter mark: ");
+                S->addMark(mark);
+
+                std::cout << "\nSuccess! Mark " << mark << " added to " << S->getName() << ".\n";
+                std::cout << "Current average mark: " << S->calculateAverageMark() << "\n";
+            }
+            else if (c == 2) {
+                int pid = promptInt("Enter professor id: ");
+                Professor* P = allProfs.findBy([pid](const Professor* prof) { return prof->getId() == pid; });
+
+                int rating = promptInt("Enter rating (1-5): ");
+                P->rate(rating);
+
+                std::cout << "\nSuccess! Rating " << rating << " added to Professor " << P->getName() << ".\n";
+                std::cout << "Current average rating: " << P->calculateAverageRating() << "\n";
+            }
+            else {
+                std::cout << "Invalid choice!\n";
+            }
+        }
+        catch (const missingObjectError& e) {
+            std::cout << "\n[Not found] " << e.what() << "\n";
+        }
+        catch (const invalidOperationError& e) {
+            std::cout << "\n[Invalid operation] " << e.what() << "\n";
+        }
+        catch (const std::exception& e) {
+            std::cout << "\n[Error] " << e.what() << "\n";
+        }
     }
 }

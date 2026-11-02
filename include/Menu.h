@@ -13,3 +13,4 @@ int promptInt(const std::string& prompt);
 void mainMenu(collection<Course*>&, collection<Student*>&, collection<Professor*>&, collection<Admin*>&);
 void printMenu(const collection<Course*>&, const collection<Student*>&, const collection<Professor*>&, const collection<Admin*>&);
 void enrollMenu(const collection<Course*>&, const collection<Student*>&, const collection<Professor*>&, const collection<Admin*>&);
+void evaluationMenu(const collection<Course*>&, const collection<Student*>&, const collection<Professor*>&, const collection<Admin*>&);
