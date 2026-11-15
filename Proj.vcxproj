@@ -130,14 +130,25 @@
     <ClInclude Include="include\Admin.h" />
     <ClInclude Include="include\Collection.h" />
     <ClInclude Include="include\Course.h" />
+    <ClInclude Include="include\CourseLimitViolationException.h" />
+    <ClInclude Include="include\EmptyFileException.h" />
+    <ClInclude Include="include\FileException.h" />
+    <ClInclude Include="include\FileManager.h" />
+    <ClInclude Include="include\InvalidFileDataException.h" />
+    <ClInclude Include="include\InvalidOperationException.h" />
+    <ClInclude Include="include\LanguageSchoolException.h" />
+    <ClInclude Include="include\InvalidDataException.h" />
     <ClInclude Include="include\Menu.h" />
+    <ClInclude Include="include\MissingObjectException.h" />
     <ClInclude Include="include\Person.h" />
     <ClInclude Include="include\Professor.h" />
     <ClInclude Include="include\Student.h" />
+    <ClInclude Include="include\UniqueIdDuplicationException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Admin.cpp" />
     <ClCompile Include="src\Course.cpp" />
+    <ClCompile Include="src\FileManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Menu.cpp" />
     <ClCompile Include="src\Person.cpp" />

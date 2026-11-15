@@ -46,6 +46,8 @@ public:
     int getStudentCount() const { return studs.getSize(); }
     int getProfessorCount() const { return profs.getSize(); }
     int getMaxCount() const { return maxCount; }
+    collection<Professor*> getProfessors() const { return profs; }
+    collection<Student*> getStudents() const { return studs; }
 
     void printInfo() const;
     Student* findStudentByName(const std::string& name) const;

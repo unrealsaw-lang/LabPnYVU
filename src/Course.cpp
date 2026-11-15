@@ -1,16 +1,19 @@
 #include "Course.h"
 #include "Professor.h"
 #include "Student.h"
-#include "Exceptions.h"
+#include "InvalidDataException.h"
+#include "CourseLimitViolationException.h"
+#include "MissingObjectException.h"
+#include "InvalidOperationException.h"
 #include <iostream>
 
 Course::Course(int id, const std::string& lang, const std::string& lvl, Professor* P, const std::string& sched, int max)
     : id(id), maxCount(max), level(lvl), language(lang), schedule(sched) {
     if (max <= 0) {
-        throw invalidDataError("Course size should be > 0");
+        throw InvalidDataException("Course size should be > 0");
     }
     if (P == nullptr) {
-        throw missingObjectError("Null pointer to Professor object");
+        throw MissingObjectException("Null pointer to Professor object");
     }
     else *this += P;
 }
@@ -54,9 +57,9 @@ std::istream& operator>>(std::istream& stream, Course& course) {
 }
 
 Course& Course::operator+=(Student* S) {
-    if (S == nullptr) throw missingObjectError("Null pointer to Student object");
-    if (studs.getSize() >= maxCount) throw courseLimitViolationError("Current course limit is " + std::to_string(maxCount));
-    if (studs.find(S) != -1) throw invalidOperationError("Student already assigned");
+    if (S == nullptr) throw MissingObjectException("Null pointer to Student object");
+    if (studs.getSize() >= maxCount) throw CourseLimitViolationException("Current course limit is " + std::to_string(maxCount));
+    if (studs.find(S) != -1) throw InvalidOperationException("Student already assigned");
 
     studs.add(S);
     if (S->courses.find(this) == -1) S->courses.add(this);
@@ -64,19 +67,19 @@ Course& Course::operator+=(Student* S) {
 }
 
 Course& Course::operator-=(Student* S) {
-    if (S == nullptr) throw missingObjectError("Null pointer to Student object");
+    if (S == nullptr) throw MissingObjectException("Null pointer to Student object");
     if (studs.find(S) != -1) {
         studs.remove(S);
         S->courses.remove(this);
         std::cout << "Student removed!\n";
     }
-    else throw missingObjectError("Student is not enrolled in this course");
+    else throw MissingObjectException("Student is not enrolled in this course");
     return *this;
 }
 
 Course& Course::operator+=(Professor* P) {
-    if (P == nullptr) throw missingObjectError("Null pointer to Professor object");
-    if (profs.find(P) != -1) throw invalidOperationError("Professor already assigned");
+    if (P == nullptr) throw MissingObjectException("Null pointer to Professor object");
+    if (profs.find(P) != -1) throw InvalidOperationException("Professor already assigned");
 
     profs.add(P);
     if (P->courses.find(this) == -1) P->courses.add(this);
@@ -84,13 +87,13 @@ Course& Course::operator+=(Professor* P) {
 }
 
 Course& Course::operator-=(Professor* P) {
-    if (P == nullptr) throw missingObjectError("Null pointer to Professor object");
+    if (P == nullptr) throw MissingObjectException("Null pointer to Professor object");
     if (profs.find(P) != -1) {
         profs.remove(P);
         P->courses.remove(this);
         std::cout << "Professor removed!\n";
     }
-    else throw missingObjectError("Professor is not assigned to this course");
+    else throw MissingObjectException("Professor is not assigned to this course");
     return *this;
 }
 

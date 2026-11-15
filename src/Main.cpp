@@ -79,7 +79,7 @@ int main() {
         initData(allProfs, allStuds, allCourses, allAdmins);
         mainMenu(allCourses, allStuds, allProfs, allAdmins);
     }
-    catch (const myException& e) { std::cerr << "Error. Program will be closed safely\n"; }
+    catch (const LanguageSchoolException& e) { std::cerr << "Error. Program will be closed safely\n"; }
 
     for (auto crs : allCourses) delete crs;
     for (auto prof : allProfs) delete prof;

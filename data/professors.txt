@@ -1,0 +1,2 @@
+1|Andrew|Foreign|
+2|Bob|Native|

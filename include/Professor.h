@@ -24,6 +24,8 @@ public:
 
     std::string getType() const override;
     std::string getDepartment() const { return department; }
+    std::vector<int> getFeedbacks() const { return feedbacks; }
+    int getFeedbacksSize()const { return static_cast<int>(feedbacks.size()); }
 
     void rate(int r) { feedbacks.push_back(r); }
     double calculateAverageRating() const;

@@ -3,7 +3,8 @@
 #include <vector>
 #include <type_traits>
 #include <ostream>
-#include "Exceptions.h"
+#include "MissingObjectException.h"
+#include "CourseLimitViolationException.h"
 
 template<typename T> class collection {
     std::vector<T> objects;
@@ -18,12 +19,12 @@ public:
                 return;
             }
         }
-        throw missingObjectError("Collection does not include given object");
+        throw MissingObjectException("Collection does not include given object");
     }
 
     T get(int index) const {
         if (index < 0 || index >= static_cast<int>(objects.size()))
-            throw courseLimitViolationError("Index shoud be >= 0 and < collection size");
+            throw CourseLimitViolationException("Index shoud be >= 0 and < collection size");
         return objects[index];
     }
 
@@ -36,12 +37,12 @@ public:
     template<typename LambdaType> T findBy(LambdaType condition) const {
         for (const T& object : objects)
             if (condition(object)) return object;
-        throw missingObjectError("No object matching given condition");
+        throw MissingObjectException("No object matching given condition");
     }
 
     int getSize() const { return static_cast<int>(objects.size()); }
 
-    void clear() { objects.clear(); std::cout << "\nCleared!\n"; }
+    void clear() { objects.clear(); }
 
     void print(std::ostream& os = std::cout) const {
         for (size_t i = 0; i < objects.size(); ++i) {

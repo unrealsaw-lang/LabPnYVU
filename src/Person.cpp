@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Person.h"
 #include "Course.h"
-#include "Exceptions.h"
+#include "MissingObjectException.h"
 
 Person::Person(int id, const std::string& N) : id(id), name(N) {}
 
@@ -19,7 +19,7 @@ std::istream& operator>>(std::istream& stream, Person& P) {
 
 Person& Person::operator+=(Course* C) {
     if (C == nullptr)
-        throw missingObjectError("Null pointer to Course object");
+        throw MissingObjectException("Null pointer to Course object");
     if (courses.find(C) != -1) { std::cout << "Already added\n"; return *this; }
     courses.add(C);
     return *this;
@@ -27,8 +27,8 @@ Person& Person::operator+=(Course* C) {
 
 Person& Person::operator-=(Course* C) {
     if (C == nullptr)
-        throw missingObjectError("Null pointer to Course object");
+        throw MissingObjectException("Null pointer to Course object");
     if (courses.find(C) != -1) courses.remove(C);
-    else throw missingObjectError("Course is not assigned to this person");
+    else throw MissingObjectException("Course is not assigned to this person");
     return *this;
 }

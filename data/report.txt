@@ -1,0 +1,38 @@
+Language school report:
+
+Course info:
+1) id: 1, language: English, level: A1, capacity: 6/6, schedule: Mon 12:00
+professors: Andrew
+students: Steve, Bob, Alex, Andrew, David, George
+2) id: 2, language: Russian, level: B2, capacity: 1/12, schedule: Mon 10:00
+professors: Andrew
+students: Steve
+3) id: 3, language: English, level: A2, capacity: 0/10, schedule: Tue 10:00
+professors: Andrew
+students: none
+
+Student info:
+1) id: 1, name: Steve, student number: 50128
+   marks: no marks
+2) id: 2, name: Bob, student number: 44101
+   marks: no marks
+3) id: 3, name: Alex, student number: 15223
+   marks: no marks
+4) id: 4, name: Andrew, student number: 73077
+   marks: no marks
+5) id: 5, name: David, student number: 22401
+   marks: no marks
+6) id: 6, name: George, student number: 55940
+   marks: no marks
+7) id: 7, name: TEST, student number: TESTID
+   marks: no marks
+
+Professor info:
+1) id: 1, name: Andrew, department: Foreign
+   feedbacks: no feedbacks
+2) id: 2, name: Bob, department: Native
+   feedbacks: no feedbacks
+
+Admin info:
+1) id: 101, name: Ann, responsibility: Admissions
+

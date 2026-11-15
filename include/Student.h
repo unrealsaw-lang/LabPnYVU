@@ -22,6 +22,8 @@ public:
 
     std::string getType() const override;
     std::string getStudentId() const { return studentNumber; }
+    std::vector<int> getMarks() const { return marks; }
+    int getMarksSize()const { return static_cast<int>(marks.size()); }
 
     void addMark(int m) { marks.push_back(m); }
     double calculateAverageMark() const;

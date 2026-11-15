@@ -3,15 +3,22 @@
 #include "Professor.h"
 #include "Student.h"
 #include "Admin.h"
+#include "FileManager.h"
+#include "UniqueIdDuplicationException.h"
+#include "InvalidDataException.h"
+#include "InvalidOperationException.h"
 #include <iostream>
 #include <memory>
+#include <fstream>
+#include <ctime>
+
 
 template <typename T> static void addToCollection(std::unique_ptr<T> obj, collection<T*>& col) {
-    if (!obj) throw missingObjectError("Pointer to null");
+    if (!obj) throw MissingObjectException("Pointer to null");
 
     for (const auto& existing : col) {
         if (existing != nullptr && existing->getId() == obj->getId())
-            throw uniqueIdDuplicationError("ID: " + std::to_string(obj->getId()) + " is already taken");
+            throw UniqueIdDuplicationException("ID: " + std::to_string(obj->getId()) + " is already taken");
     }
 
     col.add(obj.release());
@@ -38,7 +45,7 @@ template <typename T> static int promptUniqueId(const collection<T*>& col, const
             }
         }
         if (!isDuplicate) return id;
-        std::cout << "Ошибка: ID " << id << " уже занят! Попробуйте другой.\n";
+        std::cout << "ID: " << id << " already taken!\n";
     }
 }
 
@@ -67,16 +74,37 @@ static Course* findCourse(const collection<Course*>& allCourses) {
         int c = promptInt("Your choice: ");
         if (c == 0) return nullptr;
         try {
-            if (c == 1) { int id = promptInt("Enter id: "); return allCourses.findBy([id](const Course* crs) { return crs->getId() == id; }); }
-            else if (c == 2) { std::string s = promptName("Enter language: "); return allCourses.findBy([s](const Course* crs) { return crs->getLanguage() == s; }); }
-            else if (c == 3) { std::string s = promptName("Enter level: "); return allCourses.findBy([s](const Course* crs) { return crs->getLevel() == s; }); }
-            else if (c == 4) { std::string s = promptName("Enter schedule: "); return allCourses.findBy([s](const Course* crs) { return crs->getSchedule() == s; }); }
-            else if (c == 5) { int n = promptInt("Enter student count: "); return allCourses.findBy([n](const Course* crs) { return crs->getStudentCount() == n; }); }
-            else if (c == 6) { int n = promptInt("Enter professor count: "); return allCourses.findBy([n](const Course* crs) { return crs->getProfessorCount() == n; }); }
-            else if (c == 7) { int n = promptInt("Enter max count: "); return allCourses.findBy([n](const Course* crs) { return crs->getMaxCount() == n; }); }
+            if (c == 1) { 
+                int id = promptInt("Enter id: "); 
+                return allCourses.findBy([id](const Course* crs) { return crs->getId() == id; }); 
+            }
+            else if (c == 2) { 
+                std::string sId = promptName("Enter language: "); 
+                return allCourses.findBy([sId](const Course* crs) { return crs->getLanguage() == sId; }); 
+            }
+            else if (c == 3) { 
+                std::string lvl = promptName("Enter level: "); 
+                return allCourses.findBy([lvl](const Course* crs) { return crs->getLevel() == lvl; }); 
+            }
+            else if (c == 4) { 
+                std::string sched = promptName("Enter schedule: "); 
+                return allCourses.findBy([sched](const Course* crs) { return crs->getSchedule() == sched; }); 
+            }
+            else if (c == 5) { 
+                int n = promptInt("Enter student count: "); 
+                return allCourses.findBy([n](const Course* crs) { return crs->getStudentCount() == n; }); 
+            }
+            else if (c == 6) { 
+                int n = promptInt("Enter professor count: "); 
+                return allCourses.findBy([n](const Course* crs) { return crs->getProfessorCount() == n; }); 
+            }
+            else if (c == 7) { 
+                int max = promptInt("Enter max count: "); 
+                return allCourses.findBy([max](const Course* crs) { return crs->getMaxCount() == max; }); 
+            }
         }
-        catch (const missingObjectError& e) { std::cout << "\n[Not found] " << e.what() << ". Try again\n"; }
-        catch (const myException& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
+        catch (const MissingObjectException& E) { std::cout << "\n[Not found] " << E.what() << ". Try again\n"; }
+        catch (const LanguageSchoolException& E) { std::cout << "\n[Search error] " << E.what() << ". Try again\n"; }
     }
 }
 static Student* findStudent(const collection<Student*>& allStuds) {
@@ -85,14 +113,29 @@ static Student* findStudent(const collection<Student*>& allStuds) {
         int c = promptInt("Your choice: ");
         if (c == 0) return nullptr;
         try {
-            if (c == 1) { int id = promptInt("Enter id: "); return allStuds.findBy([id](const Student* stud) { return stud->getId() == id; }); }
-            else if (c == 2) { std::string s = promptName("Enter student id: "); return allStuds.findBy([s](const Student* stud) { return stud->getStudentId() == s; }); }
-            else if (c == 3) { std::string s = promptName("Enter name: "); return allStuds.findBy([s](const Student* stud) { return stud->getName() == s; }); }
-            else if (c == 4) { int n = promptInt("Enter course count: "); return allStuds.findBy([n](const Student* stud) { return stud->getCount() == n; }); }
-            else if (c == 5) { double a = promptInt("Enter min average: "); return allStuds.findBy([a](const Student* stud) { return stud->calculateAverageMark() > a; }); }
+            if (c == 1) { 
+                int id = promptInt("Enter id: "); 
+                return allStuds.findBy([id](const Student* stud) { return stud->getId() == id; }); 
+            }
+            else if (c == 2) { 
+                std::string sId = promptName("Enter student id: "); 
+                return allStuds.findBy([sId](const Student* stud) { return stud->getStudentId() == sId; }); 
+            }
+            else if (c == 3) { 
+                std::string name = promptName("Enter name: "); 
+                return allStuds.findBy([name](const Student* stud) { return stud->getName() == name; }); 
+            }
+            else if (c == 4) { 
+                int n = promptInt("Enter course count: "); 
+                return allStuds.findBy([n](const Student* stud) { return stud->getCount() == n; }); 
+            }
+            else if (c == 5) { 
+                double avg = promptInt("Enter min average: "); 
+                return allStuds.findBy([avg](const Student* stud) { return stud->calculateAverageMark() > avg; }); 
+            }
         }
-        catch (const missingObjectError& e) { std::cout << "\n[Not found] " << e.what() << ". Try again\n"; }
-        catch (const myException& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
+        catch (const MissingObjectException& E) { std::cout << "\n[Not found] " << E.what() << ". Try again\n"; }
+        catch (const LanguageSchoolException& E) { std::cout << "\n[Search error] " << E.what() << ". Try again\n"; }
     }
 }
 static Professor* findProfessor(const collection<Professor*>& allProfs) {
@@ -101,14 +144,29 @@ static Professor* findProfessor(const collection<Professor*>& allProfs) {
         int c = promptInt("Your choice: ");
         if (c == 0) return nullptr;
         try {
-            if (c == 1) { int id = promptInt("Enter id: "); return allProfs.findBy([id](const Professor* prof) { return prof->getId() == id; }); }
-            else if (c == 2) { std::string s = promptName("Enter department: "); return allProfs.findBy([s](const Professor* prof) { return prof->getDepartment() == s; }); }
-            else if (c == 3) { std::string s = promptName("Enter name: "); return allProfs.findBy([s](const Professor* prof) { return prof->getName() == s; }); }
-            else if (c == 4) { int n = promptInt("Enter course count: "); return allProfs.findBy([n](const Professor* prof) { return prof->getCount() == n; }); }
-            else if (c == 5) { double a = promptInt("Enter min average: "); return allProfs.findBy([a](const Professor* prof) { return prof->calculateAverageRating() > a; }); }
+            if (c == 1) { 
+                int id = promptInt("Enter id: "); 
+                return allProfs.findBy([id](const Professor* prof) { return prof->getId() == id; }); 
+            }
+            else if (c == 2) { 
+                std::string dep = promptName("Enter department: "); 
+                return allProfs.findBy([dep](const Professor* prof) { return prof->getDepartment() == dep; }); 
+            }
+            else if (c == 3) {
+                std::string name = promptName("Enter name: "); 
+                return allProfs.findBy([name](const Professor* prof) { return prof->getName() == name; }); 
+            }
+            else if (c == 4) { 
+                int n = promptInt("Enter course count: "); 
+                return allProfs.findBy([n](const Professor* prof) { return prof->getCount() == n; }); 
+            }
+            else if (c == 5) { 
+                double avg = promptInt("Enter min average: "); 
+                return allProfs.findBy([avg](const Professor* prof) { return prof->calculateAverageRating() > avg; }); 
+            }
         }
-        catch (const missingObjectError& e) { std::cout << "\n[Not found] " << e.what() << ". Try again\n"; }
-        catch (const myException& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
+        catch (const MissingObjectException& E) { std::cout << "\n[Not found] " << E.what() << ". Try again\n"; }
+        catch (const LanguageSchoolException& E) { std::cout << "\n[Search error] " << E.what() << ". Try again\n"; }
     }
 }
 static Admin* findAdmin(const collection<Admin*>& allAdmins) {
@@ -117,19 +175,31 @@ static Admin* findAdmin(const collection<Admin*>& allAdmins) {
         int c = promptInt("Your choice: ");
         if (c == 0) return nullptr;
         try {
-            if (c == 1) { int id = promptInt("Enter id: "); return allAdmins.findBy([id](const Admin* adm) { return adm->getId() == id; }); }
-            else if (c == 2) { std::string s = promptName("Enter responsibility: "); return allAdmins.findBy([s](const Admin* adm) { return adm->getResponsibility() == s; }); }
-            else if (c == 3) { std::string s = promptName("Enter name: "); return allAdmins.findBy([s](const Admin* adm) { return adm->getName() == s; }); }
-            else if (c == 4) { int n = promptInt("Enter course count: "); return allAdmins.findBy([n](const Admin* adm) { return adm->getCount() == n; }); }
+            if (c == 1) { 
+                int id = promptInt("Enter id: "); 
+                return allAdmins.findBy([id](const Admin* adm) { return adm->getId() == id; }); 
+            }
+            else if (c == 2) { 
+                std::string resp = promptName("Enter responsibility: "); 
+                return allAdmins.findBy([resp](const Admin* adm) { return adm->getResponsibility() == resp; }); 
+            }
+            else if (c == 3) {
+                std::string name = promptName("Enter name: ");
+                return allAdmins.findBy([name](const Admin* adm) { return adm->getName() == name; }); 
+            }
+            else if (c == 4) { 
+                int n = promptInt("Enter course count: "); 
+                return allAdmins.findBy([n](const Admin* adm) { return adm->getCount() == n; }); 
+            }
         }
-        catch (const missingObjectError& e) { std::cout << "\n[Not found] " << e.what() << ". Try again\n"; }
-        catch (const myException& e) { std::cout << "\n[Search error] " << e.what() << ". Try again\n"; }
+        catch (const MissingObjectException& E) { std::cout << "\n[Not found] " << E.what() << ". Try again\n"; }
+        catch (const LanguageSchoolException& E) { std::cout << "\n[Search error] " << E.what() << ". Try again\n"; }
     }
 }
 
 void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, collection<Professor*>& allProfs, collection<Admin*>& allAdmins) {
     while (true) {
-        std::cout << "\n1. Find object in collection\n2. Get object from collection\n3. Add object to collection\n4. Remove object from collection\n5. Get collection size\n6. Clear collection\n7. Print\n8. Enroll menu\n9. Grade/Rating menu\n0. Back\n";
+        std::cout << "\n1. Find object in collection\n2. Get object from collection\n3. Add object to collection\n4. Remove object from collection\n5. Get collection size\n6. Clear collection\n7. Print\n8. Enroll menu\n9. Grade/Rating menu\n10. File menu\n0. Back\n";
         int c = promptInt("Your choice: ");
         if (c == 0) return;
 
@@ -139,10 +209,22 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
                 std::cout << "\n1. Find student\n2. Find professor\n3. Find admin\n4. Find course\n0. Back\n";
                 subC = promptInt("Your choice: ");
                 if (subC == 0) break;
-                if (subC == 1) { const auto* f = findStudent(allStuds); if (f) f->printInfo(); }
-                else if (subC == 2) { const auto* f = findProfessor(allProfs); if (f) f->printInfo(); }
-                else if (subC == 3) { const auto* f = findAdmin(allAdmins); if (f) f->printInfo(); }
-                else if (subC == 4) { const auto* f = findCourse(allCourses); if (f) f->printInfo(); }
+                if (subC == 1) { 
+                    const auto* F = findStudent(allStuds); 
+                    if (F) F->printInfo(); 
+                }
+                else if (subC == 2) { 
+                    const auto* F = findProfessor(allProfs); 
+                    if (F) F->printInfo(); 
+                }
+                else if (subC == 3) { 
+                    const auto* F = findAdmin(allAdmins); 
+                    if (F) F->printInfo();
+                }
+                else if (subC == 4) { 
+                    const auto* F = findCourse(allCourses); 
+                    if (F) F->printInfo(); 
+                }
                 else std::cout << "\nInvalid!";
             }
         }
@@ -158,8 +240,8 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
                     else if (subC == 3) { const auto* A = allAdmins.get(idx); if (A) A->printInfo(); }
                     else if (subC == 4) { const auto* C = allCourses.get(idx); if (C) C->printInfo(); }
                 }
-                catch (const courseLimitViolationError& e) { std::cout << "\n[Index out of range] " << e.what() << "\n"; }
-                catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+                catch (const CourseLimitViolationException& E) { std::cout << "\n[Index out of range] " << E.what() << "\n"; }
+                catch (const LanguageSchoolException& E) { std::cout << "\n[Error] " << E.what() << "\n"; }
             }
         }
         else if (c == 3) {
@@ -193,31 +275,31 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
                         auto lvl = promptName("Level: ");
                         int pid = promptInt("Professor id: ");
 
-                        Professor* prof = nullptr;
+                        Professor* P = nullptr;
                         try {
-                            prof = allProfs.findBy([pid](const Professor* p_ref) { return p_ref->getId() == pid; });
+                            P = allProfs.findBy([pid](const Professor* refP) { return refP->getId() == pid; });
                         }
-                        catch (const missingObjectError&) {
+                        catch (const MissingObjectException&) {
                             std::cout << "\nProfessor not found. Create a new one\n";
                             pid = promptUniqueId(allProfs, "New professor id: ");
                             auto name = promptName("New professor name: ");
                             auto dep = promptName("New professor department: ");
                             auto newProf = std::make_unique<Professor>(pid, name, dep);
-                            prof = newProf.get();
+                            P = newProf.get();
                             addToCollection(std::move(newProf), allProfs);
                             std::cout << "\n";
                         }
                         auto sch = promptName("Schedule: ");
                         int mx = promptInt("Max capacity: ");
-                        addToCollection(std::make_unique<Course>(id, lang, lvl, prof, sch, mx), allCourses);
+                        addToCollection(std::make_unique<Course>(id, lang, lvl, P, sch, mx), allCourses);
                     }
                 }
-                catch (const uniqueIdDuplicationError& e) { std::cout << "\n[Duplicate ID] " << e.what() << "\n"; }
-                catch (const invalidDataError& e) { std::cout << "\n[Invalid data] " << e.what() << "\n"; }
-                catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
-                catch (const courseLimitViolationError& e) { std::cout << "\n[Limit exceeded] " << e.what() << "\n"; }
-                catch (const invalidOperationError& e) { std::cout << "\n[Invalid operation] " << e.what() << "\n"; }
-                catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+                catch (const UniqueIdDuplicationException& E) { std::cout << "\n[Duplicate ID] " << E.what() << "\n"; }
+                catch (const InvalidDataException& E) { std::cout << "\n[Invalid data] " << E.what() << "\n"; }
+                catch (const MissingObjectException& E) { std::cout << "\n[Missing object] " << E.what() << "\n"; }
+                catch (const CourseLimitViolationException& E) { std::cout << "\n[Limit exceeded] " << E.what() << "\n"; }
+                catch (const InvalidOperationException& E) { std::cout << "\n[Invalid operation] " << E.what() << "\n"; }
+                catch (const LanguageSchoolException& E) { std::cout << "\n[Error] " << E.what() << "\n"; }
             }
         }
         else if (c == 4) {
@@ -226,13 +308,25 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
                 subC = promptInt("Your choice: ");
                 if (subC == 0) break;
                 try {
-                    if (subC == 1) { Student* s = findStudent(allStuds); if (s) removeFromCollection(s, allStuds); }
-                    else if (subC == 2) { Professor* p = findProfessor(allProfs); if (p) removeFromCollection(p, allProfs); }
-                    else if (subC == 3) { Admin* a = findAdmin(allAdmins); if (a) removeFromCollection(a, allAdmins); }
-                    else if (subC == 4) { Course* co = findCourse(allCourses); if (co) removeFromCollection(co, allCourses); }
+                    if (subC == 1) { 
+                        Student* S = findStudent(allStuds); 
+                        if (S) removeFromCollection(S, allStuds); 
+                    }
+                    else if (subC == 2) { 
+                        Professor* P = findProfessor(allProfs); 
+                        if (P) removeFromCollection(P, allProfs); 
+                    }
+                    else if (subC == 3) { 
+                        Admin* A = findAdmin(allAdmins); 
+                        if (A) removeFromCollection(A, allAdmins); 
+                    }
+                    else if (subC == 4) { 
+                        Course* C = findCourse(allCourses); 
+                        if (C) removeFromCollection(C, allCourses); 
+                    }
                 }
-                catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
-                catch (const std::exception& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+                catch (const MissingObjectException& E) { std::cout << "\n[Missing object] " << E.what() << "\n"; }
+                catch (const LanguageSchoolException& E) { std::cout << "\n[Error] " << E.what() << "\n"; }
             }
         }
         else if (c == 5) {
@@ -254,6 +348,7 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
         else if (c == 7) printMenu(allCourses, allStuds, allProfs, allAdmins);
         else if (c == 8) enrollMenu(allCourses, allStuds, allProfs, allAdmins);
         else if (c == 9) evaluationMenu(allCourses, allStuds, allProfs, allAdmins);
+        else if (c == 10) fileMenu(allCourses, allStuds, allProfs, allAdmins);
         else std::cout << "Invalid\n";
     }
 }
@@ -268,13 +363,29 @@ void printMenu(const collection<Course*>& allCourses, const collection<Student*>
             else if (c == 2) { for (const auto& stud : allStuds) stud->printInfo(); }
             else if (c == 3) { for (const auto& prof : allProfs) prof->printInfo(); }
             else if (c == 4) { for (const auto& adm : allAdmins) adm->printInfo(); }
-            else if (c == 5) { int id = promptInt("id: "); const auto* C = allCourses.findBy([id](const Course* crs) { return crs->getId() == id; }); if (C) C->printInfo(); }
-            else if (c == 6) { int id = promptInt("id: "); const auto* S = allStuds.findBy([id](const Student* stud) { return stud->getId() == id; }); if (S) S->printInfo(); }
-            else if (c == 7) { int id = promptInt("id: "); const auto* P = allProfs.findBy([id](const Professor* prof) { return prof->getId() == id; }); if (P) P->printInfo(); }
-            else if (c == 8) { int id = promptInt("id: "); const auto* A = allAdmins.findBy([id](const Admin* adm) { return adm->getId() == id; }); if (A) A->printInfo(); }
+            else if (c == 5) { 
+                int id = promptInt("id: "); 
+                const auto* C = allCourses.findBy([id](const Course* crs) { return crs->getId() == id; });
+                if (C) C->printInfo(); 
+            }
+            else if (c == 6) { 
+                int id = promptInt("id: "); 
+                const auto* S = allStuds.findBy([id](const Student* stud) { return stud->getId() == id; }); 
+                if (S) S->printInfo(); 
+            }
+            else if (c == 7) { 
+                int id = promptInt("id: "); 
+                const auto* P = allProfs.findBy([id](const Professor* prof) { return prof->getId() == id; }); 
+                if (P) P->printInfo(); 
+            }
+            else if (c == 8) { 
+                int id = promptInt("id: "); 
+                const auto* A = allAdmins.findBy([id](const Admin* adm) { return adm->getId() == id; }); 
+                if (A) A->printInfo(); 
+            }
         }
-        catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
-        catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+        catch (const MissingObjectException& E) { std::cout << "\n[Missing object] " << E.what() << "\n"; }
+        catch (const LanguageSchoolException& E) { std::cout << "\n[Error] " << E.what() << "\n"; }
     }
 }
 
@@ -292,28 +403,42 @@ void enrollMenu(const collection<Course*>& allCourses, const collection<Student*
             if (c == 1 || c == 4) {
                 int sid = promptInt("Student id: ");
                 Student* S = allStuds.findBy([sid](const Student* stud) { return stud->getId() == sid; });
-                if (c == 1) { int before = S->getCount(); *S += C; if (S->getCount() > before) std::cout << "Student added!\n"; }
+                if (c == 1) { 
+                    int before = S->getCount(); 
+                    *S += C; 
+                    if (S->getCount() > before) std::cout << "Student added!\n"; 
+                }
                 else *C -= S;
             }
             else if (c == 2 || c == 5) {
                 int pid = promptInt("Professor id: ");
                 Professor* P = allProfs.findBy([pid](const Professor* prof) { return prof->getId() == pid; });
-                if (c == 2) { int before = P->getCount(); *P += C; if (P->getCount() > before) std::cout << "Professor added!\n"; }
+                if (c == 2) { 
+                    int before = P->getCount(); 
+                    *P += C; 
+                    if (P->getCount() > before) std::cout << "Professor added!\n"; 
+                }
                 else *C -= P;
             }
             else {
                 int aid = promptInt("Admin id: ");
                 Admin* A = allAdmins.findBy([aid](const Admin* adm) { return adm->getId() == aid; });
-                if (c == 3) { int before = A->getCount(); *A += C; if (A->getCount() > before) std::cout << "Admin added!\n"; }
-                else { int before = A->getCount(); *A -= C; if (A->getCount() < before) std::cout << "Admin removed!\n"; }
+                if (c == 3) { 
+                    int before = A->getCount(); *A += C; 
+                    if (A->getCount() > before) std::cout << "Admin added!\n"; 
+                }
+                else { 
+                    int before = A->getCount(); 
+                    *A -= C; if (A->getCount() < before) std::cout << "Admin removed!\n"; }
             }
         }
-        catch (const courseLimitViolationError& e) { std::cout << "\n[Limit exceeded] " << e.what() << "\n"; }
-        catch (const invalidOperationError& e) { std::cout << "\n[Invalid operation] " << e.what() << "\n"; }
-        catch (const missingObjectError& e) { std::cout << "\n[Missing object] " << e.what() << "\n"; }
-        catch (const myException& e) { std::cout << "\n[Error] " << e.what() << "\n"; }
+        catch (const CourseLimitViolationException& E) { std::cout << "\n[Limit exceeded] " << E.what() << "\n"; }
+        catch (const InvalidOperationException& E) { std::cout << "\n[Invalid operation] " << E.what() << "\n"; }
+        catch (const MissingObjectException& E) { std::cout << "\n[Missing object] " << E.what() << "\n"; }
+        catch (const LanguageSchoolException& E) { std::cout << "\n[Error] " << E.what() << "\n"; }
     }
 }
+
 void evaluationMenu(const collection<Course*>& allCourses, const collection<Student*>& allStuds, const collection<Professor*>& allProfs, const collection<Admin*>& allAdmins) {
     while (true) {
         std::cout << "\n1. Add mark to student\n";
@@ -338,24 +463,52 @@ void evaluationMenu(const collection<Course*>& allCourses, const collection<Stud
                 int pid = promptInt("Enter professor id: ");
                 Professor* P = allProfs.findBy([pid](const Professor* prof) { return prof->getId() == pid; });
 
-                int rating = promptInt("Enter rating (1-5): ");
+                int rating = promptInt("Enter rating: ");
                 P->rate(rating);
 
                 std::cout << "\nSuccess! Rating " << rating << " added to Professor " << P->getName() << ".\n";
                 std::cout << "Current average rating: " << P->calculateAverageRating() << "\n";
             }
-            else {
-                std::cout << "Invalid choice!\n";
+            else std::cout << "Invalid choice!\n";
+        }
+        catch (const MissingObjectException& E) { std::cout << "\n[Not found] " << E.what() << "\n"; }
+        catch (const InvalidOperationException& E) { std::cout << "\n[Invalid operation] " << E.what() << "\n"; }
+        catch (const LanguageSchoolException& E) { std::cout << "\n[Error] " << E.what() << "\n"; }
+    }
+}
+
+void fileMenu(const collection<Course*>& allCourses, const collection<Student*>& allStuds, const collection<Professor*>& allProfs, const collection<Admin*>& allAdmins) {
+    while (true) {
+        std::cout << "\n1. Save state\n";
+        std::cout << "2. Load state\n";
+        std::cout << "3. Add log\n";
+        std::cout << "4. Create report\n";
+        std::cout << "0. Back\n";
+
+        int userChoice = promptInt("Your choice: ");
+        if (userChoice == 0) return;
+
+        try {
+            if (userChoice == 1) {
+                FileManager::saveState(allCourses, allStuds, allProfs, allAdmins);
+                std::cout << "\n[Success] System saved\n";
             }
+            else if (userChoice == 2) {
+                FileManager::loadState(const_cast<collection<Course*>&>(allCourses), const_cast<collection<Student*>&>(allStuds), const_cast<collection<Professor*>&>(allProfs), const_cast<collection<Admin*>&>(allAdmins));
+                std::cout << "\n[Success] System loaded\n";
+            }
+            else if (userChoice == 3) {
+                std::string logMessage = promptName("Enter log message: ");
+                FileManager::writeLog(logMessage);
+                std::cout << "\n[Success] Log recorded\n";
+            }
+            else if (userChoice == 4) {
+                FileManager::generateReport(allCourses, allStuds, allProfs, allAdmins);
+                std::cout << "\n[Success] Report created\n";
+            }
+            else std::cout << "Invalid choice!\n";
         }
-        catch (const missingObjectError& e) {
-            std::cout << "\n[Not found] " << e.what() << "\n";
-        }
-        catch (const invalidOperationError& e) {
-            std::cout << "\n[Invalid operation] " << e.what() << "\n";
-        }
-        catch (const std::exception& e) {
-            std::cout << "\n[Error] " << e.what() << "\n";
-        }
+        catch (const FileException& caughtException) { std::cout << "\n" << caughtException.what() << "\n"; }
+        catch (const LanguageSchoolException& caughtException) { std::cout << "\n[Error] " << caughtException.what() << "\n"; }
     }
 }
