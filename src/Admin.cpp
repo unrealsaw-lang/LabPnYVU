@@ -92,9 +92,7 @@ void Admin::calculateDominantLanguage() const {
     }
 
     std::cout << "Dominant language: ";
-    if (top.getSize() == 1) {
-        std::cout << top.get(0) << "\n";
-    }
+    if (top.getSize() == 1) { std::cout << top.get(0) << "\n"; }
     else {
         int idx = 0;
         for (auto t : top) {
