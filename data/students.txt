@@ -1,7 +1,0 @@
-1|Steve|50128|
-2|Bob|44101|
-3|Alex|15223|
-4|Andrew|73077|
-5|David|22401|
-6|George|55940|
-7|TEST|TESTID|
