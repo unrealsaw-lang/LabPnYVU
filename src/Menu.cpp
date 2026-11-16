@@ -33,19 +33,13 @@ template <typename T> static void getCollectionSize(const collection<T*>& col) {
     if (col.getSize() != 0) std::cout << "\nSize of the collection: " << col.getSize();
     else std::cout << "\nCollection is empty...";
 }
-template <typename T> static int promptUniqueId(const collection<T*>& col, const std::string& prompt) {
-    while (true) {
-        int id = promptInt(prompt);
-        bool isDuplicate = false;
-        for (const auto& obj : col) {
-            if (obj != nullptr && obj->getId() == id) {
-                isDuplicate = true;
-                break;
-            }
-        }
-        if (!isDuplicate) return id;
-        std::cout << "ID: " << id << " already taken!\n";
+
+template <typename T> static int promptUniqueId(const collection<T*>& col, const std::string& msg) {
+    int id = promptInt(msg);
+    for (const auto& existing : col) {
+        if (existing != nullptr && existing->getId() == id) throw UniqueIdDuplicationException("ID: " + std::to_string(id) + " is already taken");
     }
+    return id;
 }
 
 std::string promptName(const std::string& prompt) {
