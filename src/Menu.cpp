@@ -3,6 +3,7 @@
 #include "Professor.h"
 #include "Student.h"
 #include "Admin.h"
+#include "FileManager.h"
 #include "UniqueIdDuplicationException.h"
 #include "InvalidDataException.h"
 #include "InvalidOperationException.h"
@@ -33,13 +34,19 @@ template <typename T> static void getCollectionSize(const collection<T*>& col) {
     if (col.getSize() != 0) std::cout << "\nSize of the collection: " << col.getSize();
     else std::cout << "\nCollection is empty...";
 }
-
-template <typename T> static int promptUniqueId(const collection<T*>& col, const std::string& msg) {
-    int id = promptInt(msg);
-    for (const auto& existing : col) {
-        if (existing != nullptr && existing->getId() == id) throw UniqueIdDuplicationException("ID: " + std::to_string(id) + " is already taken");
+template <typename T> static int promptUniqueId(const collection<T*>& col, const std::string& prompt) {
+    while (true) {
+        int id = promptInt(prompt);
+        bool isDuplicate = false;
+        for (const auto& obj : col) {
+            if (obj != nullptr && obj->getId() == id) {
+                isDuplicate = true;
+                break;
+            }
+        }
+        if (!isDuplicate) return id;
+        std::cout << "ID: " << id << " already taken!\n";
     }
-    return id;
 }
 
 std::string promptName(const std::string& prompt) {
@@ -192,7 +199,7 @@ static Admin* findAdmin(const collection<Admin*>& allAdmins) {
 
 void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, collection<Professor*>& allProfs, collection<Admin*>& allAdmins) {
     while (true) {
-        std::cout << "\n1. Find object in collection\n2. Get object from collection\n3. Add object to collection\n4. Remove object from collection\n5. Get collection size\n6. Clear collection\n7. Print\n8. Enroll menu\n9. Grade/Rating menu\n0. Back\n";
+        std::cout << "\n1. Find object in collection\n2. Get object from collection\n3. Add object to collection\n4. Remove object from collection\n5. Get collection size\n6. Clear collection\n7. Print\n8. Enroll menu\n9. Grade/Rating menu\n10. File menu\n0. Back\n";
         int c = promptInt("Your choice: ");
         if (c == 0) return;
 
@@ -341,6 +348,7 @@ void mainMenu(collection<Course*>& allCourses, collection<Student*>& allStuds, c
         else if (c == 7) printMenu(allCourses, allStuds, allProfs, allAdmins);
         else if (c == 8) enrollMenu(allCourses, allStuds, allProfs, allAdmins);
         else if (c == 9) evaluationMenu(allCourses, allStuds, allProfs, allAdmins);
+        else if (c == 10) fileMenu(allCourses, allStuds, allProfs, allAdmins);
         else std::cout << "Invalid\n";
     }
 }
@@ -465,6 +473,42 @@ void evaluationMenu(const collection<Course*>& allCourses, const collection<Stud
         }
         catch (const MissingObjectException& E) { std::cout << "\n[Not found] " << E.what() << "\n"; }
         catch (const InvalidOperationException& E) { std::cout << "\n[Invalid operation] " << E.what() << "\n"; }
+        catch (const LanguageSchoolException& E) { std::cout << "\n[Error] " << E.what() << "\n"; }
+    }
+}
+
+void fileMenu(const collection<Course*>& allCourses, const collection<Student*>& allStuds, const collection<Professor*>& allProfs, const collection<Admin*>& allAdmins) {
+    while (true) {
+        std::cout << "\n1. Save state\n";
+        std::cout << "2. Load state\n";
+        std::cout << "3. Add log\n";
+        std::cout << "4. Create report\n";
+        std::cout << "0. Back\n";
+
+        int userChoice = promptInt("Your choice: ");
+        if (userChoice == 0) return;
+
+        try {
+            if (userChoice == 1) {
+                FileManager::saveState(allCourses, allStuds, allProfs, allAdmins);
+                std::cout << "\n[Success] System saved\n";
+            }
+            else if (userChoice == 2) {
+                FileManager::loadState(const_cast<collection<Course*>&>(allCourses), const_cast<collection<Student*>&>(allStuds), const_cast<collection<Professor*>&>(allProfs), const_cast<collection<Admin*>&>(allAdmins));
+                std::cout << "\n[Success] System loaded\n";
+            }
+            else if (userChoice == 3) {
+                std::string logMessage = promptName("Enter log message: ");
+                FileManager::writeLog(logMessage);
+                std::cout << "\n[Success] Log recorded\n";
+            }
+            else if (userChoice == 4) {
+                FileManager::generateReport(allCourses, allStuds, allProfs, allAdmins);
+                std::cout << "\n[Success] Report created\n";
+            }
+            else std::cout << "Invalid choice!\n";
+        }
+        catch (const FileException& E) { std::cout << "\n" << E.what() << "\n"; }
         catch (const LanguageSchoolException& E) { std::cout << "\n[Error] " << E.what() << "\n"; }
     }
 }
